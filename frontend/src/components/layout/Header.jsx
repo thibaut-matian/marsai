@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { Link } from "react-router-dom";
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
+    const [showLogo, setShowLogo] = useState(false);
 
     // Empêcher le scroll du body quand le menu est ouvert
     useEffect(() => {
@@ -14,13 +15,35 @@ export default function Header() {
         return () => { document.body.style.overflow = 'unset'; };
     }, [isOpen]);
 
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 500) {
+                setShowLogo(true);
+            } else {
+                setShowLogo(false);
+            }
+        };
+        
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
     return (
         <>
             {/* Barre de navigation Principale (Visible tout le temps) */}
             <div className="navbar bg-transparent backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
-                <div className="flex-1">
-                    <Link to="/" className="btn btn-ghost text-xl text-white">MarsAI</Link>
-                </div>
+                <div className="flex-1"><Link to="/" 
+                        className={`btn btn-ghost text-xl text-white transform transition-all duration-500 ease-in-out ${
+                            showLogo 
+                                ? 'opacity-100 translate-y-0' // Visible et à sa place
+                                : 'opacity-0 -translate-y-4 pointer-events-none' // Invisible et décalé vers le haut
+                        }`}
+                    >
+                        MarsAI
+                    </Link>                
+                    </div>
 
                 {/* Menu Desktop (Caché sur mobile) */}
                 <div className="flex-none hidden md:flex">
