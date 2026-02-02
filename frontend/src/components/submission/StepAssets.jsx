@@ -1,101 +1,144 @@
 import { Input, glassTextAreaClasses } from "./FormUI";
+import { useTranslation } from "react-i18next";
 
-  export default function StepAssets({ formData, handleChange, handleFileChange, handleStillsChange, setCustomValue, errors }) {
-    return (
-      <div className="space-y-6 md:space-y-8 animate-fade-in">
-        <h2 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-white/90">Livrables Multimédias</h2>
+export default function StepAssets({ formData, handleChange, handleFileChange, handleStillsChange, setCustomValue, errors }) {
+  const { t } = useTranslation();
 
-        {/* 1. VIDÉO */}
-        <div className={`relative group p-4 md:p-6 rounded-3xl border-2 border-dashed transition-all ${errors.videoFile ? 'border-red-500 bg-red-500/10' : 'border-white/20 bg-black/20 hover:border-blue-400/50 hover:bg-black/40'}`}>
-          <label className="flex flex-col items-center justify-center cursor-pointer h-28 md:h-32">
-              <div className="text-3xl md:text-4xl mb-2">☁️</div>
-              <span className="text-base md:text-lg font-bold text-white mb-1 text-center px-2">{formData.videoFile ? formData.videoFile.name : "Fichier Source Vidéo *"}</span>
-              <span className="text-xs md:text-sm text-blue-200/60">{formData.videoFile ? "Fichier prêt" : ".MP4, .MOV (Max 400 Mo)"}</span>
-              <input type="file" name="videoFile" accept="video/*" onChange={handleFileChange} className="hidden" />
-          </label>
-          {errors.videoFile && <p className="absolute bottom-2 left-0 w-full text-center text-red-400 text-xs font-bold">{errors.videoFile}</p>}
-        </div>
-        <Input label="URL Source YouTube (optionnel)" name="filmUrl" value={formData.filmUrl} onChange={handleChange} placeholder="https://youtube.com/..." error={errors.filmUrl} />
+  return (
+    <div className="space-y-6 md:space-y-8 animate-fade-in">
+      <h2 className="text-xl md:text-2xl font-semibold mb-4 text-white/90">
+        {t('form.assetsTitle')}
+      </h2>
 
-        {/* 2. ACCESSIBILITÉ */}
-        <div className="bg-white/5 p-4 md:p-6 rounded-3xl border border-white/10 backdrop-blur-sm">
-            <h3 className="text-blue-300 font-bold text-sm tracking-wide mb-4">ACCESSIBILITÉ</h3>
-            <label className="flex items-start md:items-center gap-3 md:gap-4 cursor-pointer mb-4">
-              <input type="checkbox" name="needsSubtitles" checked={formData.needsSubtitles} onChange={handleChange} className="checkbox checkbox-primary checkbox-sm border-white/30 bg-black/30 mt-0.5 md:mt-0" />
-              <span className="text-sm text-white">Présence de voix ou de textes nécessitant des sous-titres</span>
-            </label>
-            {formData.needsSubtitles && (
-                <div className="animate-fade-in">
-                    <label className="block text-sm text-blue-200/80 mb-2">Fichier Sous-titres (.srt) *</label>
-                    <input type="file" name="subtitleFile" accept=".srt" onChange={handleFileChange} className={`w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 ${errors.subtitleFile ? 'ring-2 ring-red-500 rounded-lg' : ''}`} />
-                    {errors.subtitleFile && <p className="text-red-400 text-xs mt-1">{errors.subtitleFile}</p>}
-                </div>
+      {/* 1. UPLOAD VIDÉO */}
+      <div className={`relative group p-4 md:p-6 rounded-3xl border-2 border-dashed transition-all 
+        ${errors.videoFile ? 'border-red-500 bg-red-500/10' : formData.videoFile ? 'border-green-500 bg-green-900/10' : 'border-white/20 bg-black/20 hover:border-blue-400/50 hover:bg-black/40'}`}
+        style={{ cursor: 'pointer' }}
+      >
+        <label htmlFor="videoFileInput" className="flex flex-col items-center justify-center cursor-pointer h-28 md:h-32 relative">
+            <div className="text-base md:text-4xl mb-2 select-none pointer-events-none">☁️</div>
+            <span className="text-base md:text-lg font-bold text-white mb-1 text-center px-2 select-none pointer-events-none">
+              {formData.videoFile ? formData.videoFile.name : t('form.videoFile')}
+            </span>
+            <span className="text-xs md:text-sm text-blue-200/60 select-none pointer-events-none">
+              {formData.videoFile ? t('form.videoReady') : t('form.videoPlaceholder')}
+            </span>
+            <input id="videoFileInput" type="file" name="videoFile" accept="video/*" onChange={handleFileChange} className="hidden" />
+            {formData.videoFile && (
+              <span className="absolute top-2 right-2 text-green-400 text-xl" title="Vidéo uploadée">✔️</span>
             )}
+        </label>
+        {errors.videoFile && (
+          <div className="mt-2 text-red-400 text-sm font-semibold text-center">{errors.videoFile}</div>
+        )}
+      </div>
+
+      {/* 2. TITRE ET DURÉE (Correction du bug 'uncontrolled') */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Input 
+          label={t('form.title')} 
+          name="filmTitleOriginal" 
+          value={formData.filmTitleOriginal || ""} // "" évite le bug 'uncontrolled'
+          onChange={handleChange} 
+          error={errors.filmTitleOriginal} 
+          placeholder="Ex: Mars Invasion"
+        />
+        <Input 
+          label={t('form.duration')} 
+          name="filmDuration"   // ← Correction ici !
+          type="number"
+          value={formData.filmDuration || ""} // "" évite le bug 'uncontrolled'
+          onChange={handleChange} 
+          error={errors.filmDuration} 
+          placeholder="Sec."
+          min="0"
+        />
+      </div>
+
+      <Input 
+        label={t('form.youtubeUrl')} 
+        name="filmUrl" 
+        value={formData.filmUrl || ""} 
+        onChange={handleChange} 
+        placeholder="https://youtube.com/..." 
+        error={errors.filmUrl} 
+      />
+
+      {/* 3. IMAGES (VIGNETTE & STILLS) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/5">
+        <div className={`p-4 rounded-2xl border transition-all ${errors.thumbnailFile ? 'border-red-500' : formData.thumbnailFile ? 'border-green-500 bg-green-900/10' : 'border-white/10 bg-black/20 hover:border-blue-400/50 hover:bg-black/40'}`}
+          onClick={() => document.getElementById('thumbnailFileInput')?.click()}
+          style={{ cursor: 'pointer' }}
+        >
+          <label className="block text-sm text-blue-300 mb-2 font-bold relative select-none pointer-events-none">
+            {t('form.thumbnail')}
+            {formData.thumbnailFile && (
+              <span className="absolute top-0 right-0 text-green-400 text-xl" title="Vignette uploadée">✔️</span>
+            )}
+          </label>
+          <input id="thumbnailFileInput" type="file" name="thumbnailFile" accept="image/*" onChange={handleFileChange} className="w-full text-sm text-gray-400 cursor-pointer hidden" />
+          {formData.thumbnailFile && (
+            <div className="mt-2 text-xs text-green-400">{formData.thumbnailFile.name}</div>
+          )}
         </div>
 
-        {/* 3. IMAGES */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className={`p-4 rounded-2xl border border-white/10 bg-black/20 ${errors.thumbnailFile ? 'border-red-500' : ''}`}>
-              <label className="block text-sm text-blue-300 mb-2 font-bold">Vignette (16:9) *</label>
-              <input type="file" name="thumbnailFile" accept="image/*" onChange={handleFileChange} className="w-full text-sm text-gray-400 file:py-2 file:px-4 file:rounded-full file:bg-white/10 file:text-white file:border-0" />
-              {errors.thumbnailFile && <p className="text-red-400 text-xs mt-1">{errors.thumbnailFile}</p>}
-          </div>
-          <div className="p-4 rounded-2xl border border-white/10 bg-black/20">
-              <label className="block text-sm text-blue-300 mb-2 font-bold">Galerie (Max 3)</label>
-              <input type="file" multiple accept="image/*" onChange={handleStillsChange} className="w-full text-sm text-gray-400 file:py-2 file:px-4 file:rounded-full file:bg-white/10 file:text-white file:border-0" />
-              <div className="flex gap-2 mt-2 flex-wrap">
-                  {formData.stillsFiles.map((file, i) => (
-                      <span key={i} className="badge badge-outline badge-primary text-xs">{file.name}</span>
-                  ))}
-              </div>
-          </div>
-        </div>
-
-        {/* 4. TECH */}
-        <div className="pt-4 border-t border-white/10">
-          <h3 className="text-xl font-bold text-blue-300 mb-4">Infos & Tech</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Input label="Titre Original *" name="filmTitleOriginal" value={formData.filmTitleOriginal} onChange={handleChange} error={errors.filmTitleOriginal} />
-              <Input label="Durée (secondes) *" name="filmDuration" type="number" value={formData.filmDuration} onChange={handleChange} error={errors.filmDuration} />
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mt-6">
-              <button 
-                type="button" 
-                onClick={() => setCustomValue('aiClassification', 'FULL')} 
-                className={`group relative p-4 md:p-5 h-auto rounded-2xl border text-left transition-all duration-300 overflow-hidden ${formData.aiClassification === 'FULL' ? 'bg-gradient-to-br from-blue-600/40 to-blue-900/40 border-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.3)]' : 'bg-black/20 border-white/10 hover:border-blue-400/50 hover:shadow-[0_0_25px_rgba(59,130,246,0.2)]'}`}
-              >
-                  <div className={`absolute inset-0 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 opacity-0 transition-opacity duration-300 ${formData.aiClassification !== 'FULL' ? 'group-hover:opacity-100' : ''}`}></div>
-                  <div className="relative z-10">
-                    <div className={`font-bold text-base md:text-lg transition-transform duration-300 ${formData.aiClassification !== 'FULL' ? 'group-hover:translate-x-1' : ''}`}>🤖 100% Génération</div>
-                    <p className="text-xs text-blue-100/60 mt-1 font-normal">Aucune caméra utilisée.</p>
-                  </div>
-              </button>
-              <button 
-                type="button" 
-                onClick={() => setCustomValue('aiClassification', 'HYBRID')} 
-                className={`group relative p-4 md:p-5 h-auto rounded-2xl border text-left transition-all duration-300 overflow-hidden ${formData.aiClassification === 'HYBRID' ? 'bg-gradient-to-br from-purple-600/40 to-purple-900/40 border-purple-400 shadow-[0_0_20px_rgba(139,92,246,0.3)]' : 'bg-black/20 border-white/10 hover:border-purple-400/50 hover:shadow-[0_0_25px_rgba(139,92,246,0.2)]'}`}
-              >
-                  <div className={`absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 opacity-0 transition-opacity duration-300 ${formData.aiClassification !== 'HYBRID' ? 'group-hover:opacity-100' : ''}`}></div>
-                  <div className="relative z-10">
-                    <div className={`font-bold text-base md:text-lg transition-transform duration-300 ${formData.aiClassification !== 'HYBRID' ? 'group-hover:translate-x-1' : ''}`}>🤝 Production Hybride</div>
-                    <p className="text-xs text-purple-100/60 mt-1 font-normal">Mélange de tournage et d'IA.</p>
-                  </div>
-              </button>
-          </div>
-          {errors.aiClassification && <p className="text-red-400 text-sm mt-2">{errors.aiClassification}</p>}
-          
-          <div className="mt-6 space-y-4">
-              <div>
-                  <label className="block text-sm text-blue-200/80 mb-2">Stack Technologique *</label>
-                  <textarea name="aiStack" rows="2" value={formData.aiStack} onChange={handleChange} className={glassTextAreaClasses}></textarea>
-              </div>
-              <div>
-                  <label className="block text-sm text-blue-200/80 mb-2">Méthodologie Créative *</label>
-                  <textarea name="aiMethodology" rows="2" value={formData.aiMethodology} onChange={handleChange} className={glassTextAreaClasses}></textarea>
-              </div>
-          </div>
+        <div className={`p-4 rounded-2xl border transition-all ${formData.stillsFiles && formData.stillsFiles.length === 3 ? 'border-green-500 bg-green-900/10' : 'border-white/10 bg-black/20 hover:border-blue-400/50 hover:bg-black/40'}`}
+          onClick={() => document.getElementById('stillsFilesInput')?.click()}
+          style={{ cursor: 'pointer' }}
+        >
+          <label className="block text-sm text-blue-300 mb-2 font-bold relative select-none pointer-events-none">
+            {t('form.stills')}
+            {formData.stillsFiles && formData.stillsFiles.length === 3 && (
+              <span className="absolute top-0 right-0 text-green-400 text-xl" title="3 images uploadées">✔️</span>
+            )}
+          </label>
+          <input id="stillsFilesInput" type="file" multiple accept="image/*" onChange={handleStillsChange} className="w-full text-sm text-gray-400 cursor-pointer hidden" />
+          {formData.stillsFiles && formData.stillsFiles.length > 0 && (
+            <div className="mt-2 text-xs text-green-400">
+              {formData.stillsFiles.length} / 3 {t('form.stills')}
+              <ul className="mt-1 text-xs text-white/80 list-disc list-inside">
+                {formData.stillsFiles.map((file, idx) => (
+                  <li key={idx}>{file.name}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
-    );
-  }
+
+      {/* 4. CLASSIFICATION IA */}
+      <div className="pt-6 border-t border-white/10">
+        <h3 className="text-xl font-bold text-blue-300 mb-4">{t('form.detailsTitle')}</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button 
+              type="button" 
+              onClick={() => setCustomValue('aiClassification', 'FULL')} 
+              className={`p-4 rounded-2xl border text-left transition-all cursor-pointer ${formData.aiClassification === 'FULL' ? 'bg-blue-600/20 border-blue-400 shadow-lg' : 'bg-black/20 border-white/10 hover:bg-blue-900/30 hover:border-blue-400'}`}
+            >
+                <div className="font-bold">🤖 100% {t('form.generation')}</div>
+                <p className="text-xs text-blue-100/60 mt-1">{t('form.noCamera')}</p>
+            </button>
+            <button 
+              type="button" 
+              onClick={() => setCustomValue('aiClassification', 'HYBRID')} 
+              className={`p-4 rounded-2xl border text-left transition-all cursor-pointer ${formData.aiClassification === 'HYBRID' ? 'bg-purple-600/20 border-purple-400 shadow-lg' : 'bg-black/20 border-white/10 hover:bg-purple-900/30 hover:border-purple-400'}`}
+            >
+                <div className="font-bold">🤝 {t('form.hybridProduction')}</div>
+                <p className="text-xs text-purple-100/60 mt-1">{t('form.mixedShooting')}</p>
+            </button>
+        </div>
+        
+        <div className="mt-6 space-y-4">
+            <div>
+                <label className="block text-sm text-blue-200/80 mb-2">{t('form.techStack')}</label>
+                <textarea name="aiStack" rows="2" value={formData.aiStack || ""} onChange={handleChange} className={glassTextAreaClasses + " cursor-text"}></textarea>
+            </div>
+            <div>
+                <label className="block text-sm text-blue-200/80 mb-2">{t('form.creativeMethodology')}</label>
+                <textarea name="aiMethodology" rows="2" value={formData.aiMethodology || ""} onChange={handleChange} className={glassTextAreaClasses + " cursor-text"}></textarea>
+            </div>
+        </div>
+      </div>
+    </div>
+  );
+}

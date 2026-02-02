@@ -129,7 +129,7 @@ export default function Header() {
                     {/* Bouton d'action principal */}
                     <div className="pt-4 flex flex-col items-center gap-6">
                         <button 
-                            onClick={() => navigate('/submit-movie')}
+                            onClick={() => { setIsOpen(false); navigate('/submit-movie'); }}
                             className="bg-white text-black px-8 py-3 rounded-md font-medium text-lg hover:scale-105 transition-transform"
                         >
                             {t('nav.submit')}
@@ -138,7 +138,7 @@ export default function Header() {
                         {/* Sélecteur de langue - 2 boutons */}
                         <div className="flex gap-6">
                             <button
-                                onClick={() => i18n.changeLanguage('fr')}
+                                onClick={() => { i18n.changeLanguage('fr'); setIsOpen(false); }}
                                 className={`font-medium transition-colors text-lg ${
                                     i18n.language === 'fr'
                                         ? 'text-white'
@@ -148,7 +148,7 @@ export default function Header() {
                                 Français
                             </button>
                             <button
-                                onClick={() => i18n.changeLanguage('en')}
+                                onClick={() => { i18n.changeLanguage('en'); setIsOpen(false); }}
                                 className={`font-medium transition-colors text-lg ${
                                     i18n.language === 'en'
                                         ? 'text-white'

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from 'react';
+import getAPI from '../services/getAPI';
 
 const useProjectProgress = () => {
   const [projectProgress, setProjectProgress] = useState([]); // ✅ Tableau vide par défaut
@@ -10,10 +10,7 @@ const useProjectProgress = () => {
     const fetchProgress = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem('token');
-        const response = await axios.get('/api/admin/dashboard/progress', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const response = await getAPI.getDashboardProgress();
         setProjectProgress(response.data || []); // ✅ Fallback tableau vide
         setError(null);
       } catch (err) {

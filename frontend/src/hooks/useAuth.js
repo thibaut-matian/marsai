@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../services/authService";
+import getAPI from "../services/getAPI";
 
 export const useAuth = () => {
   const [error, setError] = useState("");
@@ -12,7 +12,19 @@ export const useAuth = () => {
     setError("");
 
     try {
-      const { role } = await login(email, password);
+      const response = await getAPI.login({ email, password });
+      const { token, user } = response.data;
+
+      if (!user?.role) {
+        throw new Error("Rôle non fourni par le serveur");
+      }
+
+      // Stocker le token et les infos utilisateur dans localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("userRole", user.role);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      const role = user.role;
 
       console.log("Rôle reçu du service de login:", role); // Debug : vérifier le rôle reçu
 

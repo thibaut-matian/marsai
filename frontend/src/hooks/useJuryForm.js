@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { juryService } from '../services/juryService';
+import { useEffect, useState } from 'react';
+import getAPI from '../services/getAPI';
 
 export const useJuryForm = (jury, onSuccess) => {
   const [formData, setFormData] = useState({
@@ -67,10 +67,10 @@ export const useJuryForm = (jury, onSuccess) => {
     try {
       if (jury) {
         // Mise à jour
-        await juryService.update(jury.id, formData);
+        await getAPI.updateJury(jury.id, formData);
       } else {
         // Création
-        await juryService.invite(formData);
+        await getAPI.inviteJury(formData);
       }
       onSuccess?.();
     } catch (error) {

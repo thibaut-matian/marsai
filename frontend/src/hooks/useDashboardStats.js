@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from 'react';
+import getAPI from '../services/getAPI';
 
 const useDashboardStats = () => {
   const [stats, setStats] = useState({
@@ -17,10 +17,7 @@ const useDashboardStats = () => {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem('token');
-        const response = await axios.get('/api/admin/dashboard/stats', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const response = await getAPI.getDashboardStats();
         setStats(response.data || {
           totalJuries: 0,
           activeJuries: 0,
