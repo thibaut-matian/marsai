@@ -18,7 +18,7 @@ export default function Header() {
 
     useEffect(() => {
         const handleScroll = () => {
-            if (window.scrollY > 500) {
+            if (window.scrollY > 400) {
                 setShowLogo(true);
             } else {
                 setShowLogo(false);
@@ -97,6 +97,12 @@ export default function Header() {
                     
                     {/* Liens de navigation */}
                     <nav className="flex flex-col items-center space-y-8 text-white">
+                         <Link 
+                            to="/" 
+                            onClick={() => setIsOpen(false)}
+                            className="text-2xl font-light hover:text-gray-400 transition-colors"
+                        >Accueil
+                        </Link>
                         <Link 
                             to="/planning" 
                             onClick={() => setIsOpen(false)}
