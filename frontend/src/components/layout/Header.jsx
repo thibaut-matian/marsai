@@ -1,9 +1,10 @@
 import React, { useState, useEffect, use } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const [showLogo, setShowLogo] = useState(false);
+    const navigate = useNavigate();
 
     // Empêcher le scroll du body quand le menu est ouvert
     useEffect(() => {
@@ -30,6 +31,8 @@ export default function Header() {
         };
     }, []);
 
+    
+
     return (
         <>
             {/* Barre de navigation Principale (Visible tout le temps) */}
@@ -51,7 +54,9 @@ export default function Header() {
                         <li><Link to="/planning">Planning</Link></li>
                         <li><Link to="/FAQ">FAQ</Link></li>
                         <li className="ml-4">
-                            <button className="bg-white text-black hover:bg-gray-200 px-4 py-2 rounded-md font-medium transition-colors">
+                            <button 
+                            onClick={() => navigate('/submit-movie')}
+                            className="bg-white text-black hover:bg-gray-200 px-4 py-2 rounded-md font-medium transition-colors">
                                 Soumettre un film
                             </button>
                         </li>
@@ -100,7 +105,7 @@ export default function Header() {
                         </Link>
                         
                         <Link 
-                            to="/" 
+                            to="/FAQ" 
                             onClick={() => setIsOpen(false)}
                             className="text-2xl font-light hover:text-gray-400 transition-colors"
                         >
@@ -112,10 +117,10 @@ export default function Header() {
                     {/* Bouton d'action principal */}
                     <div className="pt-4">
                         <button 
-                            onClick={() => setIsOpen(false)}
+                            onClick={() => navigate('/submission')}
                             className="bg-white text-black px-8 py-3 rounded-md font-medium text-lg hover:scale-105 transition-transform"
                         >
-                            Submit Project
+                            Soumettre un film
                         </button>
                     </div>
                 </div>
