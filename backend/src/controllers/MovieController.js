@@ -6,6 +6,7 @@ const { sendMailToDirector } = require("../services/emailService");
 const fs = require("fs").promises;
 const path = require("path");
 const jwt = require("jsonwebtoken");
+const { Readable } = require("stream"); 
 
 class MovieController {
   
