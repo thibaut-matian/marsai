@@ -1,21 +1,24 @@
+import teaserVideo from '../assets/videos/Teaser.mp4';
+
 export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="hero min-h-screen bg-base-200">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold">Bienvenue sur Marsai</h1>
-            <p className="py-6">
-              Découvrez une plateforme moderne et innovante conçue pour vous offrir la meilleure expérience possible.
-            </p>
-            <button className="btn btn-primary">Commencer</button>
+      <div className="hero min-h-screen text-white">
+        <video autoPlay muted loop className="absolute inset-0 w-full h-full object-cover z-0 ">
+          <source src={teaserVideo} type="video/mp4"/>
+        </video>
+        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black to-transparent z-5"></div>
+        <div className="hero-content relative z-10">
+          <div className="max-w-full text-center">
+            <h1 className="text-5xl font-bold pb-70 pt-20">Bienvenue sur Marsai</h1>
+            <button className="text-lg border shadow-lg border-white/80 bg-white/10 backdrop-blur-md rounded-lg px-6 py-3 hover:bg-white hover:text-black transition-colors">Commencer</button>
           </div>
         </div>
       </div>
 
       {/* Features Section */}
-      <div className="py-16 bg-base-100">
+      <div className="py-16 bg-black">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Nos Services</h2>
           
