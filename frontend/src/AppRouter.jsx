@@ -12,7 +12,6 @@ function AppContent() {
 
   return (
     <>
-      {/* Header visible SEULEMENT si ce n'est PAS une route admin */}
       {!isAdminRoute && <Header />}
       
       <Routes>
