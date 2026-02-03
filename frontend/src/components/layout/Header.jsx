@@ -18,7 +18,9 @@ export default function Header() {
 
     useEffect(() => {
         const handleScroll = () => {
-            if (window.scrollY > 400) {
+            const isPageScrollable = document.documentElement.scrollHeight > window.innerHeight;
+
+            if (window.scrollY > 400 || !isPageScrollable ) {
                 setShowLogo(true);
             } else {
                 setShowLogo(false);
