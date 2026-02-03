@@ -26,5 +26,12 @@ function AppContent() {
   );
 }
 
+function AppRouter() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
+  );
+}
 
 export default AppRouter;
