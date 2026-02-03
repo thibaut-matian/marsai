@@ -1,8 +1,34 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
+import axios from 'axios';
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const form = new FormData(e.target);
+    const email = form.get("email");
+    const password = form.get("password");
+    console.log("Submitting login form", form);
+    console.log("form data:", { email, password });
+
+  try {
+    const response = await axios.post('http://localhost:5173/auth/login', {
+      email,
+      password
+    });
+    localStorage.setItem('token', response.data.token);
+    localStorage.setItem('userRole', response.data.role);
+    alert('Connexion réussie !');
+    navigate("/admin/dashboard");
+  } catch (error) {
+    console.error('Erreur lors de la connexion :', error);
+    setError(error.response?.data?.message || 'Erreur lors de la connexion');
+  }};
 
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
@@ -17,6 +43,7 @@ export default function LoginForm() {
           <form action="#" method="POST" className="space-y-6" onSubmit={handleSubmit}>
             {/* Champ email */}
             <div>
+              <p className="text-red-500">{error}</p>
               <label htmlFor="email" className="block text-sm/6 font-medium text-gray-100">
                 Adresse email
               </label>
@@ -26,6 +53,7 @@ export default function LoginForm() {
                   name="email"
                   type="email"
                   required
+                  // onChange={(e) => setEmail(e.target.value)}
                   autoComplete="email"
                   className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
                 />
@@ -50,6 +78,7 @@ export default function LoginForm() {
                   name="password"
                   type={showPassword ? "text" : "password"}
                   required
+                  // onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
                   className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6 pr-10"
                 />
