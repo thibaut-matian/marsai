@@ -1,8 +1,6 @@
-import AdminLayout from '../../components/admin/layout/AdminLayout.jsx';
-
 const Dashboard = () => {
   return (
-    <AdminLayout>
+    <>
       <h1 className="text-3xl font-bold mb-4">Test du Dashboard</h1>
       
       <div className="space-y-4">
@@ -16,7 +14,7 @@ const Dashboard = () => {
           </p>
         ))}
       </div>
-    </AdminLayout>
+    </>
   );
 };
 
