@@ -5,6 +5,7 @@ import Planning from "./pages/Planning.jsx";
 import Dashboard from "./pages/admin/Dashboard.jsx";
 import AdminLayout from "./components/admin/layout/AdminLayout.jsx";
 import MainLayout from "./components/layout/MainLayout.jsx";
+import Submission from "./pages/Submission.jsx";
 
 function AppRouter() {
   return (
@@ -15,6 +16,7 @@ function AppRouter() {
           <Route path="/" element={<Home />} />
           <Route path="/FAQ" element={<FAQ />} />
           <Route path="/planning" element={<Planning />} />
+          <Route path="/submit-movie" element={<Submission />} />
         </Route>
 
         {/* Admin routes using AdminLayout (Outlet) */}
