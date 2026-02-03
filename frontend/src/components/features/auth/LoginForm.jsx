@@ -14,7 +14,7 @@ export default function LoginForm() {
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <div className="bg-white/10 border border-white/20 rounded-lg p-8 shadow-lg backdrop-blur-sm">
-          <form action="#" method="POST" className="space-y-6">
+          <form action="#" method="POST" className="space-y-6" onSubmit={handleSubmit}>
             {/* Champ email */}
             <div>
               <label htmlFor="email" className="block text-sm/6 font-medium text-gray-100">
