@@ -56,7 +56,8 @@ export default function Home() {
           </p>
         </div>
       </div>
-      <div ref={scrollRef} className="relative flex overflow-x-auto snap-x snap-mandatory gap-8 bg-black p-10">
+      <div className="relative bg-black p-10">
+        <div ref={scrollRef} className="flex overflow-x-auto snap-x snap-mandatory gap-8">
             {/* Jury 1 */}
             <div className="card bg-base-200 h-100 min-w-72 snap-center">
               <div className="card-body h-100" style={{ backgroundImage: `url(${juryImage1})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
@@ -127,12 +128,13 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <button onClick={() => scrollRef.current.scrollBy({ left: -300, behavior: 'smooth' })} className="absolute left-4 top-1/2 transform -translate-y-1/2 btn btn-circle btn-primary z-10">
-              <ChevronLeft size={20} />
-            </button>
-            <button onClick={() => scrollRef.current.scrollBy({ left: 300, behavior: 'smooth' })} className="absolute right-4 top-1/2 transform -translate-y-1/2 btn btn-circle btn-primary z-10">
-              <ChevronRight size={20} />
-            </button>
+        </div>
+        <button onClick={() => scrollRef.current.scrollBy({ left: -325, behavior: 'smooth' })} className="absolute left-5 top-1/2 transform -translate-y-1/2 btn btn-circle z-10">
+          <ChevronLeft size={20} />
+        </button>
+        <button onClick={() => scrollRef.current.scrollBy({ left: 325, behavior: 'smooth' })} className="absolute right-5 top-1/2 transform -translate-y-1/2 btn btn-circle z-10">
+          <ChevronRight size={20} />
+        </button>
       </div>
       <hr/>
 
