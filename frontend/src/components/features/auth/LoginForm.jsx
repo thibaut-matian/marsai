@@ -66,11 +66,7 @@ export default function LoginForm() {
                 <label htmlFor="password" className="block text-sm/6 font-medium text-gray-100">
                   Mot de passe
                 </label>
-                <div className="text-sm">
-                  <a href="#" className="font-semibold text-indigo-400 hover:text-indigo-300">
-                    Mot de passe oublié ?
-                  </a>
-                </div>
+                
               </div>
               <div className="mt-2 relative">
                 <input
@@ -94,6 +90,11 @@ export default function LoginForm() {
                   )}
                 </button>
               </div>
+              <div className="text-sm mt-2">
+                  <a href="#" className="font-semibold text-indigo-400 hover:text-indigo-300">
+                    Mot de passe oublié ?
+                  </a>
+                </div>
             </div>
 
             {/* Bouton de soumission */}
