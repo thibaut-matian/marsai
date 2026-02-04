@@ -17,6 +17,7 @@ function AppRouter() {
           <Route path="/FAQ" element={<FAQ />} />
           <Route path="/planning" element={<Planning />} />
           <Route path="/submit-movie" element={<Submission />} />
+          <Route path="/submission" element={<Submission />} />
         </Route>
 
         {/* Admin routes using AdminLayout (Outlet) */}
