@@ -125,7 +125,7 @@ export default function Header() {
                     {/* Bouton d'action principal */}
                     <div className="pt-4">
                         <button 
-                            onClick={() => navigate('/submission')}
+                            onClick={() => navigate('/submit-movie')}
                             className="bg-white text-black px-8 py-3 rounded-md font-medium text-lg hover:scale-105 transition-transform"
                         >
                             Soumettre un film
