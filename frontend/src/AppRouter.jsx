@@ -18,14 +18,15 @@ function AppRouter() {
           <Route path="/FAQ" element={<FAQ />} />
           <Route path="/planning" element={<Planning />} />
           <Route path="/submit-movie" element={<Submission />} />
-          <Route path="/login" element={<LoginForm />} />
         </Route>
 
         {/* Admin routes using AdminLayout (Outlet) */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
         </Route>
-      </Routes>
+        
+          <Route path="/login" element={<LoginForm />} />
+        </Routes> 
     </Router>
   );
 }
