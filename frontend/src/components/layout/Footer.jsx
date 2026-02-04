@@ -5,7 +5,7 @@ import MobileFilmLogo from "../../assets/img/logoMobile.png";
 
 export default function Footer() {
     return (
-        <footer className="flex flex-col bg-black-400 border-t border-white/5 p-6 text-center">
+        <footer className="flex flex-col bg-neutral-800 border-t border-white/5 p-6 text-center color-white">
             <div className="flex flex-col items-center mb-4 w-80 mx-auto justify-center gap-4 md:flex-row">
                 <img src={MobileFilmLogo} alt="Logo MobileFilm" className="h-25 w-45 md:h-34 md:w-54 object-contain" />
                 <p className="text-2xl font-bold">X</p>
