@@ -1,4 +1,4 @@
-import { Home, Clapperboard, Users, Settings, LogOut } from 'lucide-react';
+import { Home, Clapperboard, Users, Settings, LogOut, LayoutDashboard, Film } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
@@ -26,25 +26,15 @@ const Sidebar = () => {
 
       {/* 2. Liste des Liens de Navigation */}
       <nav className="flex-1 px-4 space-y-2">
-        <NavLink to="/admin/dashboard" className={({ isActive }) => isActive ? activeStyle : inactiveStyle}>
-          <Home size={20} /> 
-          <span>Vue d'ensemble</span>
-        </NavLink>
-
-        <NavLink to="/admin/movies" className={({ isActive }) => isActive ? activeStyle : inactiveStyle}>
-          <Clapperboard size={20} /> 
-          <span>Films reçus</span>
-        </NavLink>
-
-        <NavLink to="/admin/jury" className={({ isActive }) => isActive ? activeStyle : inactiveStyle}>
-          <Users size={20} /> 
-          <span>Gestion Jury</span>
-        </NavLink>
-
-        <NavLink to="/admin/settings" className={({ isActive }) => isActive ? activeStyle : inactiveStyle}>
-          <Settings size={20} /> 
-          <span>Paramètres</span>
-        </NavLink>
+        {['/admin/dashboard', '/admin/movies', '/admin/jury-management', '/admin/settings'].map((path) => (
+          <NavLink key={path} to={path} className={({ isActive }) => isActive ? activeStyle : inactiveStyle}>
+            {path === '/admin/dashboard' && <Home size={20} />}
+            {path === '/admin/movies' && <Clapperboard size={20} />}
+            {path === '/admin/jury-management' && <Users size={20} />}
+            {path === '/admin/settings' && <Settings size={20} />}
+            <span>{path === '/admin/dashboard' ? 'Vue d\'ensemble' : path === '/admin/movies' ? 'Films reçus' : path === '/admin/jury-management' ? 'Gestion Jury' : 'Paramètres'}</span>
+          </NavLink>
+        ))}
       </nav>
 
       {/* 3. Footer du Menu (Déconnexion) */}
