@@ -5,7 +5,7 @@ import Planning from "./pages/Planning.jsx";
 import Dashboard from "./pages/admin/Dashboard.jsx";
 import AdminLayout from "./components/admin/layout/AdminLayout.jsx";
 import MainLayout from "./components/layout/MainLayout.jsx";
-import Submission from "./pages/Submission.jsx";
+import Submission from "./components/submission/Submission.jsx";
 import DashboardJury from "./pages/jury/DashboardJury.jsx";
 
 function AppRouter() {
@@ -17,6 +17,7 @@ function AppRouter() {
           <Route path="/" element={<Home />} />
           <Route path="/FAQ" element={<FAQ />} />
           <Route path="/planning" element={<Planning />} />
+          <Route path="/submission" element={<Submission />} />
           <Route path="/submit-movie" element={<Submission />} />
         </Route>
 
