@@ -14,7 +14,7 @@ export default function Home() {
         <video autoPlay muted loop className="absolute inset-0 w-full h-full object-cover z-0 ">
           <source src={teaserVideo} type="video/mp4"/>
         </video>
-        <div className="absolute bottom-0 left-0 w-full h-60 bg-gradient-to-t from-black to-transparent z-10 pt-70"></div>
+        <div className="absolute bottom-0 left-0 w-full h-60 bg-linear-to-t from-black to-transparent z-10 pt-70"></div>
         <div className="hero-content relative z-10">
           <div className="max-w-full text-center">
             <h1 className="text-5xl font-bold pb-60 pt-20">Bienvenue sur Marsai</h1>
@@ -40,7 +40,7 @@ export default function Home() {
           <p className="text-center max-w-2xl mx-auto text-white">
             1. ........................................................................... PORTER DES LUNETTES<br />
             2. ........................................................... AIMER LES BLAGUES DE BEAUF<br />
-            3. ........................................................................... S'AVOIR IMITER DYLAN<br />
+            3. ........................................................................... SAVOIR IMITER DYLAN<br />
             4. ................................................................ S'APPELER THIBAUT MATIAN<br />
           </p>
         </div>
@@ -63,7 +63,7 @@ export default function Home() {
               <div className="card-body h-100" style={{ backgroundImage: `url(${juryImage1})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
                 <h2 className="card-title pt-75 text-white relative z-10">Etchebest</h2>
                 <p className="text-white relative z-10">C'est qui le patron</p>
-                <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent min-w-full"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-black to-transparent min-w-full"></div>
                 <div className="card-actions justify-end">
                 </div>
               </div>
@@ -73,7 +73,7 @@ export default function Home() {
               <div className="card-body h-100" style={{ backgroundImage: `url(${juryImage2})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
                 <h2 className="card-title pt-75 text-white relative z-10">Le patron</h2>
                 <p className="text-white relative z-10">C'est moi</p>
-                <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
                 <div className="card-actions justify-end">
                 </div>
               </div>
@@ -83,7 +83,7 @@ export default function Home() {
               <div className="card-body h-100" style={{ backgroundImage: `url(${juryImage3})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
                 <h2 className="card-title pt-75 text-white relative z-10">Un chat</h2>
                 <p className="text-white relative z-10">Miaou</p>
-                <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
                 <div className="card-actions justify-end">
                 </div>
               </div>
@@ -93,7 +93,7 @@ export default function Home() {
               <div className="card-body h-100" style={{ backgroundImage: `url(${juryImage4})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
                 <h2 className="card-title pt-75 text-white relative z-10">Les Winx</h2>
                 <p className="text-white relative z-10">La magiiiiiie</p>
-                <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
                 <div className="card-actions justify-end">
                 </div>
               </div>
@@ -103,7 +103,7 @@ export default function Home() {
               <div className="card-body h-100" style={{ backgroundImage: `url(${juryImage1})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
                 <h2 className="card-title pt-75 text-white relative z-10">Etchebest</h2>
                 <p className="text-white relative z-10">C'est qui le patron</p>
-                <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent min-w-full"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-black to-transparent min-w-full"></div>
                 <div className="card-actions justify-end">
                 </div>
               </div>
@@ -113,7 +113,7 @@ export default function Home() {
               <div className="card-body h-100" style={{ backgroundImage: `url(${juryImage2})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
                 <h2 className="card-title pt-75 text-white relative z-10">Le patron</h2>
                 <p className="text-white relative z-10">C'est moi</p>
-                <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
                 <div className="card-actions justify-end">
                 </div>
               </div>
@@ -123,7 +123,7 @@ export default function Home() {
               <div className="card-body h-100" style={{ backgroundImage: `url(${juryImage3})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
                 <h2 className="card-title pt-75 text-white relative z-10">Un chat</h2>
                 <p className="text-white relative z-10">Miaou</p>
-                <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
                 <div className="card-actions justify-end">
                 </div>
               </div>

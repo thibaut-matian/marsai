@@ -4,6 +4,7 @@ import LoginForm from "./components/features/auth/LoginForm.jsx";
 import FAQ from "./pages/FAQ.jsx";
 import Planning from "./pages/Planning.jsx";
 import Dashboard from "./pages/admin/Dashboard.jsx";
+import JuryManagement from "./pages/admin/JuryManagement.jsx";
 import AdminLayout from "./components/admin/layout/AdminLayout.jsx";
 import MainLayout from "./components/layout/MainLayout.jsx";
 import Submission from "./pages/Submission.jsx";
@@ -18,14 +19,17 @@ function AppRouter() {
           <Route path="/FAQ" element={<FAQ />} />
           <Route path="/planning" element={<Planning />} />
           <Route path="/submit-movie" element={<Submission />} />
-          <Route path="/login" element={<LoginForm />} />
         </Route>
 
         {/* Admin routes using AdminLayout (Outlet) */}
         <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="jury-management" element={<JuryManagement />} />
         </Route>
-      </Routes>
+        
+          <Route path="/login" element={<LoginForm />} />
+        </Routes> 
     </Router>
   );
 }
