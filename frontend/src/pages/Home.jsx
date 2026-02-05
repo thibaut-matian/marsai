@@ -162,21 +162,6 @@ Découvrez les experts qui évaluent nos projets et garantissent la qualité de 
 </div>
 <hr/>
 
-{/* CTA Section */}
-<div className="hero py-12 md:py-16 bg-base-300 bg-center bg-black">
-<div className="hero-content text-center text-white px-4">
-<div className="max-w-md">
-<h2 className="text-2xl md:text-3xl font-bold mb-4">Prêt à commencer ?</h2>
-<p className="text-sm md:text-base mb-6">
-Rejoignez-nous dès aujourd'hui et profitez de tous nos avantages.
-</p>
-<div className="flex flex-col sm:flex-row gap-4 justify-center">
-<button className="btn btn-primary btn-sm md:btn-md">S'inscrire</button>
-<button className="btn btn-outline btn-sm md:btn-md">Nous contacter</button>
-</div>
-</div>
-</div>
-</div>
 </div>
 );
 }
