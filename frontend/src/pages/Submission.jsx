@@ -185,24 +185,24 @@ if (validateStep(step)) {
 };
 
 return (
-<div className="min-h-screen bg-gray-900 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-purple-900 via-gray-900 to-black text-white p-4 font-sans flex flex-col md:items-center md:justify-center md:py-20 font-light">
+<div className="min-h-screen bg-[radial-linear(ellipse_at_top_right,var(--tw-linear-stops))] from-purple-900 via-gray-900 to-black text-white p-4 font-sans flex flex-col md:items-center md:justify-center md:py-20 font-light">
   
   <div className="w-full max-w-4xl backdrop-blur-xl bg-white/10 border border-white/20 p-6 md:p-10 rounded-3xl shadow-2xl relative overflow-hidden">
     
     {/* Header */}
     <div className="mb-10">
-      <h1 className="text-4xl font-bold text-center mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 drop-shadow-sm">
+      <h1 className="text-4xl font-bold text-center mb-6 bg-clip-text text-transparent bg-linear-to-r from-blue-400 to-purple-400 drop-shadow-sm">
         Candidature MarsAI
       </h1>
       <div className="flex gap-3 mb-3 px-2">
           {[1, 2, 3, 4].map((num) => (
-            <div key={num} className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${step >= num ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]' : 'bg-white/20'}`}></div>
+            <div key={num} className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${step >= num ? 'bg-linear-to-r from-blue-500 to-purple-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]' : 'bg-white/20'}`}></div>
           ))}
       </div>
       <p className="text-right text-sm text-blue-200/70 font-medium tracking-wider">ÉTAPE {step} / 4</p>
     </div>
 
-    <form onSubmit={(e) => e.preventDefault()} className="flex-1 min-h-[400px]">
+    <form onSubmit={(e) => e.preventDefault()} className="flex-1 min-h-100">
       
       {/* --- ÉTAPE 1 : IDENTITÉ --- */}
       {step === 1 && (
@@ -212,7 +212,7 @@ return (
             <label className="block text-sm text-blue-200/80 mb-3 ml-1">Civilité</label>
             <div className="flex bg-black/20 border border-white/10 p-1.5 rounded-2xl backdrop-blur-sm">
               {['M', 'Mme', 'Iel'].map((civ) => (
-                <button key={civ} type="button" onClick={() => setCustomValue('civilite', civ)} className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all duration-300 ${formData.civilite === civ ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' : 'text-white/60 hover:bg-white/10 hover:text-white'}`}>{civ}</button>
+                <button key={civ} type="button" onClick={() => setCustomValue('civilite', civ)} className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all duration-300 ${formData.civilite === civ ? 'bg-linear-to-r from-blue-600 to-purple-600 text-white shadow-lg' : 'text-white/60 hover:bg-white/10 hover:text-white'}`}>{civ}</button>
               ))}
             </div>
           </div>
@@ -333,7 +333,7 @@ return (
                 <input type="file" multiple accept="image/*" onChange={handleStillsChange} className="w-full text-sm text-gray-400 file:py-2 file:px-4 file:rounded-full file:bg-white/10 file:text-white" />
                 <div className="flex gap-2 mt-2">
                     {formData.stillsFiles.map((file, i) => (
-                        <div key={i} className="text-xs bg-white/10 px-2 py-1 rounded text-white/70 truncate max-w-[100px]">{file.name}</div>
+                        <div key={i} className="text-xs bg-white/10 px-2 py-1 rounded text-white/70 truncate max-w-25">{file.name}</div>
                     ))}
                 </div>
               </div>
@@ -421,7 +421,7 @@ return (
         {step > 1 && <button onClick={() => setStep(step - 1)} className="w-1/3 py-4 rounded-2xl border border-white/20 text-white/70 font-bold hover:bg-white/10 hover:text-white transition-all">← Retour</button>}
         <button 
           onClick={handleNext} 
-          className={`flex-1 py-4 rounded-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-[length:200%_auto] hover:bg-[position:right_center] text-white font-bold shadow-[0_5px_20px_-5px_rgba(99,102,241,0.6)] transition-all duration-500 ${step === 1 ? 'w-full' : ''}`}
+          className={`flex-1 py-4 rounded-2xl bg-linear-to-r from-blue-600 via-purple-600 to-blue-600 bg-size-[200%_auto] hover:bg-position-[right_center] text-white font-bold shadow-[0_5px_20px_-5px_rgba(99,102,241,0.6)] transition-all duration-500 ${step === 1 ? 'w-full' : ''}`}
         >
           {step === 4 ? "Envoyer " : "Suivant →"}
         </button>
