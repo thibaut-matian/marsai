@@ -1,5 +1,7 @@
 import { useRef } from 'react';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import MovieTimeline from '../components/features/home/timeline';
 import teaserVideo from '../assets/videos/Teaser.mp4';
 import juryImage1 from '../assets/img/test-etchebest.jpg';
 import juryImage2 from '../assets/img/test-lui.jpg';
