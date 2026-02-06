@@ -18,7 +18,9 @@ export default function Header() {
 
     useEffect(() => {
         const handleScroll = () => {
-            if (window.scrollY > 400) {
+            const isPageScrollable = document.documentElement.scrollHeight > window.innerHeight;
+
+            if (window.scrollY > 400 || !isPageScrollable ) {
                 setShowLogo(true);
             } else {
                 setShowLogo(false);
@@ -123,7 +125,7 @@ export default function Header() {
                     {/* Bouton d'action principal */}
                     <div className="pt-4">
                         <button 
-                            onClick={() => navigate('/submission')}
+                            onClick={() => navigate('/submit-movie')}
                             className="bg-white text-black px-8 py-3 rounded-md font-medium text-lg hover:scale-105 transition-transform"
                         >
                             Soumettre un film
