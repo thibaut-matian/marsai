@@ -1,42 +1,18 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
-import axios from 'axios';
+import { useAuth } from '../../../hooks/useAuth';
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const { handleLogin, error, isLoading } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     const form = new FormData(e.target);
-    const email = form.get("email");
-    const password = form.get("password");
+    const email = form.get('email');
+    const password = form.get('password');
 
-    try {
-      const response = await axios.post('http://localhost:3000/api/auth/login', {
-        email,
-        password
-      });
-
-      // Stocker le token et le rôle
-      localStorage.setItem('token', response.data.token);
-      const userRole = response.data.role;
-
-      // Redirection en fonction du rôle
-      if (userRole === 'admin') {
-        navigate("/admin/dashboard");
-      } else if (userRole === 'jury') {
-        navigate("/jury/dashboard");
-      } else {
-        throw new Error("Rôle non reconnu");
-      }
-    } catch (error) {
-      console.error('Erreur lors de la connexion :', error);
-      setError(error.response?.data?.message || 'Erreur lors de la connexion');
-    }
+    await handleLogin(email, password);
   };
 
   return (
@@ -107,9 +83,10 @@ export default function LoginForm() {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                disabled={isLoading}
+                className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:opacity-50"
               >
-                Se connecter
+                {isLoading ? 'Connexion en cours...' : 'Se connecter'}
               </button>
             </div>
           </form>

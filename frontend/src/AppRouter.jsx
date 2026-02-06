@@ -8,6 +8,7 @@ import JuryManagement from "./pages/admin/JuryManagement.jsx";
 import AdminLayout from "./components/admin/layout/AdminLayout.jsx";
 import MainLayout from "./components/layout/MainLayout.jsx";
 import Submission from "./pages/Submission.jsx";
+import LoginJury from "./pages/jury/Login.jsx";
 import DashboardJury from "./pages/jury/DashboardJury.jsx";
 
 function AppRouter() {
