@@ -3,10 +3,10 @@ import NavbarJury from "../../components/layout/NavbarJury.jsx";
 import videoSample from "../../assets/videos/Teaser.mp4"; 
 
 // Import de la Logique (Le Hook qu'on vient de créer)
-import { useDashboardJury } from "../../components/layout/hooks/useDashboardJury.js";
+import { useDashboardJury } from "../../hooks/useDashboardJury.js";
 
 export default function DashboardJury() {
-  // 👉 On récupère les données et fonctions depuis le hook
+  // On récupère les données et fonctions depuis le hook
   const { decision, setDecision, film, formatDuration } = useDashboardJury();
 
   return (

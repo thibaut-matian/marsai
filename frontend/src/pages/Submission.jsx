@@ -1,8 +1,8 @@
-import { useSubmission } from "../../components/layout/hooks/useSubmission";
-import StepIdentity from "./StepIdentity";
-import StepContact from "./StepContact";
-import StepAssets from "./StepAssets";
-import StepDetails from "./StepDetails";
+import { useSubmission } from "../hooks/useSubmission";
+import StepIdentity from "../components/submission/StepIdentity";
+import StepContact from "../components/submission/StepContact";
+import StepAssets from "../components/submission/StepAssets";
+import StepDetails from "../components/submission/StepDetails";
 
 export default function Submission() {
 const { 
