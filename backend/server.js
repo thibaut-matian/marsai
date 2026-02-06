@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
     res.json({ message: 'Bienvenue sur l\'API' });
 });
 
-app.post('/api/auth/login', async (req, res) => { // Ajout du slash / au début
+app.post('/api/auth/login', async (req, res) => { 
   const { email, password } = req.body;
   
   console.log("1. Reçu du front:", { email, password });
@@ -26,11 +26,12 @@ app.post('/api/auth/login', async (req, res) => { // Ajout du slash / au début
   if (!email || !password) return res.status(400).json({ message: 'Champs manquants' });
 
   const mockUser = {
-      _id: "user_123",
       email: "admin@test.com",
+      password: "123456",
+      role: "admin"
   };
 
-  if (email !== mockUser.email) {
+  if (email !== mockUser.email || password !== mockUser.password) {
       return res.status(401).json({ message: 'Utilisateur inconnu (Mock)' });
   }
 
@@ -39,15 +40,15 @@ app.post('/api/auth/login', async (req, res) => { // Ajout du slash / au début
   // Ici, on compare le mot de passe envoyé avec le hash (pour l'exercice, on va accepter "123456" sans hash valide pour simplifier le test si tu n'as pas généré de vrai hash)
   // Pour que ça marche VRAIMENT avec bcrypt maintenant, il faudrait un vrai hash.
   // SIMPLIFICATION POUR CE TEST DE CONNEXION :
-//   const match = (password === "123456"); 
+//    const match = (password === "123456"); 
   
 
-const secret = process.env.JWT_SECRET || 'secret_par_defaut';
-  // Génération du token
-  const token = jwt.sign({ id: mockUser._id }, secret, { expiresIn: '1h' });
+// const secret = process.env.JWT_SECRET || 'secret_par_defaut';
+//   // Génération du token
+//   const token = jwt.sign({ id: mockUser._id }, secret, { expiresIn: '1h' });
 
-  console.log("2. Connexion réussie, envoi du token");
-  return res.json({ token, user: { id: mockUser._id, email: mockUser.email } });
+  console.log("2. Connexion réussie, envoi du rôle");
+  return res.json({ role: mockUser.role });
 });
 
 // Gestion des erreurs 404
