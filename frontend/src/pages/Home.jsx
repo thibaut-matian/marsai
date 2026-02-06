@@ -1,13 +1,10 @@
 import { useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import teaserVideo from '../assets/videos/Teaser.mp4';
 import juryImage1 from '../assets/img/test-etchebest.jpg';
 import juryImage2 from '../assets/img/test-lui.jpg';
 import juryImage3 from '../assets/img/test-chat.png';
 import juryImage4 from '../assets/img/test-winx.png';
-import MovieTimeline from '../components/home/timeline';
-
 export default function Home() {
   const navigate = useNavigate();
   const scrollRef = useRef(null);
@@ -191,10 +188,6 @@ export default function Home() {
           <ChevronRight size={20} />
         </button>
       </div>
-      <hr />
-
-
-
     </div>
   );
 }
