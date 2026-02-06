@@ -7,6 +7,7 @@ import Dashboard from "./pages/admin/Dashboard.jsx";
 import AdminLayout from "./components/admin/layout/AdminLayout.jsx";
 import MainLayout from "./components/layout/MainLayout.jsx";
 import Submission from "./pages/Submission.jsx";
+import LoginJury from "./pages/jury/Login.jsx";
 
 function AppRouter() {
   return (
@@ -25,8 +26,8 @@ function AppRouter() {
           <Route path="dashboard" element={<Dashboard />} />
         </Route>
         
-          <Route path="/login" element={<LoginForm />} />
-        </Routes> 
+          <Route path="/login" element={<LoginJury />} />
+        </Routes>
     </Router>
   );
 }
