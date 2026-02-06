@@ -1,6 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
+import { Plus, Minus } from 'lucide-react';
+
 
 export default function FAQ() {
+
+  // State pour savoir quelle question est ouverte (null = aucune)
+  const [activeIndex, setActiveIndex] = useState(null);
 
   const questions = [
     "Quels sont les prix décernés lors du festival ?", 
@@ -15,20 +20,36 @@ export default function FAQ() {
     "Où puis-je consulter le règlement et les conditions de participation ?",
     ];
 
+    // Fonction pour gérer le clic
+  const toggleQuestion = (index) => {
+    // Si on clique sur la question déjà ouverte, on la ferme (null)
+    if (activeIndex === index) {
+      setActiveIndex(null);
+    } else {
+      // Sinon, on ouvre la nouvelle question
+      setActiveIndex(index);
+    }
+  };
+
     return (
-        <>
-        <div>
-            <h1>Foire aux Questions (FAQ)</h1>
-            <p>Bienvenue sur la page FAQ. Ici, vous trouverez les réponses aux questions les plus fréquentes.</p>
-        </div>
+        <div className="mb-10 mt-10 text-lg flex justify-between items-center flex-col">
+            <h1 className="text-center text-white">FAQ</h1>
+            <p className="text-center text-white text-3xl mb-10">Foire aux Questions</p>
 
         {questions.map((question, index) =>
-        <div key={index} tabIndex={0} className="collapse collapse-plus bg-base-100 border-base-300 border">
-         <div className="collapse-title font-semibold">{question}</div>
-         <div className="collapse-content text-sm"> Click the "Sign Up" button in the top right corner and follow the registration process.</div>
+        <div 
+          key={index} 
+          className={`border-b-1 border-gray-700 collapse mb-2 w-full ${activeIndex === index ? "collapse-open" : "collapse-close"}`}
+          onClick={() => toggleQuestion(index)}
+          >
+         <div className="collapse-title text-white cursor-pointer text-base flex justify-between items-center w-full">
+           <span className="flex-1">{question}</span>
+           {activeIndex === index ? <Minus className="text-white ml-4" size={20} /> : <Plus className="text-white ml-5" size={20} />}
+         </div>
+         <div className="collapse-content text-sm text-gray-400"> Click the "Sign Up" button in the top right corner and follow the registration process.</div>
        </div>
     )}
        
-        </>
+    </div>
     );
 }
