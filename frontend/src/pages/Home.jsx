@@ -71,6 +71,37 @@ Commencer
   </div>
 </div>
 
+{/* Section Récompenses */}
+<div className="py-12 md:py-16 bg-black overflow-hidden">
+  <div className="container mx-auto px-4">
+    <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 text-white uppercase tracking-widest">
+      Récompenses
+    </h2>
+    
+    <div className="max-w-2xl mx-auto flex flex-col gap-4 md:gap-6">
+      {[
+        "Un voyage tout compris à Maubeuge",
+        "Une collection de blagues de Philippe Etchebest",
+        "Le droit de porter des lunettes de soleil en intérieur",
+        "Une photo dédicacée de Thibaut"
+      ].map((recompense, index) => (
+        <div key={index} className="flex items-baseline text-white text-sm md:text-base w-full">
+          {/* Numéro */}
+          <span className="font-bold whitespace-nowrap">{index + 1}.</span>
+          
+          {/* Les pointillés */}
+          <div className="flex-grow border-b border-dotted border-white/40 mx-2 mb-1"></div>
+          
+          {/* Texte de la récompense */}
+          <span className="font-medium uppercase text-right leading-tight">
+            {recompense}
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+
 {/*Jury Section */}
 <div className="py-12 md:py-16 bg-black">
 <div className="container mx-auto px-4">
@@ -161,6 +192,8 @@ Découvrez les experts qui évaluent nos projets et garantissent la qualité de 
 </button>
 </div>
 <hr/>
+
+
 
 </div>
 );
