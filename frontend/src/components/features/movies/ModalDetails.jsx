@@ -1,8 +1,8 @@
 import { Briefcase, Clapperboard, Clock, Image, Languages, Play, Sparkles, Star, User, X } from 'lucide-react';
-import { useState } from 'react';
+import { useMovieDetails } from '../../../hooks/useMovieDetails';
 import { getFlagClass } from '../../../utils/getFlagClass';
 
-// data à remplacer par les données bdd
+// data fictive à remplacer par les données bdd, gardant le même nommage
 const movieData = {
   url: "https://www.youtube.com/watch?v=YLslsZuEaNE",
   title_vo: "L'Odyssée des Étoiles",
@@ -31,51 +31,11 @@ const movieData = {
   ]
 };
 
-const iaList = [
-  "ChatGPT",
-  "Claude",
-  "Gemini",
-  "Midjourney",
-  "DALL-E",
-  "Stable Diffusion",
-  "RunwayML",
-  "Synthesia",
-  "Sora",
-  "Pika",
-  "ElevenLabs",
-  "Murf",
-  "VALL-E",
-  "Jukebox",
-  "MusicGen",
-  "Suno",
-  "Udio",
-  "Leonardo AI",
-  "Artbreeder",
-  "Firefly"
-];
-
-// Fonction pour extraire les IAs mentionnées dans la description
-const extractIAs = (iaDescription, iaList) => {
-  if (!iaDescription) return [];
-  return iaList.filter(ia => 
-    iaDescription.toLowerCase().includes(ia.toLowerCase())
-  );
-};
-
-// Fonction pour extraire l'ID YouTube
-const getYouTubeId = (url) => {
-  const match = url?.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?]+)/);
-  return match ? match[1] : null;
-};
-
 // Utilise movieData par défaut si aucune prop n'est passée
 const ModalDetails = ({ movie = movieData, isOpen = true, onClose = () => {} }) => {
-  const [showVideo, setShowVideo] = useState(false);
+  const { showVideo, toggleVideo, detectedIAs, youtubeId } = useMovieDetails(movie);
 
   if (!isOpen || !movie) return null;
-
-  const detectedIAs = extractIAs(movie.ia, iaList);
-  const youtubeId = getYouTubeId(movie.url);
 
   return (
     <dialog className="modal modal-open">
@@ -128,7 +88,7 @@ const ModalDetails = ({ movie = movieData, isOpen = true, onClose = () => {} }) 
           {/* Bouton switch poster/vidéo */}
           <button
             className="btn btn-sm btn-white gap-1"
-            onClick={() => setShowVideo(!showVideo)}
+            onClick={toggleVideo}
           >
             {showVideo ? (
               <>

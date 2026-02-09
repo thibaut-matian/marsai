@@ -1,0 +1,22 @@
+export const iaList = [
+  "ChatGPT",
+  "Claude",
+  "Gemini",
+  "Midjourney",
+  "DALL-E",
+  "Stable Diffusion",
+  "RunwayML",
+  "Synthesia",
+  "Sora",
+  "Pika",
+  "ElevenLabs",
+  "Murf",
+  "VALL-E",
+  "Jukebox",
+  "MusicGen",
+  "Suno",
+  "Udio",
+  "Leonardo AI",
+  "Artbreeder",
+  "Firefly"
+];
