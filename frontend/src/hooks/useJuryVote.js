@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function useDashboardJury() {
+export function useJuryVote() {
   // 1. GESTION DE L'ÉTAT (Le vote)
   const [decision, setDecision] = useState(null);
 

@@ -41,15 +41,15 @@ return (
     {/* 2. CENTRE : Menu Desktop (Caché sur mobile) */}
     <div className="hidden md:flex items-center gap-8 bg-black/20 px-8 py-2 rounded-full border border-white/5">
         <Link 
-            to="/jury/dashboard" 
+            to="/jury/DashboardJury" 
             className={`text-sm font-bold uppercase tracking-widest transition-colors ${isActive('/jury/dashboard') ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
         >
             Films à noter
         </Link>
         <div className="w-1 h-1 rounded-full bg-gray-700"></div>
         <Link 
-            to="/jury/ranking" 
-            className={`text-sm font-bold uppercase tracking-widest transition-colors ${isActive('/jury/ranking') ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
+            to="/jury/RankingJury" 
+            className={`text-sm font-bold uppercase tracking-widest transition-colors ${isActive('/jury/RankingJury') ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
         >
             Mon Classement
         </Link>
@@ -125,14 +125,14 @@ return (
         {/* Navigation */}
         <nav className="flex flex-col items-center space-y-6 w-full">
             <Link 
-                to="/jury/dashboard" 
+                to="/jury/DashboardJury" 
                 onClick={() => setIsOpen(false)}
                 className={`text-xl font-light transition-colors w-full text-center py-3 border-b border-white/5 ${isActive('/jury/dashboard') ? 'text-white font-bold' : 'text-gray-400'}`}
             >
                 Films à noter
             </Link>
             <Link 
-                to="/jury/ranking" 
+                to="/jury/RankingJury" 
                 onClick={() => setIsOpen(false)}
                 className={`text-xl font-light transition-colors w-full text-center py-3 border-b border-white/5 ${isActive('/jury/ranking') ? 'text-white font-bold' : 'text-gray-400'}`}
             >
