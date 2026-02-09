@@ -42,7 +42,7 @@ const ModalDetails = ({ movie = movieData, isOpen = true, onClose = () => {} }) 
       <div className="modal-box max-w-4xl bg-black/90 text-white relative">
         {/* Bouton fermer */}
         <button
-          className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 z-10"
+          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 z-10"
           onClick={onClose}
         >
           <X className="w-5 h-5" />
@@ -51,7 +51,7 @@ const ModalDetails = ({ movie = movieData, isOpen = true, onClose = () => {} }) 
 
         </div>
         {/* Header avec poster/vidéo et infos */}
-        <div className="flex flex-col items-center gap-6">
+        <div className="flex flex-col items-center gap-6 mt-6">
           <figure className="w-full flex flex-col items-center shrink-0 relative">
             {showVideo && youtubeId ? (
               <iframe
