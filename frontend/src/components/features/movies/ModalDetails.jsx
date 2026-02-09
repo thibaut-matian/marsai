@@ -68,7 +68,7 @@ const ModalDetails = ({ movie = movieData, isOpen = true, onClose = () => {} }) 
                   <img 
                     src={movie.poster || 'https://picsum.photos/400/600'}
                     alt={movie.title_vo}
-                    className="w-full md:w-64 h-auto rounded-xl object-cover shadow-lg"
+                    className="w-full h-auto rounded-xl object-cover shadow-lg"
                   />
                 </figure>
                 {/* 8 empty divs needed for the 3D effect */}
