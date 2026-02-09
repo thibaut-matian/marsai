@@ -17,7 +17,6 @@ function AppRouter() {
           <Route path="/" element={<Home />} />
           <Route path="/FAQ" element={<FAQ />} />
           <Route path="/planning" element={<Planning />} />
-          <Route path="/submission" element={<Submission />} />
           <Route path="/submit-movie" element={<Submission />} />
         </Route>
 
