@@ -1,4 +1,4 @@
-import { Clapperboard, Clock, Image, Languages, Play, Sparkles, Star, User, X } from 'lucide-react';
+import { Briefcase, Clapperboard, Clock, Image, Languages, Play, Sparkles, Star, User, X } from 'lucide-react';
 import { useState } from 'react';
 import { getFlagClass } from '../../../utils/getFlagClass';
 
@@ -13,9 +13,9 @@ const movieData = {
   synopsis_vo: "Dans un futur lointain, une équipe d'astronautes part à la recherche d'une nouvelle planète habitable après que la Terre soit devenue inhabitable. Leur voyage les mènera aux confins de l'univers connu.",
   synopsis_en: "In a distant future, a team of astronauts embarks on a quest to find a new habitable planet after Earth becomes uninhabitable. Their journey takes them to the far reaches of the known universe.",
   ia: "scénario réalisé avec Gemini, vidéo par DALL-E, musique par Jukebox et voix par VALL-E",
-  real_lastname: "Dupont",
-  real_firstname: "Marie",
-  actual_job: "Réalisatrice",
+  real_lastname: "Nom random",
+  real_firstname: "Prénom random",
+  actual_job: "Poste random",
   poster: "https://picsum.photos/400/600",
   screenshots: [
     "https://picsum.photos/800/600",
@@ -87,44 +87,61 @@ const ModalDetails = ({ movie = movieData, isOpen = true, onClose = () => {} }) 
         >
           <X className="w-5 h-5" />
         </button>
+        <div>
 
+        </div>
         {/* Header avec poster/vidéo et infos */}
-        <div className="flex flex-col md:flex-row gap-6">
-          <figure className="shrink-0 relative">
+        <div className="flex flex-col items-center gap-6">
+          <figure className="w-full flex flex-col items-center shrink-0 relative">
             {showVideo && youtubeId ? (
               <iframe
                 src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1`}
                 title={movie.title_vo}
-                className="w-full md:w-64 h-48 md:h-96 rounded-xl shadow-lg"
+                className="w-full aspect-video rounded-xl shadow-lg"
                 allow="autoplay; encrypted-media"
                 allowFullScreen
               />
             ) : (
-              <img
-                src={movie.poster || 'https://picsum.photos/400/600'}
-                alt={movie.title_vo}
-                className="w-full md:w-64 h-auto rounded-xl object-cover shadow-lg"
-              />
+              <div className="hover-3d">
+                {/* content */}
+                <figure className="max-w-84 rounded-2xl">
+                  <img 
+                    src={movie.poster || 'https://picsum.photos/400/600'}
+                    alt={movie.title_vo}
+                    className="w-full md:w-64 h-auto rounded-xl object-cover shadow-lg"
+                  />
+                </figure>
+                {/* 8 empty divs needed for the 3D effect */}
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
             )}
             
-            {/* Bouton switch poster/vidéo */}
-            <button
-              className="btn btn-sm btn-white absolute bottom-2 left-2 gap-1"
-              onClick={() => setShowVideo(!showVideo)}
-            >
-              {showVideo ? (
-                <>
-                  <Image className="w-4 h-4" /> Poster
-                </>
-              ) : (
-                <>
-                  <Play className="w-4 h-4" /> Vidéo
-                </>
-              )}
-            </button>
           </figure>
+            
+          {/* Bouton switch poster/vidéo */}
+          <button
+            className="btn btn-sm btn-white gap-1"
+            onClick={() => setShowVideo(!showVideo)}
+          >
+            {showVideo ? (
+              <>
+                <Image className="w-4 h-4" /> Poster
+              </>
+            ) : (
+              <>
+                <Play className="w-4 h-4" /> Vidéo
+              </>
+            )}
+          </button>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 w-full">
             <h2 className="text-2xl font-bold">{movie.title_vo}</h2>
             <p className="text-white italic">{movie.title_en}</p>
 
@@ -157,13 +174,34 @@ const ModalDetails = ({ movie = movieData, isOpen = true, onClose = () => {} }) 
             </div>
 
             {/* Réalisateur */}
-            <div className="flex items-center gap-2 mt-2">
-              <Clapperboard className="w-4 h-4 text-secondary" />
-              <span className="font-medium">
-                {movie.real_firstname} {movie.real_lastname}
-              </span>
-              <span className="text-white">— {movie.actual_job}</span>
+            <div className="flex flex-col gap-2 md:flex-row mt-2">
+              <div className='flex items-center gap-2'>
+                <Clapperboard className="w-5 h-5 text-white" />
+                <span className="font-medium">
+                  {movie.real_firstname} {movie.real_lastname}
+                </span>
+              </div>
+              <div className='flex items-center gap-2'>
+                <Briefcase className="w-5 h-5 text-white" />
+                <span className="text-white">
+                  {movie.actual_job}
+                </span>
+              </div>
             </div>
+          </div>
+        </div>
+
+        <div className="divider"></div>
+        
+        <div className="collapse collapse-arrow border border-base-300">
+          <input type="radio" name="my-accordion-2" />
+          <div className="collapse-title font-semibold">Galerie photo</div>
+          <div className="collapse-content flex justify-center text-sm">
+              <figure className="hover-gallery max-w-full">
+                {movie.screenshots?.map((screenshot, index) => (
+                  <img key={index} src={screenshot} alt={`Screenshot ${index + 1}`} />
+                ))}
+              </figure>
           </div>
         </div>
 
