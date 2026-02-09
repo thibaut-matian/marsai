@@ -4,3 +4,13 @@ body {
   overflow-x: hidden;
   min-height: 100vh;
 }
+
+/* Cache la scrollbar sur le carrousel */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
