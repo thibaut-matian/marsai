@@ -44,9 +44,6 @@ export default function FAQ() {
           <source src={videoFAQ} type="video/mp4"/>
         </video>
 
-        {/* UN FILTRE NOIR (Optionnel mais recommandé pour lire le texte) */}
-        <div className="absolute inset-0 bg-black/50"></div>
-
         {/* LE CONTENU TEXTE */}
         {/* z-10 et relative : permet au texte de passer PAR DESSUS la vidéo */}
         <div className="relative z-10 text-center pt-30">
