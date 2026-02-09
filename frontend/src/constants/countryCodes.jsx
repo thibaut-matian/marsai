@@ -292,7 +292,7 @@ export const countryCodes = {
 };
 
 export function getCountryCode(countryName) {
-  return countryToCode[countryName] || null;
+  return countryCodes[countryName] || null;
 }
 
 export function getFlagClass(countryName) {

@@ -20,3 +20,5 @@ export const iaList = [
   "Artbreeder",
   "Firefly"
 ];
+
+export default iaList;
