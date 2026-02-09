@@ -10,6 +10,7 @@ import MainLayout from "./components/layout/MainLayout.jsx";
 import Submission from "./pages/Submission.jsx";
 import LoginJury from "./pages/jury/Login.jsx";
 import DashboardJury from "./pages/jury/DashboardJury.jsx";
+import MovieModeration from "./pages/admin/movieModeration.jsx";
 
 function AppRouter() {
   return (
@@ -29,6 +30,7 @@ function AppRouter() {
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="jury-management" element={<JuryManagement />} />
+          <Route path="/admin/movies" element={<MovieModeration />} />
         </Route>
 
         {/* 3. Routes Jury et login (Autonomes, avec leur propre Navbar interne) */}
