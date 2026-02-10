@@ -22,7 +22,7 @@ const ListMovies = () => {
   };
 
   return (
-    <div className="p-6 min-h-screen">
+    <div className="p-6">
       {/* Tableau avec ta couleur personnalisée */}
       <div className="overflow-x-auto rounded-2xl border border-white/10 bg-[#1E1E24]/90 backdrop-blur-md shadow-2xl">
         <table className="table w-full">
