@@ -1,29 +1,9 @@
 import React, { useState } from 'react';
 import { Eye, Trash2, AlertOctagon, User, Video, Mail, X, Send } from "lucide-react";
-
-const REPORTS_DATA = [
-  { id: 1, titre: "Gameplay Call of Duty", auteur: "GamerPro99", email: "gamerpro@mail.com", raison: "Contenu violent", timestamp: "Il y a 2h" },
-  { id: 2, titre: "Comment hacker un compte", auteur: "MrRobot", email: "fsociety@protonmail.com", raison: "Activités illégales", timestamp: "Il y a 5h" },
-  { id: 3, titre: "Musique sans droits", auteur: "DJ_Vibe", email: "vibe@studio.fr", raison: "Droits d'auteur", timestamp: "Hier" },
-];
+import useReport from "../../hooks/useReport";
 
 const ReportTable = () => {
-  const [reports, setReports] = useState(REPORTS_DATA);
-  const [selectedReport, setSelectedReport] = useState(null); // Pour gérer l'ouverture de la modale mail
-
-  const handleDelete = (id, titre) => {
-    if (window.confirm(`Confirmez-vous la suppression de la vidéo : ${titre} ?`)) {
-      setReports(reports.filter(report => report.id !== id));
-    }
-  };
-
-  const handleSendEmail = (e) => {
-    e.preventDefault();
-    // Ici tu mettrais ton appel API (EmailJS, Nodemailer, etc.)
-    alert(`Email de notification envoyé à ${selectedReport.email}`);
-    setSelectedReport(null);
-  };
-
+const {reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport } = useReport();
   return (
     <div className="p-6 bg-[#14141b] relative">
       <div className="flex items-center gap-3 mb-6">
