@@ -13,6 +13,7 @@
     "@tailwindcss/vite": "^4.1.18",
     "axios": "^1.13.4",
     "daisyui": "^5.5.14",
+    "flag-icons": "^7.5.0",
     "lucide-react": "^0.562.0",
     "motion": "^12.33.0",
     "react": "^19.2.0",
