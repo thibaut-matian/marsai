@@ -24,7 +24,7 @@ export default function Home() {
           <source src={teaserVideo} type="video/mp4" />
         </video>
         {/* Dégradé */}
-        <div className="absolute bottom-0 left-0 w-full h-96 bg-gradient-to-t from-black via-black/40 to-transparent z-0"></div>
+        <div className="absolute bottom-0 left-0 w-full h-96 bg-linear-to-t from-black via-black/40 to-transparent z-0"></div>
 
         {/* Contenu */}
         <div className="relative z-10 h-full flex flex-col items-center justify-end px-4 sm:px-6 md:px-8 pb-72"> <button
@@ -58,7 +58,7 @@ export default function Home() {
                 <span className="font-bold whitespace-nowrap">{index + 1}.</span>
 
                 {/* Les points dynamiques : flex-grow prend toute la place restante */}
-                <div className="flex-grow border-b border-dotted border-white/40 mx-2 mb-1"></div>
+                <div className="grow border-b border-dotted border-white/40 mx-2 mb-1"></div>
 
                 {/* Texte du critère - text-right pour l'aligner à la fin */}
                 <span className="font-medium uppercase text-right leading-tight">
@@ -89,7 +89,7 @@ export default function Home() {
                 <span className="font-bold whitespace-nowrap">{index + 1}.</span>
 
                 {/* Les pointillés */}
-                <div className="flex-grow border-b border-dotted border-white/40 mx-2 mb-1"></div>
+                <div className="grow border-b border-dotted border-white/40 mx-2 mb-1"></div>
 
                 {/* Texte de la récompense */}
                 <span className="font-medium uppercase text-right leading-tight">
@@ -110,14 +110,14 @@ export default function Home() {
           </p>
         </div>
       </div>
-      <div className="relative bg-black p-4 md:p-10">
-        <div ref={scrollRef} className="flex overflow-x-auto snap-x snap-mandatory gap-4 md:gap-8">
+      <div className="relative bg-black p-4 md:p-10 overflow-hidden">
+        <div ref={scrollRef} className="flex overflow-x-auto snap-x snap-mandatory gap-4 md:gap-8 scrollbar-hide">
           {/* Jury 1 */}
           <div className="card bg-base-200 h-80 md:h-96 min-w-60 md:min-w-72 snap-center">
             <div className="card-body h-full" style={{ backgroundImage: `url(${juryImage1})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
               <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Etchebest</h2>
               <p className="text-sm md:text-base text-white relative z-10">C'est qui le patron</p>
-              <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
               <div className="card-actions justify-end">
               </div>
             </div>
@@ -127,7 +127,7 @@ export default function Home() {
             <div className="card-body h-full" style={{ backgroundImage: `url(${juryImage2})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
               <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Le patron</h2>
               <p className="text-sm md:text-base text-white relative z-10">C'est moi</p>
-              <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
               <div className="card-actions justify-end">
               </div>
             </div>
@@ -137,7 +137,7 @@ export default function Home() {
             <div className="card-body h-full" style={{ backgroundImage: `url(${juryImage3})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
               <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Un chat</h2>
               <p className="text-sm md:text-base text-white relative z-10">Miaou</p>
-              <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
               <div className="card-actions justify-end">
               </div>
             </div>
@@ -147,7 +147,7 @@ export default function Home() {
             <div className="card-body h-full" style={{ backgroundImage: `url(${juryImage4})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
               <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Les Winx</h2>
               <p className="text-sm md:text-base text-white relative z-10">La magiiiiiie</p>
-              <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
               <div className="card-actions justify-end">
               </div>
             </div>
@@ -157,7 +157,7 @@ export default function Home() {
             <div className="card-body h-full" style={{ backgroundImage: `url(${juryImage1})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
               <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Etchebest</h2>
               <p className="text-sm md:text-base text-white relative z-10">C'est qui le patron</p>
-              <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
               <div className="card-actions justify-end">
               </div>
             </div>
@@ -167,7 +167,7 @@ export default function Home() {
             <div className="card-body h-full" style={{ backgroundImage: `url(${juryImage2})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
               <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Le patron</h2>
               <p className="text-sm md:text-base text-white relative z-10">C'est moi</p>
-              <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
               <div className="card-actions justify-end">
               </div>
             </div>
@@ -177,7 +177,7 @@ export default function Home() {
             <div className="card-body h-full" style={{ backgroundImage: `url(${juryImage3})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
               <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Un chat</h2>
               <p className="text-sm md:text-base text-white relative z-10">Miaou</p>
-              <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
               <div className="card-actions justify-end">
               </div>
             </div>

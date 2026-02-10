@@ -1,0 +1,54 @@
+@font-face {
+  font-family: 'Alkalami-Regular';
+  src: url('./assets/fonts/Alkalami-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'AndadaPro-Bold';
+  src: url('./assets/fonts/AndadaPro-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'AndadaPro-ExtraBold';
+  src: url('./assets/fonts/AndadaPro-ExtraBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'AndadaPro-Medium';
+  src: url('./assets/fonts/AndadaPro-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'AndadaPro-Regular';
+  src: url('./assets/fonts/AndadaPro-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'AndadaPro-SemiBold';
+  src: url('./assets/fonts/AndadaPro-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Barlow-Bold';
+  src: url('./assets/fonts/Barlow-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Barlow-ExtraBold';
+  src: url('./assets/fonts/Barlow-ExtraBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Barlow-Regular';
+  src: url('./assets/fonts/Barlow-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Barlow-SemiBold';
+  src: url('./assets/fonts/Barlow-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Sora-reg';
+  src: url('./assets/fonts/Alkalami-Regular.ttf') format('truetype');
+}
