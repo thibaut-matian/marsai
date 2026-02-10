@@ -17,17 +17,22 @@ const getYouTubeId = (url) => {
 
 export const useMovieDetails = (movie) => {
   const [showVideo, setShowVideo] = useState(false);
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
   const detectedIAs = extractIAs(movie?.ia);
   const youtubeId = getYouTubeId(movie?.url);
 
   const toggleVideo = () => setShowVideo(!showVideo);
+  const toggleGallery = () => setIsGalleryOpen(!isGalleryOpen);
 
   return {
     showVideo,
     setShowVideo,
     toggleVideo,
     detectedIAs,
-    youtubeId
+    youtubeId,
+    isGalleryOpen,
+    setIsGalleryOpen,
+    toggleGallery
   };
 };

@@ -1,4 +1,4 @@
-import { Briefcase, Clapperboard, Clock, Image, Languages, Play, Sparkles, Star, User, X } from 'lucide-react';
+import { Briefcase, ChevronDown, Clapperboard, Clock, Image, Languages, Play, Sparkles, Star, User, X } from 'lucide-react';
 import { useMovieDetails } from '../../../hooks/useMovieDetails';
 import { getFlagClass } from '../../../utils/getFlagClass';
 
@@ -33,7 +33,7 @@ const movieData = {
 
 // Utilise movieData par défaut si aucune prop n'est passée
 const ModalDetails = ({ movie = movieData, isOpen = true, onClose = () => {} }) => {
-  const { showVideo, toggleVideo, detectedIAs, youtubeId } = useMovieDetails(movie);
+  const { showVideo, toggleVideo, detectedIAs, youtubeId, isGalleryOpen, setIsGalleryOpen } = useMovieDetails(movie);
 
   if (!isOpen || !movie) return null;
 
@@ -152,10 +152,19 @@ const ModalDetails = ({ movie = movieData, isOpen = true, onClose = () => {} }) 
         </div>
 
         <div className="divider"></div>
-        
-        <div className="collapse collapse-arrow border border-base-300">
-          <input type="radio" name="my-accordion-2" />
-          <div className="collapse-title font-semibold">Galerie photo</div>
+
+        <div className="collapse border-base-300 border">
+          <input 
+            type="checkbox" 
+            checked={isGalleryOpen}
+            onChange={(e) => setIsGalleryOpen(e.target.checked)}
+          />
+          <div className="collapse-title flex justify-between font-semibold pr-4">
+            <label>Galerie photo</label>
+            <ChevronDown 
+              className={`transition-transform duration-300 ${isGalleryOpen ? 'rotate-180' : ''}`} 
+            />
+          </div>
           <div className="collapse-content flex justify-center text-sm">
               <figure className="hover-gallery max-w-full">
                 {movie.screenshots?.map((screenshot, index) => (
