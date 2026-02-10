@@ -36,7 +36,7 @@ const ReportTable = () => {
           <thead className="text-gray-400 bg-black/40">
             <tr className="border-b border-white/10 text-sm uppercase tracking-wider">
               <th className="bg-transparent py-5">Vidéo</th>
-              <th className="bg-transparent">Auteur</th>
+              <th className="bg-transparent">Réalisateur</th>
               <th className="bg-transparent">Raison</th>
               <th className="bg-transparent text-center">Actions</th>
             </tr>
@@ -60,9 +60,9 @@ const ReportTable = () => {
                   </div>
                 </td>
                 <td>
-                  <span className="badge badge-outline border-error/50 text-error bg-error/5 py-3 px-4 text-xs font-semibold uppercase">
-                    {report.raison}
-                  </span>
+                <span className="badge badge-outline border-error/50 text-error bg-error/5 py-3 px-4 text-[10px] sm:text-xs font-semibold uppercase tracking-tight whitespace-nowrap">
+                {report.raison}
+                </span>
                 </td>
                 <td>
                   <div className="flex justify-center gap-2">
@@ -70,7 +70,6 @@ const ReportTable = () => {
                       <Eye size={18} />
                     </button>
                     
-                    {/* NOUVEAU : BOUTON MAIL */}
                     <button 
                       className="btn btn-square btn-sm bg-amber-500/20 hover:bg-amber-500 border border-amber-500 text-amber-500 hover:text-black transition-all"
                       onClick={() => setSelectedReport(report)}
