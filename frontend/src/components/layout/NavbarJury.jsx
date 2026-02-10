@@ -41,15 +41,15 @@ return (
     {/* 2. CENTRE : Menu Desktop (Caché sur mobile) */}
     <div className="hidden md:flex items-center gap-8 bg-black/20 px-8 py-2 rounded-full border border-white/5">
         <Link 
-            to="/jury/dashboard" 
+            to="/jury/DashboardJury" 
             className={`text-sm font-bold uppercase tracking-widest transition-colors ${isActive('/jury/dashboard') ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
         >
             Films à noter
         </Link>
         <div className="w-1 h-1 rounded-full bg-gray-700"></div>
         <Link 
-            to="/jury/ranking" 
-            className={`text-sm font-bold uppercase tracking-widest transition-colors ${isActive('/jury/ranking') ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
+            to="/jury/RankingJury" 
+            className={`text-sm font-bold uppercase tracking-widest transition-colors ${isActive('/jury/RankingJury') ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
         >
             Mon Classement
         </Link>
@@ -64,7 +64,7 @@ return (
         </button>
         
         {/* Séparateur */}
-        <div className="h-8 w-[1px] bg-white/10"></div>
+        <div className="h-8 w-px bg-white/10"></div>
 
         {/* Profil Jury */}
         <div className="flex items-center gap-3 cursor-pointer group">
@@ -72,7 +72,7 @@ return (
                 <p className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">Marro Veronique</p>
                 <p className="text-[10px] text-gray-400 uppercase tracking-wider">Jury 2026</p>
             </div>
-            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 p-[2px] shadow-lg shadow-purple-900/20">
+            <div className="h-10 w-10 rounded-full bg-linear-to-br from-blue-600 to-purple-600 p-0.5 shadow-lg shadow-purple-900/20">
                 <div className="h-full w-full rounded-full bg-black flex items-center justify-center text-xs font-bold text-white">VM</div>
             </div>
         </div>
@@ -93,7 +93,7 @@ return (
 
 {/* --- OVERLAY MENU MOBILE (Style Jury) --- */}
 <div 
-    className={`fixed inset-0 z-[60] bg-[#0f0c29] transform transition-all duration-300 ease-in-out flex flex-col ${
+    className={`fixed inset-0 z-60 bg-[#0f0c29] transform transition-all duration-300 ease-in-out flex flex-col ${
         isOpen ? 'opacity-100 visible translate-x-0' : 'opacity-0 invisible translate-x-full'
     }`}
 >
@@ -115,7 +115,7 @@ return (
         
         {/* Avatar Mobile */}
         <div className="flex flex-col items-center mb-8">
-            <div className="h-20 w-20 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 p-[3px] mb-4 shadow-[0_0_20px_rgba(124,58,237,0.3)]">
+            <div className="h-20 w-20 rounded-full bg-linear-to-br from-blue-600 to-purple-600 p-0.75 mb-4 shadow-[0_0_20px_rgba(124,58,237,0.3)]">
             <div className="h-full w-full rounded-full bg-black flex items-center justify-center text-2xl font-bold text-white">VM</div>
             </div>
             <h3 className="text-2xl font-bold text-white">Vero Marro</h3>
@@ -125,14 +125,14 @@ return (
         {/* Navigation */}
         <nav className="flex flex-col items-center space-y-6 w-full">
             <Link 
-                to="/jury/dashboard" 
+                to="/jury/DashboardJury" 
                 onClick={() => setIsOpen(false)}
                 className={`text-xl font-light transition-colors w-full text-center py-3 border-b border-white/5 ${isActive('/jury/dashboard') ? 'text-white font-bold' : 'text-gray-400'}`}
             >
                 Films à noter
             </Link>
             <Link 
-                to="/jury/ranking" 
+                to="/jury/RankingJury" 
                 onClick={() => setIsOpen(false)}
                 className={`text-xl font-light transition-colors w-full text-center py-3 border-b border-white/5 ${isActive('/jury/ranking') ? 'text-white font-bold' : 'text-gray-400'}`}
             >
