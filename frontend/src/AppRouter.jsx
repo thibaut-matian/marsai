@@ -11,6 +11,7 @@ import Submission from "./pages/Submission.jsx";
 import LoginJury from "./pages/jury/Login.jsx";
 import JuryVote from "./pages/jury/JuryVote.jsx";
 import DashboardJury from "./pages/jury/DashboardJury.jsx";
+import ModalDetails from "./components/features/movies/ModalDetails.jsx";
 import RankingJury from "./pages/jury/RankingJury.jsx";
 
 function AppRouter() {
@@ -24,6 +25,7 @@ function AppRouter() {
           <Route path="/planning" element={<Planning />} />
           <Route path="/submission" element={<Submission />} />
           <Route path="/submit-movie" element={<Submission />} />
+          <Route path="/modal" element={<ModalDetails />} />
         </Route>
 
         {/* 2. Routes Admin (avec la Sidebar Admin) */}
