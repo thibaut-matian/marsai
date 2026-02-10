@@ -1,136 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { ChevronDown } from "lucide-react";
+import { useEventPlanning } from "../hook/useEventPlanning";
 
 export default function Planning() {
-    const [fridayOpen, setFridayOpen] = useState(false);
-    const [saturdayOpen, setSaturdayOpen] = useState(false);
-    const [isDesktop, setIsDesktop] = useState(typeof window !== 'undefined' ? window.innerWidth >= 768 : false);
-
-    useEffect(() => {
-        const handleResize = () => {
-            setIsDesktop(window.innerWidth >= 768);
-        };
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    const fridayEvents = [
-        {
-            id: 1,
-            title: "Evenement 1",
-            time: "10h - 11h",
-            description: "Découvrez notre conférence sur xyz",
-            image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=150&h=90&fit=crop"
-        },
-        {
-            id: 2,
-            title: "Evenement 2",
-            time: "11h - 12h",
-            description: "Découvrez notre conférence sur xyz",
-            image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=150&h=90&fit=crop"
-        },
-        {
-            id: 3,
-            title: "Evenement 3",
-            time: "12h - 13h",
-            description: "Découvrez notre conférence sur xyz",
-            image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=150&h=90&fit=crop"
-        },
-        {
-            id: 4,
-            title: "Evenement 4",
-            time: "13h - 14h",
-            description: "Découvrez notre conférence sur xyz",
-            image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=150&h=90&fit=crop"
-        },
-        {
-            id: 9,
-            title: "Evenement 5",
-            time: "14h - 15h",
-            description: "Découvrez notre conférence sur xyz",
-            image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=150&h=90&fit=crop"
-        },
-        {
-            id: 10,
-            title: "Evenement 6",
-            time: "15h - 16h",
-            description: "Découvrez notre conférence sur xyz",
-            image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=150&h=90&fit=crop"
-        },
-        {
-            id: 11,
-            title: "Evenement 7",
-            time: "16h - 17h",
-            description: "Découvrez notre conférence sur xyz",
-            image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=150&h=90&fit=crop"
-        },
-        {
-            id: 12,
-            title: "Evenement 8",
-            time: "17h - 18h",
-            description: "Découvrez notre conférence sur xyz",
-            image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=150&h=90&fit=crop"
-        }
-    ];
-
-    const saturdayEvents = [
-        {
-            id: 5,
-            title: "Evenement 1",
-            time: "10h - 11h",
-            description: "Découvrez notre conférence sur xyz",
-            image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=150&h=90&fit=crop"
-        },
-        {
-            id: 6,
-            title: "Evenement 2",
-            time: "11h - 12h",
-            description: "Découvrez notre conférence sur xyz",
-            image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=150&h=90&fit=crop"
-        },
-        {
-            id: 7,
-            title: "Evenement 3",
-            time: "12h - 13h",
-            description: "Découvrez notre conférence sur xyz",
-            image: "https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=150&h=90&fit=crop"
-        },
-        {
-            id: 8,
-            title: "Evenement 4",
-            time: "13h - 14h",
-            description: "Découvrez notre conférence sur xyz",
-            image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=150&h=90&fit=crop"
-        },
-        {
-            id: 13,
-            title: "Evenement 5",
-            time: "14h - 15h",
-            description: "Découvrez notre conférence sur xyz",
-            image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=150&h=90&fit=crop"
-        },
-        {
-            id: 14,
-            title: "Evenement 6",
-            time: "15h - 16h",
-            description: "Découvrez notre conférence sur xyz",
-            image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=150&h=90&fit=crop"
-        },
-        {
-            id: 15,
-            title: "Evenement 7",
-            time: "16h - 17h",
-            description: "Découvrez notre conférence sur xyz",
-            image: "https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=150&h=90&fit=crop"
-        },
-        {
-            id: 16,
-            title: "Evenement 8",
-            time: "17h - 18h",
-            description: "Découvrez notre conférence sur xyz",
-            image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=150&h=90&fit=crop"
-        }
-    ];
+    const { 
+        fridayOpen, 
+        saturdayOpen, 
+        isDesktop, 
+        fridayEvents, 
+        saturdayEvents, 
+        toggleFriday, 
+        toggleSaturday 
+    } = useEventPlanning();
 
     const EventCard = ({ event }) => (
         <div className="group card bg-base-800/50 border border-cyan-500/30 shadow-md cursor-pointer hover:border-cyan-400 hover:bg-cyan-950/40 hover:shadow-lg transition-all duration-300">
@@ -219,7 +100,7 @@ export default function Planning() {
                         <div className="border-2 border-teal-500 rounded-2xl bg-slate-900/40 backdrop-blur overflow-hidden">
                             {/* MOBILE ACCORDION HEADER */}
                             <button
-                                onClick={() => setFridayOpen(!fridayOpen)}
+                                onClick={toggleFriday}
                                 className="w-full p-6 text-left bg-slate-900/50 hover:bg-slate-900/70 transition flex justify-between items-center md:hidden"
                             >
                                 <h1 className="text-4xl font-normal">VENDREDI</h1>
@@ -252,7 +133,7 @@ export default function Planning() {
                         <div className="border-2 border-teal-500 rounded-2xl bg-slate-900/40 backdrop-blur overflow-hidden">
                             {/* MOBILE ACCORDION HEADER */}
                             <button
-                                onClick={() => setSaturdayOpen(!saturdayOpen)}
+                                onClick={toggleSaturday}
                                 className="w-full p-6 text-left bg-slate-900/50 hover:bg-slate-900/70 transition flex justify-between items-center md:hidden"
                             >
                                 <h1 className="text-4xl font-normal">SAMEDI</h1>
