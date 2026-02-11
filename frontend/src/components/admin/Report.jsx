@@ -1,24 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Eye, Trash2, AlertOctagon, User, Video, Mail, X, Send } from "lucide-react";
 import useReport from "../../hooks/useReport";
 import usePagination from "../../hooks/usePagination";
+import PaginationControls from "../pagination"; // On importe le composant réutilisable
 
 const ReportTable = () => {
-const {reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport } = useReport();
+  const { reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport } = useReport();
 
-const { 
-    currentPage, 
-    totalPages, 
-    currentItems, 
-    indexOfFirstItem, 
-    indexOfLastItem, 
-    paginate, 
-    totalItems 
-  } = usePagination(reports, 20);
-
+  // On récupère tout l'objet pagination
+  const pagination = usePagination(reports, 10);
 
   return (
-<div className="p-6 bg-[#14141b] relative">
+    <div className="p-6 bg-[#14141b] relative">
       <div className="flex items-center gap-3 mb-6">
         <AlertOctagon className="text-error" size={32} />
         <h2 className="text-2xl font-bold text-white">Signalements en attente</h2>
@@ -30,18 +23,20 @@ const {
             <tr className="border-b border-white/10 text-sm uppercase tracking-wider">
               <th className="bg-transparent py-5">Vidéo</th>
               <th className="bg-transparent">Réalisateur</th>
-              <th className="bg-transparent">Raison</th>
+              <th className="bg-transparent text-center">Raison</th>
               <th className="bg-transparent text-center">Actions</th>
             </tr>
           </thead>
           
           <tbody className="text-white">
-            {/* IMPORTANT : On utilise currentItems ici au lieu de reports */}
-            {currentItems.map((report) => (
+            {/* On utilise pagination.currentItems pour n'afficher que les 20 du moment */}
+            {pagination.currentItems.map((report) => (
               <tr key={report.id} className="border-b border-white/5 hover:bg-white/5 transition-all">
                 <td>
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-red-500/10 rounded-lg text-red-500"><Video size={20} /></div>
+                    <div className="p-2 bg-red-500/10 rounded-lg text-red-500">
+                      <Video size={20} />
+                    </div>
                     <div>
                       <div className="font-bold text-md">{report.titre}</div>
                       <div className="text-xs text-gray-500">{report.timestamp}</div>
@@ -53,10 +48,10 @@ const {
                     <User size={14} className="text-gray-500" /> {report.auteur}
                   </div>
                 </td>
-                <td className="text-center">
-                  <span className="badge badge-outline border-error/50 text-error bg-error/5 py-3 px-4 text-[10px] sm:text-xs font-semibold uppercase tracking-tight whitespace-nowrap">
-                    {report.raison}
-                  </span>
+                  <td className="text-center min-w-[180px]"> {/* On force une largeur mini ici */}
+  <span className="badge badge-outline border-error/50 text-error bg-error/5 py-4 px-4 text-[10px] sm:text-xs font-semibold uppercase tracking-tight whitespace-nowrap h-auto inline-flex items-center justify-center">
+    {report.raison}
+  </span>
                 </td>
                 <td>
                   <div className="flex justify-center gap-2">
@@ -84,44 +79,20 @@ const {
           </tbody>
         </table>
 
-        {totalPages > 1 && (
-          <div className="flex justify-between items-center p-4 bg-black/20 border-t border-white/10">
-            <span className="text-sm text-gray-500 italic">
-              {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, totalItems)} sur {totalItems} signalements
-            </span>
-            <div className="join">
-              <button 
-                className="join-item btn btn-sm bg-[#1E1E24] border-white/10 text-white"
-                onClick={() => paginate(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                <ChevronLeft size={16} />
-              </button>
-              <button className="join-item btn btn-sm bg-blue-600 text-white border-white/10">
-                {currentPage} / {totalPages}
-              </button>
-              <button 
-                className="join-item btn btn-sm bg-[#1E1E24] border-white/10 text-white"
-                onClick={() => paginate(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                <ChevronRight size={16} />
-              </button>
-            </div>
-          </div>
-        )}
+        {/* --- UTILISATION DU COMPOSANT GÉNÉRIQUE --- */}
+        <PaginationControls pagination={pagination} label="signalements" />
       </div>
 
       {/* MODALE DE CONTACT */}
       {selectedReport && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-[#1E1E24] border border-white/10 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-            <div className="p-6">
+            <div className="p-6 text-white">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                  <Mail className="text-amber-500" /> Contacter l'auteur
+                <h3 className="text-xl font-bold flex items-center gap-2 text-amber-500">
+                  <Mail /> Contacter {selectedReport.auteur}
                 </h3>
-                <button onClick={() => setSelectedReport(null)} className="text-gray-400 hover:text-white transition-colors">
+                <button onClick={() => setSelectedReport(null)} className="hover:text-red-500 transition-colors">
                   <X size={24} />
                 </button>
               </div>
@@ -136,21 +107,19 @@ const {
                     value={`${selectedReport.auteur} (${selectedReport.email})`} 
                   />
                 </div>
-
                 <div>
-                  <label className="block text-xs uppercase font-bold text-gray-500 mb-1">Message d'avertissement</label>
+                  <label className="block text-xs uppercase font-bold text-gray-500 mb-1">Message</label>
                   <textarea 
                     required
                     className="w-full bg-black/30 border border-white/10 focus:border-amber-500 rounded-lg p-3 text-white text-sm h-32 outline-none transition-colors"
                     defaultValue={`Bonjour ${selectedReport.auteur},\n\nVotre vidéo "${selectedReport.titre}" a été signalée pour : ${selectedReport.raison}. \n\nConformément à nos règles, celle-ci sera supprimée.`}
                   />
                 </div>
-
                 <button 
                   type="submit" 
                   className="w-full btn bg-amber-500 hover:bg-amber-400 text-black border-none font-bold flex gap-2"
                 >
-                  <Send size={18} /> Envoyer l'e-mail
+                  <Send size={18} /> Envoyer l'avertissement
                 </button>
               </form>
             </div>
