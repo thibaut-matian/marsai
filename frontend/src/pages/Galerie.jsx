@@ -27,7 +27,7 @@ export default function Galerie() {
   };
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full bg-black min-h-screen">
       <h1 className="text-4xl font-bold text-center mt-10">Galerie</h1>
       <p className="text-center text-lg mt-4">
         Découvrez les moments forts du festival à travers notre galerie de photos et de vidéos.
@@ -61,7 +61,6 @@ export default function Galerie() {
           «
         </button>
 
-        Boutons de pagination (1 à 10)
         {Array.from({ length: totalPages }, (_, i) => (
           <button
             key={i + 1}
