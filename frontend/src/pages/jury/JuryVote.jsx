@@ -1,13 +1,31 @@
-    // Imports UI
+// Imports UI
     import NavbarJury from "../../components/layout/NavbarJury.jsx";
     import videoSample from "../../assets/videos/Teaser.mp4"; 
 
     // Import de la Logique 
     import { useJuryVote } from "../../hooks/useJuryVote";
+    import { useState } from "react";
 
     export default function JuryVote() {
     // On récupère les données et fonctions depuis le hook
     const { decision, setDecision, film, formatDuration } = useJuryVote();
+
+    // État pour gérer la modale de signalement
+    const [reportReason, setReportReason] = useState("");
+    const [reportDetails, setReportDetails] = useState("");
+    const [reportSubmitted, setReportSubmitted] = useState(false);
+
+    const handleReportSubmit = () => {
+        // Ici vous pouvez ajouter la logique pour envoyer le signalement au backend
+        console.log("Signalement envoyé:", { reason: reportReason, details: reportDetails });
+        setReportSubmitted(true);
+        setTimeout(() => {
+            document.getElementById('report_modal').close();
+            setReportSubmitted(false);
+            setReportReason("");
+            setReportDetails("");
+        }, 2000);
+    };
 
     return (
         <div className="min-h-screen bg-[#100b18] text-white font-sans overflow-x-hidden">
@@ -18,36 +36,46 @@
             
             {/* --- BLOC PRINCIPAL : VIDÉO + ACTIONS --- */}
             <div className="flex flex-col lg:flex-row gap-8 mb-12">
-                
-                {/* LECTEUR VIDÉO */}
-                <div className="w-full lg:w-3/4">
-                    <div className="relative rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 bg-black aspect-video group">
-                        <video 
-                            src={videoSample} 
-                            className="w-full h-full object-cover" 
-                            controls 
-                            autoPlay
-                            muted
-                        />
-                    </div>
+                     {/* LECTEUR VIDÉO */}
+            <div className="w-full lg:w-3/4">
+                <div className="relative rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 bg-black aspect-video group">
+                    <video 
+                        src={videoSample} 
+                        className="w-full h-full object-cover" 
+                        controls 
+                        autoPlay
+                        muted
+                    />
                 </div>
+            </div>
 
-                {/* VERDICT */}
-                <div className="w-full lg:w-1/4 flex flex-col justify-center">
-                    <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 text-center sticky top-28">
-                        <h2 className="text-xl font-bold text-white mb-8 uppercase tracking-widest">Votre Verdict</h2>
-                        <div className="flex flex-col gap-6">
-                            <ActionButton type="validate" label="J'AIME (Valider)" current={decision} set={setDecision} />
-                            <ActionButton type="discuss" label="À DISCUTER" current={decision} set={setDecision} />
-                            <ActionButton type="refuse" label="J'AIME PAS (Refuser)" current={decision} set={setDecision} />
-                        </div>
-                        {decision && (
-                            <div className="mt-8 animate-fade-in text-blue-300 font-medium">
-                                Vote enregistré ! <br/> <span className="text-xs text-white/50">Passage au suivant...</span>
-                            </div>
-                        )}
+            {/* VERDICT */}
+            <div className="w-full lg:w-1/4 flex flex-col gap-4">
+                <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 text-center flex flex-col h-full">
+                    <h2 className="text-xl font-bold text-white mb-8 uppercase tracking-widest">Votre Verdict</h2>
+                    <div className="flex flex-col gap-6 flex-grow justify-center">
+                        <ActionButton type="validate" label="J'AIME (Valider)" current={decision} set={setDecision} />
+                        <ActionButton type="discuss" label="À DISCUTER" current={decision} set={setDecision} />
+                        <ActionButton type="refuse" label="J'AIME PAS (Refuser)" current={decision} set={setDecision} />
                     </div>
+                    {decision && (
+                        <div className="mt-8 animate-fade-in text-blue-300 font-medium">
+                            Vote enregistré ! <br/> <span className="text-xs text-white/50">Passage au suivant...</span>
+                        </div>
+                    )}
                 </div>
+                
+                {/* Bouton de signalement - en dehors de la section verdict */}
+                <button
+                    onClick={() => document.getElementById('report_modal').showModal()}
+                    className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 rounded-2xl text-red-400 hover:text-red-300 transition-all duration-300 text-base font-semibold"
+                >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    Signaler un problème
+                </button>
+            </div>
             </div>
 
             {/* --- SECTION INFOS --- */}
@@ -140,6 +168,87 @@
                 </div>
             </div>
         </div>
+
+        {/* Modale de signalement avec DaisyUI */}
+        <dialog id="report_modal" className="modal">
+            <div className="modal-box bg-[#1a1425] border border-white/10 rounded-3xl max-w-md shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+                {!reportSubmitted ? (
+                    <>
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-2xl font-bold text-white">Signaler un problème</h2>
+                            <form method="dialog">
+                                <button className="text-gray-400 hover:text-white transition-colors">
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+
+                        <div className="space-y-6">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                    Type de problème
+                                </label>
+                                <select
+                                    value={reportReason}
+                                    onChange={(e) => setReportReason(e.target.value)}
+                                    className="select select-bordered w-full bg-[#100C17] border-white/10 text-white focus:border-red-500 focus:outline-none focus:outline-red-500/50 hover:border-red-500/50 transition-colors"
+                                >
+                                    <option value="" disabled>Sélectionnez une raison</option>
+                                    <option value="technical">Problème technique (son, image)</option>
+                                    <option value="loading">La vidéo ne charge pas</option>
+                                    <option value="content">Contenu inapproprié</option>
+                                    <option value="quality">Problème de qualité</option>
+                                    <option value="other">Autre</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                    Détails (optionnel)
+                                </label>
+                                <textarea
+                                    value={reportDetails}
+                                    onChange={(e) => setReportDetails(e.target.value)}
+                                    placeholder="Décrivez le problème rencontré..."
+                                    rows={4}
+                                    className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 transition-colors resize-none"
+                                />
+                            </div>
+
+                            <div className="flex gap-4">
+                                <form method="dialog" className="flex-1">
+                                    <button className="w-full px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-white transition-all duration-300 font-medium">
+                                        Annuler
+                                    </button>
+                                </form>
+                                <button
+                                    onClick={handleReportSubmit}
+                                    disabled={!reportReason}
+                                    className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 border border-red-500/30 rounded-lg text-white transition-all duration-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-red-600"
+                                >
+                                    Signaler
+                                </button>
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <div className="text-center py-8">
+                        <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-2">Signalement envoyé</h3>
+                        <p className="text-gray-400">Merci pour votre contribution</p>
+                    </div>
+                )}
+            </div>
+            <form method="dialog" className="modal-backdrop">
+                <button>close</button>
+            </form>
+        </dialog>
         </div>
     );
     }
