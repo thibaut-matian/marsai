@@ -25,7 +25,7 @@ function AppRouter() {
           {/* Galerie s'affiche à la phase 2 */}
           <Route path="/galerie" element={<Galerie />} />
         </Route>
-gi
+
         {/* 2. Routes Admin (avec la Sidebar Admin) */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
