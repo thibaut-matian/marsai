@@ -1,11 +1,24 @@
 import React, { useState } from 'react';
 import { Eye, Trash2, AlertOctagon, User, Video, Mail, X, Send } from "lucide-react";
 import useReport from "../../hooks/useReport";
+import usePagination from "../../hooks/usePagination";
 
 const ReportTable = () => {
 const {reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport } = useReport();
+
+const { 
+    currentPage, 
+    totalPages, 
+    currentItems, 
+    indexOfFirstItem, 
+    indexOfLastItem, 
+    paginate, 
+    totalItems 
+  } = usePagination(reports, 20);
+
+
   return (
-    <div className="p-6 bg-[#14141b] relative">
+<div className="p-6 bg-[#14141b] relative">
       <div className="flex items-center gap-3 mb-6">
         <AlertOctagon className="text-error" size={32} />
         <h2 className="text-2xl font-bold text-white">Signalements en attente</h2>
@@ -23,7 +36,8 @@ const {reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport
           </thead>
           
           <tbody className="text-white">
-            {reports.map((report) => (
+            {/* IMPORTANT : On utilise currentItems ici au lieu de reports */}
+            {currentItems.map((report) => (
               <tr key={report.id} className="border-b border-white/5 hover:bg-white/5 transition-all">
                 <td>
                   <div className="flex items-center gap-3">
@@ -39,17 +53,16 @@ const {reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport
                     <User size={14} className="text-gray-500" /> {report.auteur}
                   </div>
                 </td>
-                <td>
-                <span className="badge badge-outline border-error/50 text-error bg-error/5 py-3 px-4 text-[10px] sm:text-xs font-semibold uppercase tracking-tight whitespace-nowrap">
-                {report.raison}
-                </span>
+                <td className="text-center">
+                  <span className="badge badge-outline border-error/50 text-error bg-error/5 py-3 px-4 text-[10px] sm:text-xs font-semibold uppercase tracking-tight whitespace-nowrap">
+                    {report.raison}
+                  </span>
                 </td>
                 <td>
                   <div className="flex justify-center gap-2">
                     <button className="btn btn-square btn-sm bg-blue-600 hover:bg-blue-500 border-none text-white" title="Voir">
                       <Eye size={18} />
                     </button>
-                    
                     <button 
                       className="btn btn-square btn-sm bg-amber-500/20 hover:bg-amber-500 border border-amber-500 text-amber-500 hover:text-black transition-all"
                       onClick={() => setSelectedReport(report)}
@@ -57,10 +70,10 @@ const {reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport
                     >
                       <Mail size={18} />
                     </button>
-
                     <button 
                       className="btn btn-square btn-sm bg-red-600/20 hover:bg-red-600 border border-red-600 text-red-500 hover:text-white transition-all"
                       onClick={() => handleDelete(report.id, report.titre)}
+                      title="Supprimer"
                     >
                       <Trash2 size={18} />
                     </button>
@@ -70,6 +83,33 @@ const {reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport
             ))}
           </tbody>
         </table>
+
+        {totalPages > 1 && (
+          <div className="flex justify-between items-center p-4 bg-black/20 border-t border-white/10">
+            <span className="text-sm text-gray-500 italic">
+              {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, totalItems)} sur {totalItems} signalements
+            </span>
+            <div className="join">
+              <button 
+                className="join-item btn btn-sm bg-[#1E1E24] border-white/10 text-white"
+                onClick={() => paginate(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button className="join-item btn btn-sm bg-blue-600 text-white border-white/10">
+                {currentPage} / {totalPages}
+              </button>
+              <button 
+                className="join-item btn btn-sm bg-[#1E1E24] border-white/10 text-white"
+                onClick={() => paginate(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* MODALE DE CONTACT */}
