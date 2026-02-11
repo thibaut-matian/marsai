@@ -6,6 +6,7 @@ export default function Galerie() {
     id: i + 1,
     src: "./public/Port.png",
     title: `Titre de l'image ${i + 1}`,
+    director: `Réalisateur ${i + 1}`,
   }));
 
   // État pour la page active
@@ -26,33 +27,41 @@ export default function Galerie() {
     }
   };
 
-  return (
-    <div className="flex flex-col w-full bg-black min-h-screen">
-      <h1 className="text-4xl font-bold text-center mt-10">Galerie</h1>
-      <p className="text-center text-lg mt-4">
-        Découvrez les moments forts du festival à travers notre galerie de photos et de vidéos.
-      </p>
+return (
+  <div className="flex flex-col w-full bg-black">
+    <h1 className="text-4xl font-bold text-center mt-[7.5rem] text-white">Galerie</h1>
+    <p className="text-center text-lg mt-4 text-gray-300">
+      Découvrez les moments forts du festival à travers notre galerie de photos et de vidéos.
+    </p>
 
-      {/* Galerie d'images */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 px-4">
-        {currentImages.map((image) => (
-          <div key={image.id} className="bg-white/10 rounded-lg shadow-md overflow-hidden backdrop-blur-sm">
-            <div className="p-3 bg-black/30 border-b border-white/20">
-              <h3 className="text-white text-lg font-semibold text-center">{image.title}</h3>
-            </div>
-            <div className="h-64 flex items-center justify-center bg-gray-200">
-              <img
-                src={image.src}
-                alt={`Photo ${image.id}`}
-                className="w-full h-full object-cover"
-              />
-            </div>
+    {/* Galerie d'images */}
+    <div className="grid mr-8 ml-8 grid-cols-1 md:grid-cols-3 gap-6 mt-10 mb-10 px-4">
+      {currentImages.map((image) => (
+        <div key={image.id} className="rounded-lg shadow-md overflow-hidden bg-white/5">
+          {/* Div avec effet "liquid glass" minimaliste */}
+          <div className="p-3 border-b border-white/10
+                          text-white">
+            <h3 className="text-lg font-medium">{image.title}</h3>
+            {image.director && (
+              <h4 className="text-sm text-gray-300 mt-1">{image.director}</h4>
+            )}
           </div>
-        ))}
-      </div>
+          <div className="h-64 flex items-center justify-center bg-gray-100">
+            <img
+              src={image.src}
+              alt={`Photo ${image.id}`}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+    <Pagination />
+  </div>
+);
 
       {/* Pagination */}
-      <div className="join flex justify-center mt-8">
+      {/* <div className="join flex justify-center mt-8">
         <button
           className="join-item btn"
           onClick={() => goToPage(currentPage - 1)}
@@ -78,7 +87,5 @@ export default function Galerie() {
         >
           »
         </button>
-      </div>
-    </div>
-  );
+      </div> */}
 }
