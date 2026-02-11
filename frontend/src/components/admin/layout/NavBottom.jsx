@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 const NavBottom = () => {
   const navigationLinks = [
     { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/admin/films', label: 'Films', icon: Film },
+    { path: '/admin/movies', label: 'Films', icon: Film },
     { path: '/admin/jury-management', label: 'Jurys', icon: Users },
     { path: '/admin/settings', label: 'Settings', icon: Settings }
   ];
