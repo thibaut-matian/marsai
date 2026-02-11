@@ -11,6 +11,7 @@ import LoginJury from "./pages/jury/Login.jsx";
 import JuryVote from "./pages/jury/JuryVote.jsx";
 import DashboardJury from "./pages/jury/DashboardJury.jsx";
 import Galerie from "./pages/Galerie.jsx";
+import MovieModeration from "./pages/admin/movieModeration.jsx";
 import ModalDetails from "./components/features/movies/ModalDetails.jsx";
 import RankingJury from "./pages/jury/RankingJury.jsx";
 
@@ -35,6 +36,7 @@ function AppRouter() {
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="jury-management" element={<JuryManagement />} />
+          <Route path="/admin/movies" element={<MovieModeration />} />
         </Route>
 
         {/* 3. Routes Jury et login (Autonomes, avec leur propre Navbar interne) */}
