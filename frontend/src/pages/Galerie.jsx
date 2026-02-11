@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PaginationControls from '../components/pagination';
 
 export default function Galerie() {
   // Données simulées : 50 images (10 pages × 5 images)
@@ -20,11 +21,40 @@ export default function Galerie() {
   // Calcul du nombre total de pages
   const totalPages = Math.ceil(images.length / imagesPerPage);
 
+  // Générer les numéros de pages avec ellipsis (...)
+  const generatePageNumbers = () => {
+    const maxVisible = 5;
+    if (totalPages <= maxVisible) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    const pages = [];
+    if (currentPage <= 3) {
+      pages.push(1, 2, 3, 4, '...', totalPages);
+    } else if (currentPage >= totalPages - 2) {
+      pages.push(1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+    } else {
+      pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+    }
+    return pages;
+  };
+
   // Fonction pour changer de page
-  const goToPage = (page) => {
+  const paginate = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
+  };
+
+  // Préparer les données pour le composant de pagination
+  const paginationData = {
+    currentPage,
+    totalPages,
+    paginate,
+    pageNumbers: generatePageNumbers(),
+    indexOfFirstItem: startIndex + 1,
+    indexOfLastItem: startIndex + currentImages.length,
+    totalItems: images.length,
   };
 
 return (
@@ -56,36 +86,11 @@ return (
         </div>
       ))}
     </div>
-    <Pagination />
+
+    {/* Composant Pagination */}
+    <div className="flex justify-center mb-10">
+      <PaginationControls pagination={paginationData} />
+    </div>
   </div>
 );
-
-      {/* Pagination */}
-      {/* <div className="join flex justify-center mt-8">
-        <button
-          className="join-item btn"
-          onClick={() => goToPage(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          «
-        </button>
-
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
-            key={i + 1}
-            className={`join-item btn ${currentPage === i + 1 ? 'btn-active' : ''}`}
-            onClick={() => goToPage(i + 1)}
-          >
-            {i + 1}
-          </button>
-        ))}
-
-        <button
-          className="join-item btn"
-          onClick={() => goToPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          »
-        </button>
-      </div> */}
 }
