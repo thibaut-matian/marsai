@@ -1,169 +1,97 @@
-// Imports UI
-import NavbarJury from "../../components/layout/NavbarJury.jsx";
-import videoSample from "../../assets/videos/Teaser.mp4"; 
+    import { Link } from "react-router-dom";
+    import NavbarJury from "../../components/layout/NavbarJury.jsx";
 
-// Import de la Logique (Le Hook qu'on vient de créer)
-import { useDashboardJury } from "../../hooks/useDashboardJury.js";
-
-export default function DashboardJury() {
-  // On récupère les données et fonctions depuis le hook
-  const { decision, setDecision, film, formatDuration } = useDashboardJury();
-
-  return (
-    <div className="min-h-screen bg-[#100b18] text-white font-sans overflow-x-hidden">
-      
-      <NavbarJury />
-
-      <div className="pt-24 px-4 md:px-12 pb-20 container mx-auto max-w-7xl">
-        
-        {/* --- BLOC PRINCIPAL : VIDÉO + ACTIONS --- */}
-        <div className="flex flex-col lg:flex-row gap-8 mb-12">
-            
-            {/* LECTEUR VIDÉO */}
-            <div className="w-full lg:w-3/4">
-                <div className="relative rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 bg-black aspect-video group">
-                    <video 
-                        src={videoSample} 
-                        className="w-full h-full object-cover" 
-                        controls 
-                        autoPlay
-                        muted
-                    />
-                </div>
-            </div>
-
-            {/* VERDICT */}
-            <div className="w-full lg:w-1/4 flex flex-col justify-center">
-                <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 text-center sticky top-28">
-                    <h2 className="text-xl font-bold text-white mb-8 uppercase tracking-widest">Votre Verdict</h2>
-                    <div className="flex flex-col gap-6">
-                        <ActionButton type="validate" label="J'AIME (Valider)" current={decision} set={setDecision} />
-                        <ActionButton type="discuss" label="À DISCUTER" current={decision} set={setDecision} />
-                        <ActionButton type="refuse" label="J'AIME PAS (Refuser)" current={decision} set={setDecision} />
-                    </div>
-                    {decision && (
-                        <div className="mt-8 animate-fade-in text-blue-300 font-medium">
-                            Vote enregistré ! <br/> <span className="text-xs text-white/50">Passage au suivant...</span>
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
-
-        {/* --- SECTION INFOS --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
-            {/* COLONNE GAUCHE (2/3) */}
-            <div className="lg:col-span-2 space-y-8">
-                <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
-                    <div className="flex flex-wrap items-center gap-4 mb-6">
-                        <h1 className="text-3xl font-bold text-white">{film.title}</h1>
-                        <span className="px-3 py-1 bg-white/10 rounded-full border border-white/5 text-sm text-gray-300">
-                            ⏱ {formatDuration(film.duration)}
-                        </span>
-                        <span className={`px-3 py-1 rounded-full border text-sm font-bold ${film.aiClassification === 'FULL' ? 'bg-blue-500/20 text-blue-300 border-blue-500/30' : 'bg-purple-500/20 text-purple-300 border-purple-500/30'}`}>
-                            {film.aiClassification === 'FULL' ? '🤖 100% IA' : '🤝 Hybride'}
-                        </span>
-                    </div>
-                    
-                    <div className="space-y-8 text-gray-300 leading-relaxed">
-                        <div>
-                            <h3 className="text-white font-bold uppercase tracking-wider text-xs mb-3 text-blue-400">Synopsis</h3>
-                            <p>{film.synopsis}</p>
-                        </div>
-                        {film.directorNote && (
-                            <div>
-                                <h3 className="text-white font-bold uppercase tracking-wider text-xs mb-3 text-purple-400">Note d'intention</h3>
-                                <p className="italic text-white/60 pl-4 border-l-2 border-white/10">"{film.directorNote}"</p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
-                    <h3 className="text-white font-bold uppercase tracking-wider text-sm mb-6 flex items-center gap-2">
-                        <span className="text-xl">🛠</span> Fabrication & IA
-                    </h3>
-                    <div className="mb-6">
-                        <p className="text-xs text-gray-500 uppercase mb-2 font-bold">Stack Technologique</p>
-                        <div className="flex flex-wrap gap-2">
-                            {film.aiStack.split(',').map((tool, i) => (
-                                <span key={i} className="bg-black/40 px-3 py-1 rounded-lg border border-white/10 text-blue-200 text-sm">{tool.trim()}</span>
-                            ))}
-                        </div>
-                    </div>
-                    <div>
-                        <p className="text-xs text-gray-500 uppercase mb-2 font-bold">Méthodologie Créative</p>
-                        <p className="text-sm text-gray-400 bg-black/20 p-4 rounded-xl border border-white/5">{film.aiMethodology}</p>
-                    </div>
-                </div>
-            </div>
-
-            {/* COLONNE DROITE (1/3) */}
-            <div className="lg:col-span-1 space-y-8">
-                <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
-                    <h3 className="text-white font-bold uppercase tracking-wider text-xs mb-6 text-gray-500">Candidat</h3>
-                    <div className="flex items-center gap-4 mb-6">
-                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 border border-white/10 flex items-center justify-center text-lg font-bold">
-                            {film.director.firstname[0]}{film.director.lastname[0]}
-                        </div>
-                        <div>
-                            <p className="text-xl font-bold text-white">{film.director.firstname} {film.director.lastname}</p>
-                            <p className="text-sm text-gray-400">{film.director.city}, {film.director.country}</p>
-                        </div>
-                    </div>
-                    <div className="space-y-3 text-sm border-t border-white/10 pt-4">
-                        <div className="flex justify-between">
-                            <span className="text-gray-500">Métier</span>
-                            <span className="text-white">{film.director.profession}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-gray-500">Réseaux</span>
-                            <span className="text-blue-400 cursor-pointer hover:text-white">{film.director.socials.instagram}</span>
-                        </div>
-                    </div>
-                </div>
-
-                {film.team.length > 0 && (
-                    <div className="bg-white/5 border border-white/10 rounded-3xl p-8">
-                        <h3 className="text-white font-bold uppercase tracking-wider text-xs mb-4 text-gray-500">Équipe & Crédits</h3>
-                        <ul className="space-y-3">
-                            {film.team.map((member, idx) => (
-                                <li key={idx} className="flex justify-between text-sm items-center bg-black/20 p-2 rounded-lg">
-                                    <span className="text-gray-400">{member.role}</span>
-                                    <span className="text-white font-medium">{member.firstname} {member.lastname}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
-            </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Composant Visuel simple pour les boutons (Peut rester ici car c'est purement visuel)
-function ActionButton({ type, label, current, set }) {
-    const styles = {
-        validate: "border-green-500 text-green-500 hover:bg-green-500/10",
-        discuss: "border-yellow-500 text-yellow-500 hover:bg-yellow-500/10",
-        refuse: "border-red-500 text-red-500 hover:bg-red-500/10"
+    export default function DashboardJury() {
+    // Simulation de données (Tu connecteras ça au backend plus tard)
+    const stats = {
+        totalFilms: 12,
+        watchedFilms: 4,
+        remainingTime: "3 jours",
+        userName: "Véro"
     };
-    
-    const activeStyles = {
-        validate: "bg-green-600 border-green-500 text-white shadow-[0_0_20px_rgba(34,197,94,0.4)]",
-        discuss: "bg-yellow-600 border-yellow-500 text-white shadow-[0_0_20px_rgba(234,179,8,0.4)]",
-        refuse: "bg-red-600 border-red-500 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)]"
-    };
+
+    const progressPercentage = (stats.watchedFilms / stats.totalFilms) * 100;
 
     return (
-        <button 
-            onClick={() => set(type)}
-            className={`w-full py-4 rounded-xl flex items-center justify-center gap-3 font-bold transition-all duration-300 border uppercase tracking-wider text-sm ${current === type ? activeStyles[type] : `bg-transparent border-white/10 text-gray-400 ${styles[type]}`}`}
-        >
-            {label}
-        </button>
+        <div className="min-h-screen bg-[#100b18] text-white font-sans overflow-x-hidden">
+        <NavbarJury />
+
+        <div className="pt-32 px-4 md:px-12 pb-20 container mx-auto max-w-6xl animate-fade-in">
+            
+            {/* HEADER : SALUTATION */}
+            <header className="mb-16">
+                <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                    Bonjour, <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">{stats.userName}</span> 👋
+                </h1>
+                <p className="text-xl text-gray-400">Prêt(e) à découvrir les pépites de demain ?</p>
+            </header>
+
+            {/* SECTION PRINCIPALE : PROGRESSION */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                
+                {/* CARTE 1 : PROGRESSION */}
+                <div className="col-span-2 bg-white/5 border border-white/10 rounded-3xl p-8 relative overflow-hidden group hover:border-white/20 transition-all">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+                    
+                    <h2 className="text-2xl font-bold mb-2">Votre Progression</h2>
+                    <div className="flex items-end gap-2 mb-6">
+                        <span className="text-4xl font-bold text-white">{stats.watchedFilms}</span>
+                        <span className="text-xl text-gray-500 mb-1">/ {stats.totalFilms} films vus</span>
+                    </div>
+
+                    {/* Barre de progression */}
+                    <div className="w-full h-4 bg-gray-800 rounded-full overflow-hidden mb-2">
+                        <div 
+                            className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-1000 ease-out"
+                            style={{ width: `${progressPercentage}%` }}
+                        ></div>
+                    </div>
+                    <p className="text-sm text-gray-400 text-right">{Math.round(progressPercentage)}% complété</p>
+                </div>
+
+                {/* CARTE 2 : TEMPS RESTANT */}
+                <div className="bg-white/5 border border-white/10 rounded-3xl p-8 flex flex-col justify-center items-center text-center hover:border-white/20 transition-all">
+                    <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center text-2xl mb-4 text-red-400">
+                        ⏳
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-300">Temps Restant</h3>
+                    <p className="text-3xl font-bold text-white mt-2">{stats.remainingTime}</p>
+                    <p className="text-xs text-gray-500 mt-2">Avant la clôture des votes</p>
+                </div>
+            </div>
+
+            {/* ACTIONS PRINCIPALES */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                {/* BOUTON LANCER LA SESSION */}
+                <Link to="/jury/JuryVote" className="group relative bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-1 overflow-hidden transition-transform hover:scale-[1.02]">
+                    <div className="absolute inset-0 bg-white/20 group-hover:opacity-0 transition-opacity"></div>
+                    <div className="bg-[#100b18] rounded-[22px] h-full p-8 flex items-center justify-between relative z-10 group-hover:bg-transparent transition-colors">
+                        <div>
+                            <h3 className="text-2xl font-bold text-white mb-2">
+                                {stats.watchedFilms === 0 ? "Commencer les votes" : "Reprendre la session"}
+                            </h3>
+                            <p className="text-gray-400 group-hover:text-white/80 transition-colors">Visionner le film suivant</p>
+                        </div>
+                        <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white text-white group-hover:text-purple-600 transition-all">
+                            <svg className="w-8 h-8 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </div>
+                    </div>
+                </Link>
+
+                {/* BOUTON VOIR CLASSEMENT */}
+                <Link to="/jury/RankingJury" className="bg-white/5 border border-white/10 rounded-3xl p-8 flex items-center justify-between hover:bg-white/10 transition-all group">
+                    <div>
+                        <h3 className="text-2xl font-bold text-white mb-2">Mon Classement</h3>
+                        <p className="text-gray-400">Revoir mes notes et coups de cœur</p>
+                    </div>
+                    <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-300 group-hover:border-blue-400 group-hover:text-blue-400 transition-all">
+                        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+                    </div>
+                </Link>
+            </div>
+
+        </div>
+        </div>
     );
-}
+    }
