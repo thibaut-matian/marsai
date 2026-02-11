@@ -14,12 +14,12 @@ export default function Home() {
     <div className="min-h-screen">
       {/* Hero Section */}
       <div className="relative w-full h-screen text-white overflow-hidden">
-        {/* Video de fond - fixed pour couvrir toute la hauteur */}
+        {/* Video de fond - relative pour qu'elle scrolle */}
         <video
           autoPlay
           muted
           loop
-          className="fixed inset-0 w-full h-full object-cover -z-10"
+          className="absolute inset-0 w-full h-full object-cover -z-10"
         >
           <source src={teaserVideo} type="video/mp4" />
         </video>
@@ -27,11 +27,12 @@ export default function Home() {
         <div className="absolute bottom-0 left-0 w-full h-96 bg-linear-to-t from-black via-black/40 to-transparent z-0"></div>
 
         {/* Contenu */}
-        <div className="relative z-10 h-full flex flex-col items-center justify-end px-4 sm:px-6 md:px-8 pb-72"> <button
-          onClick={() => navigate('/submit-movie')}
-          className="text-base sm:text-lg border border-white/80 bg-white/10 backdrop-blur-md rounded-lg px-4 sm:px-6 py-2 sm:py-3 hover:bg-white hover:text-black transition-colors duration-300">
-          Commencer
-        </button>
+        <div className="absolute inset-0 z-10 h-full flex flex-col items-center justify-end px-4 sm:px-6 md:px-8 pb-16">
+          <button
+            onClick={() => navigate('/submit-movie')}
+            className="text-base sm:text-lg border border-white/80 bg-white/10 backdrop-blur-md rounded-lg px-4 sm:px-6 py-2 sm:py-3 hover:bg-white hover:text-black transition-colors duration-300">
+            Commencer
+          </button>
         </div>
       </div>
 

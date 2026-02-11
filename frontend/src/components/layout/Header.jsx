@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Header() {
@@ -38,7 +38,7 @@ export default function Header() {
     return (
         <>
             {/* Barre de navigation Principale (Visible tout le temps) */}
-            <div className="navbar bg-transparent backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
+            <div className="navbar bg-transparent backdrop-blur-md border-b border-white/10 fixed top-0 z-40">
                 <div className="flex-1"><Link to="/" 
                         className={`btn btn-ghost text-xl text-white transform transition-all duration-500 ease-in-out ${
                             showLogo 

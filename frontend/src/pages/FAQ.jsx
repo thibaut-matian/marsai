@@ -27,26 +27,34 @@ export default function FAQ() {
   };
 
   return (
-    <div className="flex flex-col w-full"> {/* Container Principal */}
+    <div className="flex flex-col w-full bg-black min-h-screen"> 
       
-      {/* --- SECTION HEADER (Vidéo + Titre) --- */}
-      {/* 1. relative : permet aux enfants en 'absolute' de se caler par rapport à CE bloc */}
-      {/* 2. overflow-hidden : coupe tout ce qui dépasse (la vidéo) */}
-      <div className="relative w-full h-64 overflow-hidden flex items-center justify-center">
+      {/* --- LE CONTENEUR HERO (Le Parent) --- */}
+      {/* - relative : Pour que la vidéo (absolute) se cale sur LUI.
+          - h-[50vh] : La hauteur de la zone vidéo (50% de la hauteur d'écran). 
+                       Tu peux mettre h-96 si tu veux plus petit.
+          - overflow-hidden : Coupe ce qui dépasse.
+      */}
+      <div className="relative w-full h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
         
-        {/* LA VIDÉO EN ARRIÈRE-PLAN */}
+        {/* LA VIDÉO (L'Enfant Arrière-Plan) */}
+        {/* CHANGEMENT ICI : absolute (au lieu de fixed) */}
         <video 
           autoPlay 
           muted 
           loop 
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover z-0"
         >
           <source src={videoFAQ} type="video/mp4"/>
         </video>
 
-        {/* LE CONTENU TEXTE */}
-        {/* z-10 et relative : permet au texte de passer PAR DESSUS la vidéo */}
-        <div className="relative z-10 text-center pt-30">
+        {/* LE FILTRE SOMBRE (Pour la lisibilité) */}
+        <div className="absolute inset-0 bg-black/50 z-0"></div>
+
+        {/* LE CONTENU TEXTE (L'Enfant Premier Plan) */}
+        {/* z-10 : Pour passer au dessus de la vidéo */}
+        {/* pt-20 : Pour éviter que le titre soit caché par le Header fixed */}
+        <div className="relative z-10 text-center px-4 pt-24">
           <h1 className="text-white font-bold text-4xl mb-2">FAQ</h1>
           <p className="text-white text-xl">Foire aux Questions</p>
         </div>
@@ -54,7 +62,7 @@ export default function FAQ() {
 
 
       {/* --- SECTION LISTE DES QUESTIONS --- */}
-      <div className="max-w-3xl mx-auto w-full px-4 py-10">
+      <div className="max-w-3xl mx-auto w-full px-4 py-10 z-10 relative">
         {questions.map((question, index) => (
           <div 
             key={index} 
@@ -67,7 +75,6 @@ export default function FAQ() {
             `}
             onClick={() => toggleQuestion(index)}
           >
-            {/* Titre de la question */}
             <div className="collapse-title text-white cursor-pointer text-base flex justify-between items-center w-full pr-4">
               <span className="flex-1 font-medium">{question}</span>
               <span className="text-indigo-400">
@@ -78,7 +85,6 @@ export default function FAQ() {
               </span>
             </div>
 
-            {/* Contenu de la réponse */}
             <div className="collapse-content text-sm text-gray-300"> 
               <p className="pt-2">Click the "Sign Up" button in the top right corner and follow the registration process.</p>
             </div>
