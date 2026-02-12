@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PaginationControls from '../components/pagination';
 
 export default function Galerie() {
@@ -12,7 +12,25 @@ export default function Galerie() {
 
   // État pour la page active
   const [currentPage, setCurrentPage] = useState(1);
-  const imagesPerPage = 5;
+  const [imagesPerPage, setImagesPerPage] = useState(5);
+
+  // Met à jour `imagesPerPage` selon la taille de l'écran (mobile-first)
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    const update = (matches) => {
+      const newPer = matches ? 10 : 5;
+      setImagesPerPage(newPer);
+      const newTotal = Math.ceil(images.length / newPer);
+      setCurrentPage((prev) => Math.min(prev, newTotal));
+    };
+    update(mq.matches);
+    if (mq.addEventListener) mq.addEventListener('change', (e) => update(e.matches));
+    else mq.addListener((e) => update(e.matches));
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener('change', (e) => update(e.matches));
+      else mq.removeListener((e) => update(e.matches));
+    };
+  }, [images.length]);
 
   // Calcul des images à afficher pour la page actuelle
   const startIndex = (currentPage - 1) * imagesPerPage;
