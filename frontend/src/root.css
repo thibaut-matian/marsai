@@ -1,3 +1,44 @@
+@import url('./fonts.css');
+@import 'flag-icons/css/flag-icons.min.css';
+
+:root {
+    /* Alkalami */
+    --alkalami-reg: 'Alkalami-Regular';
+
+    /* AndadaPro */
+    --andada-reg: 'AndadaPro-Regular';
+    --andada-med: 'AndadaPro-Medium';
+    --andada-semibold: 'AndadaPro-SemiBold';
+    --andada-bold: 'AndadaPro-Bold';
+    --andada-extrabold: 'AndadaPro-ExtraBold';
+
+    /* Barlow */
+    --barlow-reg: 'Barlow-Regular';
+    --barlow-semibold: 'Barlow-SemiBold';
+    --barlow-bold: 'Barlow-Bold';
+    --barlow-extrabold: 'Barlow-ExtraBold';
+
+    --bg-main: #0E3530;
+}
+
+/* Alkalami */
+.font-alkalami-reg { font-family: var(--alkalami-reg), serif; }
+
+/* AndadaPro */
+.font-andada-reg { font-family: var(--andada-reg), serif; }
+.font-andada-med { font-family: var(--andada-med), serif; }
+.font-andada-semibold { font-family: var(--andada-semibold), serif; }
+.font-andada-bold { font-family: var(--andada-bold), serif; }
+.font-andada-extrabold { font-family: var(--andada-extrabold), serif; }
+
+/* Barlow */
+.font-barlow-reg { font-family: var(--barlow-reg), sans-serif; }
+.font-barlow-semibold { font-family: var(--barlow-semibold), sans-serif; }
+.font-barlow-bold { font-family: var(--barlow-bold), sans-serif; }
+.font-barlow-extrabold { font-family: var(--barlow-extrabold), sans-serif; }
+
+.btn-white { background-color: white; color: black;}
+.badge-white { background-color: white; color: black;}
 body {
   margin: 0;
   padding: 0;

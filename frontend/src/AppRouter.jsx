@@ -11,6 +11,8 @@ import Submission from "./pages/Submission.jsx";
 import LoginJury from "./pages/jury/Login.jsx";
 import JuryVote from "./pages/jury/JuryVote.jsx";
 import DashboardJury from "./pages/jury/DashboardJury.jsx";
+import MovieModeration from "./pages/admin/movieModeration.jsx";
+import ModalDetails from "./components/features/movies/ModalDetails.jsx";
 import RankingJury from "./pages/jury/RankingJury.jsx";
 
 function AppRouter() {
@@ -24,6 +26,7 @@ function AppRouter() {
           <Route path="/planning" element={<Planning />} />
           <Route path="/submission" element={<Submission />} />
           <Route path="/submit-movie" element={<Submission />} />
+          <Route path="/modal" element={<ModalDetails />} />
         </Route>
 
         {/* 2. Routes Admin (avec la Sidebar Admin) */}
@@ -31,6 +34,7 @@ function AppRouter() {
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="jury-management" element={<JuryManagement />} />
+          <Route path="/admin/movies" element={<MovieModeration />} />
         </Route>
 
         {/* 3. Routes Jury et login (Autonomes, avec leur propre Navbar interne) */}
