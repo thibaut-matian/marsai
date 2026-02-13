@@ -8,6 +8,7 @@ const Note = require("./NotesModel");
 const MovieSocial = require("./MoviesSocials");
 const SocialMedia = require("./SocialMediasModel");
 const Event = require("./EventsModel");
+const EventType = require("./EventTypeModel");
 
 
 // 1. RELATION SQUAD (ÉQUIPE)
