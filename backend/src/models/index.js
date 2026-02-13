@@ -9,6 +9,7 @@ const MovieSocial = require("./MoviesSocials");
 const SocialMedia = require("./SocialMediasModel");
 const Event = require("./EventsModel");
 const MovieReport = require("./MoviesReportModel");
+const Status = require("./Status");
 
 
 // 1. RELATION SQUAD (ÉQUIPE)
@@ -104,5 +105,6 @@ module.exports = {
   Event,
   Note,
   MovieReport,
-  User
+  User,
+  Status
 };
