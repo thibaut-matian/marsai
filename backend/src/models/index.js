@@ -1,29 +1,70 @@
 const Movie = require("./MoviesModel");
+const SocialLink = require("./SocialLinksModel");
 const Squad = require("./SquadModel");
-const MoviesScreenshots = require("./MoviesScreenshotsModel");
+const Booking = require("./BookingModel");
+const MovieScreenshot = require("./MoviesScreenshotsModel");
 const Note = require("./NotesModel");
+const MovieSocial = require("./MoviesSocials");
+const SocialMedia = require("./SocialMediasModel");
+const Event = require("./EventsModel"); // Ajouté pour la cohérence globale
 
 
-// Un film peut avoir plusieurs collaborateurs (Scénariste, Monteur, etc.)
+// 1. RELATION SQUAD (ÉQUIPE)
+// Un film possède plusieurs collaborateurs
 Movie.hasMany(Squad, {
   foreignKey: "movie_id",
-  as: "team", // Alias utilisé pour la soumission groupée du formulaire [cite: 38, 42]
+  as: "team",
 });
-
-// Chaque collaborateur est lié à un seul film
 Squad.belongsTo(Movie, {
   foreignKey: "movie_id",
 });
 
-// Chaque collaborateur est lié à un seul film
-MoviesScreenshots.belongsTo(Movie, {
+// 2. RELATION RÉSEAUX SOCIAUX
+Movie.belongsToMany(SocialLink, {
+  through: "movies_socials",
+  foreignKey: "movie_id",
+  otherKey: "social_id",
+});
+// Important : Un lien (URL) appartient à une plateforme spécifique (ex: Instagram).
+SocialLink.belongsTo(SocialMedia, {
+  foreignKey: "social_id",
+  as: "platform",
+});
+
+// 3. RELATION SCREENSHOTS (CAPTURES D'ÉCRAN)
+Movie.hasMany(MovieScreenshot, {
+  foreignKey: "movie_id",
+  as: "screenshots",
+});
+MovieScreenshot.belongsTo(Movie, {
   foreignKey: "movie_id",
 });
 
-// Un film peut avoir plusieurs screenshots
-Movie.hasMany(MoviesScreenshots, {
+// 4. RELATION BILLETTERIE (EVENTS & BOOKINGS)
+Event.hasMany(Booking, {
+  foreignKey: "event_id",
+});
+
+Booking.belongsTo(Event, {
+  foreignKey: "event_id",
+});
+
+Event.belongsTo(EventType, { 
+  foreignKey: "event_type_id", 
+  as: "type" 
+});
+
+EventType.hasMany(Event, {
+  foreignKey: "event_type_id",
+});
+
+Movie.hasMany(MovieSocial, {
   foreignKey: "movie_id",
-  as: "screenshots",
+  as: "socials"
+});
+
+MovieSocial.belongsTo(Movie, {
+  foreignKey: "movie_id",
 });
 
 Movie.hasOne(Note, { 
@@ -38,8 +79,22 @@ Note.belongsTo(Movie, {
 // La Note est créée par un Utilisateur (Modérateur)
 // Un modérateur peut écrire plusieurs notes (sur des films différents), 
 // mais la Note, elle, n'a qu'un seul auteur.
-User.hasMany(Note, { foreignKey: "user_id" });
-Note.belongsTo(User, { foreignKey: "user_id", as: "Jury" });
+User.hasMany(Note, {
+  foreignKey: "user_id" 
+});
 
-// Export des modèles pour utilisation dans server.js
-module.exports = { Note, Movie, Squad, MoviesScreenshots };
+Note.belongsTo(User, {
+ foreignKey: "user_id", as: "Jury" 
+});
+
+// Ajout de SocialMedia et Event dans l'export pour server.js.
+module.exports = {
+  Movie,
+  Squad,
+  MovieScreenshot,
+  SocialLink,
+  SocialMedia,
+  Booking,
+  Event,
+  Note
+};
