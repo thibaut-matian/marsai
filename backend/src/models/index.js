@@ -2,6 +2,7 @@ const Movie = require("./MoviesModel");
 const SocialLink = require("./SocialLinksModel");
 const Squad = require("./SquadModel");
 const Booking = require("./BookingModel");
+const Newsletter = require("./NewsletterModel");
 const User = require("./Users");
 const MovieScreenshot = require("./MoviesScreenshotsModel");
 const Note = require("./NotesModel");
@@ -9,6 +10,8 @@ const MovieSocial = require("./MoviesSocials");
 const SocialMedia = require("./SocialMediasModel");
 const Event = require("./EventsModel");
 const EventType = require("./EventTypeModel");
+const MovieReport = require("./MoviesReportModel");
+const Status = require("./Status");
 
 
 // 1. RELATION SQUAD (ÉQUIPE)
@@ -78,6 +81,10 @@ Note.belongsTo(Movie, {
     foreignKey: "movie_id" 
 });
 
+
+MovieReport.belongsTo(Movie, { foreignKey: "movie_id" });
+Movie.hasOne(MovieReport, { foreignKey: "movie_id", onDelete: "CASCADE", as: "rapport" });
+
 // La Note est créée par un Utilisateur (Modérateur)
 // Un modérateur peut écrire plusieurs notes (sur des films différents), 
 // mais la Note, elle, n'a qu'un seul auteur.
@@ -99,5 +106,8 @@ module.exports = {
   Booking,
   Event,
   Note,
-  User
+  MovieReport,
+  User,
+  Newsletter,
+  Status
 };
