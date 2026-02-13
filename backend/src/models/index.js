@@ -8,6 +8,7 @@ const Note = require("./NotesModel");
 const MovieSocial = require("./MoviesSocials");
 const SocialMedia = require("./SocialMediasModel");
 const Event = require("./EventsModel");
+const Status = require("./Status");
 
 
 // 1. RELATION SQUAD (ÉQUIPE)
@@ -98,5 +99,6 @@ module.exports = {
   Booking,
   Event,
   Note,
-  User
+  User,
+  Status
 };
