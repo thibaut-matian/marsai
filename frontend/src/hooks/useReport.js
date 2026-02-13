@@ -33,8 +33,8 @@ export default function useReport() {
   { id: 32, titre: "Chirurgie esthétique ratée", auteur: "BeautyFail", email: "beauty@fail.com", raison: "Contenu inapproprié", timestamp: "Hier" },
   { id: 33, titre: "Arnaque au support tech", auteur: "MicrosoftSupport_Fake", email: "support@fake.in", raison: "Arnaque / Spam", timestamp: "Il y a 22h" }
 ];
-    const [reports, setReports] = useState(INITIAL_DATA);
-    const [selectedReport, setSelectedReport] = useState(null);
+  const [reports, setReports] = useState(INITIAL_DATA);
+    const [selectedReport, setSelectedReport] = useState(null); // Pour la modale de contact
 
     const handleDelete = (id, titre) => {
         if (window.confirm(`Confirmez-vous la suppression de la vidéo : ${titre} ?`)) {
@@ -44,9 +44,15 @@ export default function useReport() {
 
     const handleSendEmail = (e) => {
         e.preventDefault();
-        alert(`Email de notification envoyé à ${selectedReport.email}`);
-        setSelectedReport(null);
+        alert(`Email de notification envoyé à l'auteur : ${selectedReport.auteur}`);
+        setSelectedReport(null); // Ferme la modale
     };
 
-    return { reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport };
+    return { 
+        reports, 
+        handleDelete, 
+        handleSendEmail, 
+        selectedReport, 
+        setSelectedReport 
+    };
 }

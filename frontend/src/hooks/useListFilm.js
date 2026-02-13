@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 
 export default function useListFilm() {
 
@@ -23,7 +24,7 @@ const MOVIES_DATA = [
   { id: 18, titre: "Blade Runner 2049", realisateur: "Denis Villeneuve", description: "Un flic découvre un secret enfoui.", statut: "En attente" },
   { id: 19, titre: "The Shining", realisateur: "Stanley Kubrick", description: "Hiver sanglant dans un hôtel isolé.", statut: "Validé" },
   { id: 20, titre: "Avatar: The Way of Water", realisateur: "James Cameron", description: "Retour sur Pandora sous l'océan.", statut: "Validé" },
-{ id: 21, titre: "Le Loup de Wall Street", realisateur: "Martin Scorsese", description: "L'ascension fulgurante d'un courtier en bourse.", statut: "Validé" },
+  { id: 21, titre: "Le Loup de Wall Street", realisateur: "Martin Scorsese", description: "L'ascension fulgurante d'un courtier en bourse.", statut: "Validé" },
   { id: 22, titre: "Shutter Island", realisateur: "Martin Scorsese", description: "Enquête troublante dans un hôpital psychiatrique.", statut: "Validé" },
   { id: 23, titre: "Inception 2 (Fan Made)", realisateur: "Inconnu", description: "Une suite non officielle pleine de spam.", statut: "Signalé" },
   { id: 24, titre: "Le Seigneur des Anneaux", realisateur: "Peter Jackson", description: "Une quête épique pour détruire un anneau unique.", statut: "Validé" },
@@ -75,8 +76,23 @@ const MOVIES_DATA = [
   { id: 70, titre: "The Batman", realisateur: "Matt Reeves", description: "Le Chevalier Noir face au Sphinx.", statut: "Validé" }
 ];
 
+const [movies, setMovies] = useState(MOVIES_DATA);
+  const [selectedMovie, setSelectedMovie] = useState(null); // État pour la modale
 
- const getBadgeClass = (statut) => {
+  const handleDelete = (id, titre) => {
+    if (window.confirm(`Confirmez-vous la suppression du film : ${titre} ?`)) {
+      setMovies(movies.filter((movie) => movie.id !== id));
+    }
+  };
+
+  const handleSendEmail = (e) => {
+    e.preventDefault();
+    // Ici, on récupère les données du formulaire si besoin
+    alert(`Email envoyé au réalisateur de : ${selectedMovie.titre}`);
+    setSelectedMovie(null); // Ferme la modale
+  };
+
+  const getBadgeClass = (statut) => {
     switch (statut) {
       case "Validé": return "badge-success text-white";
       case "Refusé": return "badge-error text-white";
@@ -86,5 +102,12 @@ const MOVIES_DATA = [
     }
   };
 
-  return { MOVIES_DATA, getBadgeClass };
-}     
+  return { 
+    movies,
+    getBadgeClass, 
+    handleDelete, 
+    handleSendEmail, 
+    selectedMovie, 
+    setSelectedMovie 
+  };
+}

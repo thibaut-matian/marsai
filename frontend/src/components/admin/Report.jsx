@@ -2,7 +2,8 @@ import React from 'react';
 import { Eye, Trash2, AlertOctagon, User, Video, Mail, X, Send } from "lucide-react";
 import useReport from "../../hooks/useReport";
 import usePagination from "../../hooks/usePagination";
-import PaginationControls from "../pagination"; // On importe le composant réutilisable
+import PaginationControls from "../pagination";
+import ContactModal from "../features/contactModal";
 
 const ReportTable = () => {
   const { reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport } = useReport();
@@ -59,9 +60,8 @@ const ReportTable = () => {
                       <Eye size={18} />
                     </button>
                     <button 
-                      className="btn btn-square btn-sm bg-amber-500/20 hover:bg-amber-500 border border-amber-500 text-amber-500 hover:text-black transition-all"
-                      onClick={() => setSelectedReport(report)}
-                      title="Contacter l'auteur"
+                      className="btn btn-square btn-sm bg-amber-500/20 border border-amber-500 text-amber-500"
+                      onClick={() => setSelectedReport(report)} 
                     >
                       <Mail size={18} />
                     </button>
@@ -84,48 +84,12 @@ const ReportTable = () => {
       </div>
 
       {/* MODALE DE CONTACT */}
-      {selectedReport && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-[#1E1E24] border border-white/10 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-            <div className="p-6 text-white">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold flex items-center gap-2 text-amber-500">
-                  <Mail /> Contacter {selectedReport.auteur}
-                </h3>
-                <button onClick={() => setSelectedReport(null)} className="hover:text-red-500 transition-colors">
-                  <X size={24} />
-                </button>
-              </div>
-
-              <form onSubmit={handleSendEmail} className="space-y-4">
-                <div>
-                  <label className="block text-xs uppercase font-bold text-gray-500 mb-1">Destinataire</label>
-                  <input 
-                    type="text" 
-                    disabled 
-                    className="w-full bg-black/30 border border-white/5 rounded-lg p-2 text-gray-300 italic" 
-                    value={`${selectedReport.auteur} (${selectedReport.email})`} 
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs uppercase font-bold text-gray-500 mb-1">Message</label>
-                  <textarea 
-                    required
-                    className="w-full bg-black/30 border border-white/10 focus:border-amber-500 rounded-lg p-3 text-white text-sm h-32 outline-none transition-colors"
-                    defaultValue={`Bonjour ${selectedReport.auteur},\n\nVotre vidéo "${selectedReport.titre}" a été signalée pour : ${selectedReport.raison}. \n\nConformément à nos règles, celle-ci sera supprimée.`}
-                  />
-                </div>
-                <button 
-                  type="submit" 
-                  className="w-full btn bg-amber-500 hover:bg-amber-400 text-black border-none font-bold flex gap-2"
-                >
-                  <Send size={18} /> Envoyer l'avertissement
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
+      <ContactModal 
+        isOpen={!!selectedReport} // Ouvert si selectedMovie n'est pas null
+        data={selectedReport} 
+        onClose={() => setSelectedReport(null)} 
+        onSend={handleSendEmail}
+      />
     </div>
   );
 };
