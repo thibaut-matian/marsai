@@ -1,37 +1,51 @@
 const Movie = require("./MoviesModel");
 const SocialLink = require("./SocialLinksModel");
 const Squad = require("./SquadModel");
+const Booking = require("./BookingModel");
 const MoviesScreenshots = require("./MoviesScreenshotsModel");
 const MoviesSocials = require("./MoviesSocials");
+const SocialMedia = require("./SocialMediasModel");
+const Event = require("./EventsModel"); // Ajouté pour la cohérence globale
 
 // --- DÉFINITION DES RELATIONS ---
 
-// Un film peut avoir plusieurs collaborateurs (Scénariste, Monteur, etc.)
+// 1. RELATION SQUAD (ÉQUIPE)
+// Un film possède plusieurs collaborateurs
 Movie.hasMany(Squad, {
   foreignKey: "movie_id",
-  as: "team", // Alias utilisé pour la soumission groupée du formulaire [cite: 38, 42]
+  as: "team",
 });
-
-// Chaque collaborateur est lié à un seul film
 Squad.belongsTo(Movie, {
   foreignKey: "movie_id",
 });
 
+// 2. RELATION RÉSEAUX SOCIAUX
 Movie.belongsToMany(SocialLink, {
-  through: "movies_socials", // Table de jointure définie dans votre SQL
-  foreign_key: "movie_id",
+  through: "movies_socials",
+  foreignKey: "movie_id",
   otherKey: "social_id",
 });
+// Important : Un lien (URL) appartient à une plateforme spécifique (ex: Instagram).
+SocialLink.belongsTo(SocialMedia, {
+  foreignKey: "social_id",
+  as: "platform",
+});
 
-// Chaque collaborateur est lié à un seul film
+// 3. RELATION SCREENSHOTS (CAPTURES D'ÉCRAN)
+Movie.hasMany(MoviesScreenshots, {
+  foreignKey: "movie_id",
+  as: "screenshots",
+});
 MoviesScreenshots.belongsTo(Movie, {
   foreignKey: "movie_id",
 });
 
-// Un film peut avoir plusieurs screenshots
-Movie.hasMany(MoviesScreenshots, {
-  foreignKey: "movie_id",
-  as: "screenshots",
+// 4. RELATION BILLETTERIE (EVENTS & BOOKINGS)
+Event.hasMany(Booking, {
+  foreignKey: "event_id",
+});
+Booking.belongsTo(Event, {
+  foreignKey: "event_id",
 });
 
 Movie.hasMany(MoviesSocials, {
@@ -43,5 +57,13 @@ MoviesSocials.belongsTo(Movie, {
   foreignKey: "movie_id",
 });
 
-// Export des modèles pour utilisation dans server.js
-module.exports = { Movie, Squad, MoviesScreenshots };
+// Ajout de SocialMedia et Event dans l'export pour server.js.
+module.exports = {
+  Movie,
+  Squad,
+  MoviesScreenshots,
+  SocialLink,
+  SocialMedia,
+  Booking,
+  Event,
+};
