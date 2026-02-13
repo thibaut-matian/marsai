@@ -2,12 +2,12 @@ const Movie = require("./MoviesModel");
 const SocialLink = require("./SocialLinksModel");
 const Squad = require("./SquadModel");
 const Booking = require("./BookingModel");
-const MoviesScreenshots = require("./MoviesScreenshotsModel");
-const MoviesSocials = require("./MoviesSocials");
+const MovieScreenshot = require("./MoviesScreenshotsModel");
+const Note = require("./NotesModel");
+const MovieSocial = require("./MoviesSocials");
 const SocialMedia = require("./SocialMediasModel");
-const Events = require("./EventsModel"); // Ajouté pour la cohérence globale
+const Event = require("./EventsModel"); // Ajouté pour la cohérence globale
 
-// --- DÉFINITION DES RELATIONS ---
 
 // 1. RELATION SQUAD (ÉQUIPE)
 // Un film possède plusieurs collaborateurs
@@ -32,48 +32,69 @@ SocialLink.belongsTo(SocialMedia, {
 });
 
 // 3. RELATION SCREENSHOTS (CAPTURES D'ÉCRAN)
-Movie.hasMany(MoviesScreenshots, {
+Movie.hasMany(MovieScreenshot, {
   foreignKey: "movie_id",
   as: "screenshots",
 });
-MoviesScreenshots.belongsTo(Movie, {
+MovieScreenshot.belongsTo(Movie, {
   foreignKey: "movie_id",
 });
 
 // 4. RELATION BILLETTERIE (EVENTS & BOOKINGS)
-Events.hasMany(Booking, {
+Event.hasMany(Booking, {
   foreignKey: "event_id",
 });
 
-Booking.belongsTo(Events, {
+Booking.belongsTo(Event, {
   foreignKey: "event_id",
 });
 
-Events.belongsTo(EventsTypes, { 
+Event.belongsTo(EventType, { 
   foreignKey: "event_type_id", 
   as: "type" 
 });
 
-EventsTypes.hasMany(Events, {
+EventType.hasMany(Event, {
   foreignKey: "event_type_id",
 });
 
-Movie.hasMany(MoviesSocials, {
+Movie.hasMany(MovieSocial, {
   foreignKey: "movie_id",
   as: "socials"
 });
 
-MoviesSocials.belongsTo(Movie, {
+MovieSocial.belongsTo(Movie, {
   foreignKey: "movie_id",
+});
+
+Movie.hasOne(Note, { 
+    foreignKey: "movie_id", 
+    onDelete: "CASCADE" 
+});
+
+Note.belongsTo(Movie, { 
+    foreignKey: "movie_id" 
+});
+
+// La Note est créée par un Utilisateur (Modérateur)
+// Un modérateur peut écrire plusieurs notes (sur des films différents), 
+// mais la Note, elle, n'a qu'un seul auteur.
+User.hasMany(Note, {
+  foreignKey: "user_id" 
+});
+
+Note.belongsTo(User, {
+ foreignKey: "user_id", as: "Jury" 
 });
 
 // Ajout de SocialMedia et Event dans l'export pour server.js.
 module.exports = {
   Movie,
   Squad,
-  MoviesScreenshots,
+  MovieScreenshot,
   SocialLink,
   SocialMedia,
   Booking,
-  Events,
+  Event,
+  Note
 };
