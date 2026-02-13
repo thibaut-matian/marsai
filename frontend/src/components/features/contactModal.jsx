@@ -5,48 +5,72 @@ const ContactModal = ({ isOpen, onClose, data, onSend }) => {
   if (!isOpen || !data) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-[#1E1E24] border border-white/10 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-        <div className="p-6 text-white">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold flex items-center gap-2 text-amber-500">
-              <Mail /> Contacter {data.auteur || data.realisateur}
+    <div className="modal modal-open backdrop-blur-sm">
+      <div className="modal-box bg-[#1E1E24] border border-white/10 max-w-md shadow-2xl relative">
+        
+        {/* Bouton Fermer */}
+        <button 
+          type="button"
+          onClick={onClose} 
+          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-white hover:text-red-500"
+        >
+          <X size={20} />
+        </button>
+
+        <div className="text-white">
+          <div className="flex items-center gap-2 mb-6">
+            <div className="p-2 bg-amber-500/10 rounded-lg">
+              <Mail className="text-amber-500" />
+            </div>
+            <h3 className="text-xl font-bold text-amber-500">
+              Contacter {data.auteur || data.realisateur}
             </h3>
-            <button onClick={onClose} className="hover:text-red-500 transition-colors">
-              <X size={24} />
-            </button>
           </div>
 
-          <form onSubmit={onSend} className="space-y-4">
-            <div>
-              <label className="block text-xs uppercase font-bold text-gray-500 mb-1">Destinataire</label>
+          <form onSubmit={onSend} className="space-y-5">
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text text-gray-500 uppercase text-xs font-bold">Destinataire</span>
+              </label>
               <input 
                 type="text" 
                 disabled 
-                className="w-full bg-black/30 border border-white/5 rounded-lg p-2 text-gray-300 italic" 
+                className="input input-bordered bg-black/30 border-white/5 text-gray-400 italic w-full" 
                 value={`${data.auteur || data.realisateur} (${data.email || 'email non renseigné'})`} 
               />
             </div>
-            <div>
-              <label className="block text-xs uppercase font-bold text-gray-500 mb-1">Message</label>
-             <textarea 
-  required
-  className="w-full bg-black/30 border border-white/10 focus:border-amber-500 rounded-lg p-3 text-white text-sm h-32 outline-none transition-colors"
-  defaultValue={
-    data.raison 
-      ? `Bonjour ${data.auteur},\n\nVotre vidéo "${data.titre}" a été signalée pour le motif suivant : ${data.raison}.\n\nAprès vérification, nous vous informons que celle-ci va être traitée par notre équipe de modération.`
-      : `Bonjour ${data.realisateur},\n\nNous vous contactons concernant votre film "${data.titre}" dont le statut actuel est : ${data.statut}.\n\nNous aurions besoin de précisions complémentaires pour finaliser sa validation sur la plateforme.`
-  }
-/>
+
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text text-gray-500 uppercase text-xs font-bold">Message</span>
+              </label>
+              <textarea 
+                required
+                key={data.id} // ASTUCE : Force React à recalculer le texte quand on change de film
+                className="textarea textarea-bordered bg-black/30 border-white/10 focus:border-amber-500 text-white h-32 w-full text-sm outline-none"
+                defaultValue={
+                  data.raison 
+                    ? `Bonjour ${data.auteur},\n\nVotre vidéo "${data.titre}" a été signalée pour le motif suivant : ${data.raison}.\n\nAprès vérification, nous vous informons que celle-ci va être traitée par notre équipe de modération.`
+                    : `Bonjour ${data.realisateur},\n\nNous vous contactons concernant votre film "${data.titre}" dont le statut actuel est : ${data.statut}.\n\nNous aurions besoin de précisions complémentaires.`
+                }
+              />
             </div>
-            <button 
-              type="submit" 
-              className="w-full btn bg-amber-500 hover:bg-amber-400 text-black border-none font-bold flex gap-2"
-            >
-              <Send size={18} /> Envoyer le message
-            </button>
+
+            <div className="modal-action">
+              <button 
+                type="submit" 
+                className="btn w-full bg-amber-500 hover:bg-amber-400 text-black border-none font-bold flex gap-2"
+              >
+                <Send size={18} /> Envoyer le message
+              </button>
+            </div>
           </form>
         </div>
+      </div>
+
+      {/* Fond pour fermer en cliquant à côté */}
+      <div className="modal-backdrop bg-black/60" onClick={onClose}>
+        <button className="cursor-default">close</button>
       </div>
     </div>
   );

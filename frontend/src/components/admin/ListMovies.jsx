@@ -53,7 +53,7 @@ const ListMovies = () => {
                     </button>
                     <button 
                       className="btn btn-square btn-sm bg-amber-500/20 hover:bg-amber-500 border border-amber-500 text-amber-500 hover:text-black transition-all"
-                      onClick={() => setSelectedMovie(film)}
+                      onClick={() => setSelectedMovie(film)} // Ouvre la modale}
                       title="Contacter le réalisateur"
                     >
                       <Mail size={18} />
@@ -77,9 +77,9 @@ const ListMovies = () => {
 
       {/* MODALE DE CONTACT RÉUTILISABLE */}
       <ContactModal 
-        isOpen={!!selectedMovie} 
-        onClose={() => setSelectedMovie(null)} 
+        isOpen={!!selectedMovie}
         data={selectedMovie} 
+        onClose={() => setSelectedMovie(null)} 
         onSend={handleSendEmail} 
       />
     </div>

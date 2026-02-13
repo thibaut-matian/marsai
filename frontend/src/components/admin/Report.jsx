@@ -60,9 +60,8 @@ const ReportTable = () => {
                       <Eye size={18} />
                     </button>
                     <button 
-                      className="btn btn-square btn-sm bg-amber-500/20 hover:bg-amber-500 border border-amber-500 text-amber-500 hover:text-black transition-all"
-                      onClick={() => setSelectedReport(report)}
-                      title="Contacter l'auteur"
+                      className="btn btn-square btn-sm bg-amber-500/20 border border-amber-500 text-amber-500"
+                      onClick={() => setSelectedReport(report)} 
                     >
                       <Mail size={18} />
                     </button>
@@ -86,10 +85,10 @@ const ReportTable = () => {
 
       {/* MODALE DE CONTACT */}
       <ContactModal 
-        isOpen={!!selectedReport} 
-        onClose={() => setSelectedReport(null)} 
+        isOpen={!!selectedReport} // Ouvert si selectedMovie n'est pas null
         data={selectedReport} 
-        onSend={handleSendEmail} 
+        onClose={() => setSelectedReport(null)} 
+        onSend={handleSendEmail}
       />
     </div>
   );
