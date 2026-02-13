@@ -2,11 +2,12 @@ const Movie = require("./MoviesModel");
 const SocialLink = require("./SocialLinksModel");
 const Squad = require("./SquadModel");
 const Booking = require("./BookingModel");
+const User = require("./Users");
 const MovieScreenshot = require("./MoviesScreenshotsModel");
 const Note = require("./NotesModel");
 const MovieSocial = require("./MoviesSocials");
 const SocialMedia = require("./SocialMediasModel");
-const Event = require("./EventsModel"); // Ajouté pour la cohérence globale
+const Event = require("./EventsModel");
 
 
 // 1. RELATION SQUAD (ÉQUIPE)
@@ -96,5 +97,6 @@ module.exports = {
   SocialMedia,
   Booking,
   Event,
-  Note
+  Note,
+  User
 };
