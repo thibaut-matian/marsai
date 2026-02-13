@@ -12,7 +12,7 @@ const Event = require("./EventsModel");
 const EventType = require("./EventTypeModel");
 const MovieReport = require("./MoviesReportModel");
 const Status = require("./Status");
-
+const Role = require("./Roles");
 
 // 1. RELATION SQUAD (ÉQUIPE)
 // Un film possède plusieurs collaborateurs
@@ -96,6 +96,36 @@ Note.belongsTo(User, {
  foreignKey: "user_id", as: "Jury" 
 });
 
+// RELATION USER - ROLE
+User.belongsTo(Role, {
+  foreignKey: "role_id",
+  as: "role"
+});
+
+Role.hasMany(User, {
+  foreignKey: "role_id"
+});
+
+// RELATION BOOKING - STATUS
+Booking.belongsTo(Status, {
+  foreignKey: "status_id",
+  as: "status"
+});
+
+Status.hasMany(Booking, {
+  foreignKey: "status_id"
+});
+
+// RELATION BOOKING - USER
+Booking.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user"
+});
+
+User.hasMany(Booking, {
+  foreignKey: "user_id"
+});
+
 // Ajout de SocialMedia et Event dans l'export pour server.js.
 module.exports = {
   Movie,
@@ -105,9 +135,11 @@ module.exports = {
   SocialMedia,
   Booking,
   Event,
+  EventType,
   Note,
   MovieReport,
   User,
   Newsletter,
-  Status
+  Status,
+  Role
 };
