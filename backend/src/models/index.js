@@ -3,10 +3,11 @@ const SocialLink = require("./SocialLinksModel");
 const Squad = require("./SquadModel");
 const Booking = require("./BookingModel");
 const MoviesScreenshots = require("./MoviesScreenshotsModel");
+const Newsletter = require("./NewsletterModel");
 
 // --- DÉFINITION DES RELATIONS ---
 
-// Un film peut avoir plusieurs collaborateurs (Scénariste, Monteur, etc.)
+// Un film peut avoir plusieurs collaborateurs
 Movie.hasMany(Squad, {
   foreignKey: "movie_id",
   as: "team", // Alias utilisé pour la soumission groupée du formulaire [cite: 38, 42]
@@ -35,4 +36,12 @@ Movie.hasMany(MoviesScreenshots, {
 });
 
 // Export des modèles pour utilisation dans server.js
-module.exports = { Movie, Squad, MoviesScreenshots, SocialLink, Booking };
+module.exports = {
+  Movie,
+  Squad,
+  MoviesScreenshots,
+  SocialLink,
+  Booking,
+  Event,
+  Newsletter,
+};
