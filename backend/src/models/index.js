@@ -3,6 +3,7 @@ const SocialLink = require("./SocialLinksModel");
 const Squad = require("./SquadModel");
 const Booking = require("./BookingModel");
 const MoviesScreenshots = require("./MoviesScreenshotsModel");
+const MoviesSocials = require("./MoviesSocials");
 const SocialMedia = require("./SocialMediasModel");
 const Event = require("./EventsModel"); // Ajouté pour la cohérence globale
 
@@ -45,6 +46,15 @@ Event.hasMany(Booking, {
 });
 Booking.belongsTo(Event, {
   foreignKey: "event_id",
+});
+
+Movie.hasMany(MoviesSocials, {
+  foreignKey: "movie_id",
+  as: "socials"
+});
+
+MoviesSocials.belongsTo(Movie, {
+  foreignKey: "movie_id",
 });
 
 // Ajout de SocialMedia et Event dans l'export pour server.js.
