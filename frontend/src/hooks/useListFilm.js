@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 
 export default function useListFilm() {
 
@@ -75,8 +76,22 @@ const MOVIES_DATA = [
   { id: 70, titre: "The Batman", realisateur: "Matt Reeves", description: "Le Chevalier Noir face au Sphinx.", statut: "Validé" }
 ];
 
+const [movies, setMovies] = useState(MOVIES_DATA);
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
- const getBadgeClass = (statut) => {
+  const handleDelete = (id, titre) => {
+    if (window.confirm(`Confirmez-vous la suppression du film : ${titre} ?`)) {
+      setMovies(movies.filter((movie) => movie.id !== id));
+    }
+  };
+
+  const handleSendEmail = (e) => {
+    e.preventDefault();
+    alert(`Email envoyé au réalisateur de : ${selectedMovie.titre}`);
+    setSelectedMovie(null);
+  };
+
+  const getBadgeClass = (statut) => {
     switch (statut) {
       case "Validé": return "badge-success text-white";
       case "Refusé": return "badge-error text-white";
@@ -86,5 +101,12 @@ const MOVIES_DATA = [
     }
   };
 
-  return { MOVIES_DATA, getBadgeClass };
-}     
+  return { 
+    movies,
+    getBadgeClass, 
+    handleDelete, 
+    handleSendEmail, 
+    selectedMovie, 
+    setSelectedMovie 
+  };
+}
