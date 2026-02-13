@@ -9,6 +9,7 @@ const Note = require("./NotesModel");
 const MovieSocial = require("./MoviesSocials");
 const SocialMedia = require("./SocialMediasModel");
 const Event = require("./EventsModel");
+const MovieReport = require("./MoviesReportModel");
 const Status = require("./Status");
 
 
@@ -79,6 +80,10 @@ Note.belongsTo(Movie, {
     foreignKey: "movie_id" 
 });
 
+
+MovieReport.belongsTo(Movie, { foreignKey: "movie_id" });
+Movie.hasOne(MovieReport, { foreignKey: "movie_id", onDelete: "CASCADE", as: "rapport" });
+
 // La Note est créée par un Utilisateur (Modérateur)
 // Un modérateur peut écrire plusieurs notes (sur des films différents), 
 // mais la Note, elle, n'a qu'un seul auteur.
@@ -100,6 +105,7 @@ module.exports = {
   Booking,
   Event,
   Note,
+  MovieReport,
   User,
   Newsletter,
   Status
