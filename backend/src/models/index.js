@@ -2,6 +2,7 @@ const Movie = require("./MoviesModel");
 const SocialLink = require("./SocialLinksModel");
 const Squad = require("./SquadModel");
 const MoviesScreenshots = require("./MoviesScreenshotsModel");
+const MoviesSocials = require("./MoviesSocials");
 
 // --- DÉFINITION DES RELATIONS ---
 
@@ -31,6 +32,15 @@ MoviesScreenshots.belongsTo(Movie, {
 Movie.hasMany(MoviesScreenshots, {
   foreignKey: "movie_id",
   as: "screenshots",
+});
+
+Movie.hasMany(MoviesSocials, {
+  foreignKey: "movie_id",
+  as: "socials"
+});
+
+MoviesSocials.belongsTo(Movie, {
+  foreignKey: "movie_id",
 });
 
 // Export des modèles pour utilisation dans server.js
