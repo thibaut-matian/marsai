@@ -1,4 +1,5 @@
 const Movie = require("./MoviesModel");
+const SocialLink = require("./SocialLinksModel");
 const Squad = require("./SquadModel");
 const MoviesScreenshots = require("./MoviesScreenshotsModel");
 
@@ -13,6 +14,12 @@ Movie.hasMany(Squad, {
 // Chaque collaborateur est lié à un seul film
 Squad.belongsTo(Movie, {
   foreignKey: "movie_id",
+});
+
+Movie.belongsToMany(SocialLink, {
+  through: "movies_socials", // Table de jointure définie dans votre SQL
+  foreign_key: "movie_id",
+  otherKey: "social_id",
 });
 
 // Chaque collaborateur est lié à un seul film
