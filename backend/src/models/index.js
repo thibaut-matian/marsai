@@ -1,5 +1,5 @@
 const Movie = require("./MoviesModel");
-const SocialLink = require("./Social_linksModel");
+const SocialLink = require("./SocialLinksModel");
 const Squad = require("./SquadModel");
 
 // --- DÉFINITION DES RELATIONS ---
