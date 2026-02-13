@@ -2,6 +2,7 @@ const Movie = require("./MoviesModel");
 const SocialLink = require("./SocialLinksModel");
 const Squad = require("./SquadModel");
 const Booking = require("./BookingModel");
+const Newsletter = require("./NewsletterModel");
 const User = require("./Users");
 const MovieScreenshot = require("./MoviesScreenshotsModel");
 const Note = require("./NotesModel");
@@ -100,5 +101,6 @@ module.exports = {
   Event,
   Note,
   User,
+  Newsletter,
   Status
 };
