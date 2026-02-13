@@ -1,7 +1,7 @@
 const Movie = require("./MoviesModel");
 const Squad = require("./SquadModel");
 const MoviesScreenshots = require("./MoviesScreenshotsModel");
-const Note = require("./NoteModel");
+const Note = require("./NotesModel");
 
 
 // Un film peut avoir plusieurs collaborateurs (Scénariste, Monteur, etc.)
