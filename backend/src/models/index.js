@@ -3,6 +3,7 @@ const SocialLink = require("./SocialLinksModel");
 const Squad = require("./SquadModel");
 const Booking = require("./BookingModel");
 const MoviesScreenshots = require("./MoviesScreenshotsModel");
+const User = require("./Users");
 
 // --- DÉFINITION DES RELATIONS ---
 
@@ -35,4 +36,4 @@ Movie.hasMany(MoviesScreenshots, {
 });
 
 // Export des modèles pour utilisation dans server.js
-module.exports = { Movie, Squad, MoviesScreenshots, SocialLink, Booking };
+module.exports = { Movie, Squad, MoviesScreenshots, SocialLink, Booking, User }
