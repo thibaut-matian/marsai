@@ -5,7 +5,7 @@ const Booking = require("./BookingModel");
 const MoviesScreenshots = require("./MoviesScreenshotsModel");
 const MoviesSocials = require("./MoviesSocials");
 const SocialMedia = require("./SocialMediasModel");
-const Event = require("./EventsModel"); // Ajouté pour la cohérence globale
+const Events = require("./EventsModel"); // Ajouté pour la cohérence globale
 
 // --- DÉFINITION DES RELATIONS ---
 
@@ -41,11 +41,21 @@ MoviesScreenshots.belongsTo(Movie, {
 });
 
 // 4. RELATION BILLETTERIE (EVENTS & BOOKINGS)
-Event.hasMany(Booking, {
+Events.hasMany(Booking, {
   foreignKey: "event_id",
 });
-Booking.belongsTo(Event, {
+
+Booking.belongsTo(Events, {
   foreignKey: "event_id",
+});
+
+Events.belongsTo(EventsTypes, { 
+  foreignKey: "event_type_id", 
+  as: "type" 
+});
+
+EventsTypes.hasMany(Events, {
+  foreignKey: "event_type_id",
 });
 
 Movie.hasMany(MoviesSocials, {
@@ -65,5 +75,5 @@ module.exports = {
   SocialLink,
   SocialMedia,
   Booking,
-  Event,
+  Events,
 };
