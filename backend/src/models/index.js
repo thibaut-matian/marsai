@@ -1,5 +1,6 @@
 const Movie = require("./MoviesModel");
 const Squad = require("./SquadModel");
+const Booking = require("./BookingModel");
 
 // --- DÉFINITION DES RELATIONS ---
 
@@ -15,4 +16,4 @@ Squad.belongsTo(Movie, {
 });
 
 // Export des modèles pour utilisation dans server.js
-module.exports = { Movie, Squad };
+module.exports = { Movie, Squad, Booking };
