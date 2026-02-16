@@ -14,144 +14,170 @@ const MovieReport = require("./MovieReportModel");
 const Status = require("./StatusModel");
 const Role = require("./RoleModel");
 const Award = require("./AwardModel");
+const MovieAward = require("./MovieAwardModel");
 
-// 1. RELATION SQUAD (ÉQUIPE)
-// Un film possède plusieurs collaborateurs
+// =============================================
+// 1. MOVIE RELATIONS
+// =============================================
+
+// Movie - Award
+Movie.belongsToMany(Award, {
+  through: MovieAward,
+  foreignKey: "movie_id",
+  otherKey: "award_id",
+  as: "awards"
+});
+Award.belongsToMany(Movie, {
+  through: MovieAward,
+  foreignKey: "award_id",
+  otherKey: "movie_id",
+  as: "movies"
+});
+
+// Movie - Squad (équipe)
 Movie.hasMany(Squad, {
   foreignKey: "movie_id",
-  as: "team",
+  as: "team"
 });
 Squad.belongsTo(Movie, {
-  foreignKey: "movie_id",
+  foreignKey: "movie_id"
 });
 
-// 2. RELATION RÉSEAUX SOCIAUX
-Movie.belongsToMany(SocialLink, {
-  through: "movies_socials",
-  foreignKey: "movie_id",
-  otherKey: "social_id",
-});
-// Important : Un lien (URL) appartient à une plateforme spécifique (ex: Instagram).
-SocialLink.belongsTo(SocialMedia, {
-  foreignKey: "social_id",
-  as: "platform",
-});
-
-// 3. RELATION SCREENSHOTS (CAPTURES D'ÉCRAN)
+// Movie - Screenshots
 Movie.hasMany(MovieScreenshot, {
   foreignKey: "movie_id",
-  as: "screenshots",
+  as: "screenshots"
 });
 MovieScreenshot.belongsTo(Movie, {
+  foreignKey: "movie_id"
+});
+
+// Movie - Note
+Movie.hasOne(Note, { 
+  foreignKey: "movie_id", 
+  onDelete: "CASCADE" 
+});
+Note.belongsTo(Movie, { 
+  foreignKey: "movie_id" 
+});
+
+// Movie - MovieReport
+Movie.hasOne(MovieReport, { 
+  foreignKey: "movie_id", 
+  onDelete: "CASCADE", 
+  as: "rapport" 
+});
+MovieReport.belongsTo(Movie, { 
+  foreignKey: "movie_id" 
+});
+
+// Movie - SocialLink (via MovieSocial)
+Movie.belongsToMany(SocialLink, {
+  through: MovieSocial,
   foreignKey: "movie_id",
-});
-
-// 4. RELATION BILLETTERIE (EVENTS & BOOKINGS)
-Event.hasMany(Booking, {
-  foreignKey: "event_id",
-});
-
-Booking.belongsTo(Event, {
-  foreignKey: "event_id",
-});
-
-Event.belongsTo(EventType, { 
-  foreignKey: "event_type_id", 
-  as: "type" 
-});
-
-EventType.hasMany(Event, {
-  foreignKey: "event_type_id",
-});
-
-Movie.hasMany(MovieSocial, {
-  foreignKey: "movie_id",
+  otherKey: "social_id",
   as: "socials"
 });
-
-MovieSocial.belongsTo(Movie, {
-  foreignKey: "movie_id",
+SocialLink.belongsToMany(Movie, {
+  through: MovieSocial,
+  foreignKey: "social_id",
+  otherKey: "movie_id"
 });
 
-Movie.hasOne(Note, { 
-    foreignKey: "movie_id", 
-    onDelete: "CASCADE" 
+// =============================================
+// 2. SOCIAL RELATIONS
+// =============================================
+
+// SocialLink - SocialMedia (plateforme)
+SocialLink.belongsTo(SocialMedia, {
+  foreignKey: "social_id",
+  as: "platform"
+});
+SocialMedia.hasMany(SocialLink, {
+  foreignKey: "social_id"
 });
 
-Note.belongsTo(Movie, { 
-    foreignKey: "movie_id" 
-});
+// =============================================
+// 3. USER RELATIONS
+// =============================================
 
-
-MovieReport.belongsTo(Movie, { foreignKey: "movie_id" });
-Movie.hasOne(MovieReport, { foreignKey: "movie_id", onDelete: "CASCADE", as: "rapport" });
-
-// La Note est créée par un Utilisateur (Modérateur)
-// Un modérateur peut écrire plusieurs notes (sur des films différents), 
-// mais la Note, elle, n'a qu'un seul auteur.
-User.hasMany(Note, {
-  foreignKey: "user_id" 
-});
-
-Note.belongsTo(User, {
- foreignKey: "user_id", as: "Jury" 
-});
-
-// RELATION USER - ROLE
+// User - Role
 User.belongsTo(Role, {
   foreignKey: "role_id",
   as: "role"
 });
-
 Role.hasMany(User, {
   foreignKey: "role_id"
 });
 
-// RELATION BOOKING - STATUS
-Booking.belongsTo(Status, {
-  foreignKey: "status_id",
-  as: "status"
+// User - Note
+User.hasMany(Note, {
+  foreignKey: "user_id"
+});
+Note.belongsTo(User, {
+  foreignKey: "user_id", 
+  as: "Jury"
 });
 
-Status.hasMany(Booking, {
-  foreignKey: "status_id"
+// User - Booking
+User.hasMany(Booking, {
+  foreignKey: "user_id"
 });
-
-// RELATION BOOKING - USER
 Booking.belongsTo(User, {
   foreignKey: "user_id",
   as: "user"
 });
 
-User.hasMany(Booking, {
-  foreignKey: "user_id"
+// =============================================
+// 4. EVENT & BOOKING RELATIONS
+// =============================================
+
+// Event - EventType
+Event.belongsTo(EventType, { 
+  foreignKey: "event_type_id", 
+  as: "type" 
+});
+EventType.hasMany(Event, {
+  foreignKey: "event_type_id"
 });
 
-// RELATION MOVIE - AWARD
-Movie.belongsTo(Award, {
-  foreignKey: "award_id",
-  as: "award"
+// Event - Booking
+Event.hasMany(Booking, {
+  foreignKey: "event_id"
+});
+Booking.belongsTo(Event, {
+  foreignKey: "event_id"
 });
 
-Award.hasMany(Movie, {
-  foreignKey: "award_id"
+// Booking - Status
+Booking.belongsTo(Status, {
+  foreignKey: "status_id",
+  as: "status"
+});
+Status.hasMany(Booking, {
+  foreignKey: "status_id"
 });
 
-// Ajout de SocialMedia et Event dans l'export pour server.js.
+// =============================================
+// EXPORTS
+// =============================================
+
 module.exports = {
   Movie,
-  Squad,
-  MovieScreenshot,
   SocialLink,
-  SocialMedia,
+  Squad,
   Booking,
+  Newsletter,
+  User,
+  MovieScreenshot,
+  Note,
+  MovieSocial,
+  SocialMedia,
   Event,
   EventType,
-  Note,
   MovieReport,
-  User,
-  Newsletter,
   Status,
   Role,
-  Award
+  Award,
+  MovieAward
 };
