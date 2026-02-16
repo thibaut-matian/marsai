@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
 
 const MoviesScreenshots = sequelize.define(
-  "movie_screenshots",
+  "MoviesScreenshots",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -19,7 +19,7 @@ const MoviesScreenshots = sequelize.define(
     }
   },
   {
-    tableName: "movie_screenshots",
+    tableName: "movies_screenshots",
     timestamps: false,
   },
 );

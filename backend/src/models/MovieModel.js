@@ -140,6 +140,10 @@ const Movie = sequelize.define(
       type: DataTypes.STRING(255),
       allowNull: false, // Obligatoire si présence de voix [cite: 43]
     },
+    award_id: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1,
+    },
     is_selected: {
       type: DataTypes.INTEGER,
       defaultValue: 0,

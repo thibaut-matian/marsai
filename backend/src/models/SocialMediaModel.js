@@ -15,7 +15,7 @@ const SocialMedia = sequelize.define(
     },
   },
   {
-    tableName: "social_medias",
+    tableName: "socials_medias",
     timestamps: false,
     freezeTableName: true,
     comment:

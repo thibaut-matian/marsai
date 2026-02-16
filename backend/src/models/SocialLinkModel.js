@@ -28,7 +28,7 @@ const SocialLink = sequelize.define(
     },
   },
   {
-    tableName: "social_links",
+    tableName: "socials_links",
     timestamps: false,
     freezeTableName: true,
   },
