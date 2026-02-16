@@ -1,18 +1,18 @@
-const Movie = require("./MoviesModel");
-const SocialLink = require("./SocialLinksModel");
+const Movie = require("./MovieModel");
+const SocialLink = require("./SocialLinkModel");
 const Squad = require("./SquadModel");
 const Booking = require("./BookingModel");
 const Newsletter = require("./NewsletterModel");
-const User = require("./Users");
-const MovieScreenshot = require("./MoviesScreenshotsModel");
-const Note = require("./NotesModel");
-const MovieSocial = require("./MoviesSocials");
-const SocialMedia = require("./SocialMediasModel");
-const Event = require("./EventsModel");
+const User = require("./UserModel");
+const MovieScreenshot = require("./MovieScreenshotsModel");
+const Note = require("./NoteModel");
+const MovieSocial = require("./MovieSocialModel");
+const SocialMedia = require("./SocialMediaModel");
+const Event = require("./EventModel");
 const EventType = require("./EventTypeModel");
-const MovieReport = require("./MoviesReportModel");
-const Status = require("./Status");
-const Role = require("./Roles");
+const MovieReport = require("./MovieReportModel");
+const Status = require("./StatusModel");
+const Role = require("./RoleModel");
 
 // 1. RELATION SQUAD (ÉQUIPE)
 // Un film possède plusieurs collaborateurs
