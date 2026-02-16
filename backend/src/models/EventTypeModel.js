@@ -14,7 +14,7 @@ const EventType = sequelize.define("EventType", {
     },
   },
   {
-    tableName: "event_type",
+    tableName: "events_types",
     timestamps: false,
     charset: "utf8mb4",
     collate: "utf8mb4_general_ci",

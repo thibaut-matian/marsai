@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
 
 const MoviesSocials = sequelize.define(
-  "movies_socials",
+  "MoviesSocials",
   {
     id: {
       type: DataTypes.INTEGER,
