@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import PaginationControls from '../components/pagination';
 import { Flag } from 'lucide-react';
 import { countryCodes, getFlagClass } from '../constants/countryCodes';
+import useResponsiveImages from '../hooks/useResponsiveImages';
 
 export default function Galerie() {
   // Données simulées : 50 images (10 pages × 5 images)
@@ -21,21 +22,13 @@ export default function Galerie() {
 
   // État pour la page active
   const [currentPage, setCurrentPage] = useState(1);
-  const [imagesPerPage, setImagesPerPage] = useState(5);
   const desktopCheckRef = useRef(null);
   const galleryTopRef = useRef(null);
-  const [isDesktop, setIsDesktop] = useState(false);
+  const { isDesktop, imagesPerPage } = useResponsiveImages(desktopCheckRef, images.length, setCurrentPage);
 
   // Détection responsive basée sur les classes Tailwind :
   // on place un élément `hidden md:block` et on lit sa visibilité au montage.
-  useEffect(() => {
-    const detected = desktopCheckRef.current && desktopCheckRef.current.offsetParent !== null;
-    setIsDesktop(detected);
-    const newPer = detected ? 9 : 5;
-    setImagesPerPage(newPer);
-    const newTotal = Math.ceil(images.length / newPer);
-    setCurrentPage((prev) => Math.min(prev, newTotal));
-  }, [images.length]);
+  // responsive detection moved to useResponsiveImages hook
 
   // Construire les tailles de page selon le mode (mobile simple, desktop: N par page)
   const getPageSizes = (total) => {
