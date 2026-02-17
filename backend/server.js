@@ -6,7 +6,7 @@ require("dotenv").config();
 
 const sequelize = require("./src/config/Database");
 
-const { Movie, Squad } = require("./src/models");
+const routes = require('./src/routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,7 +16,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// --- ROUTES ---
+// Routes API
+app.use('/api', routes);
 
 // Route de bienvenue
 app.get("/", (req, res) => {
