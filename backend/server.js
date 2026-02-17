@@ -7,6 +7,8 @@ require("dotenv").config();
 const sequelize = require("./src/config/Database");
 
 const { Movie, Squad } = require("./src/models");
+const userRoutes = require("./src/routes/userRoutes");
+const roleRoutes = require("./src/routes/roleRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,6 +24,12 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.json({ message: "Bienvenue sur l'API marsAI" });
 });
+
+// Routes utilisateurs
+app.use("/api/users", userRoutes);
+
+// Routes rôles
+app.use("/api/roles", roleRoutes);
 
 /**
  * ROUTE DE SOUMISSION D'UNE ŒUVRE (Spécifications marsAI)
