@@ -3,7 +3,7 @@ import { Input } from "./FormUI";
 export default function StepContact({ formData, handleChange, errors }) {
   return (
     <div className="space-y-8 animate-fade-in">
-        <h2 className="text-2xl font-semibold mb-6 text-white/90">Contact & E-Réputation</h2>
+        <h2 className="text-xl md:text-2xl font-semibold mb-6 text-white/90">Contact & E-Réputation</h2>
         
         <Input label="Email *" name="email" type="email" value={formData.email} onChange={handleChange} error={errors.email} />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -11,9 +11,9 @@ export default function StepContact({ formData, handleChange, errors }) {
           <Input label="Mobile *" name="mobile" type="tel" value={formData.mobile} onChange={handleChange} error={errors.mobile} />
         </div>
 
-        <div className="bg-white/5 p-6 rounded-3xl border border-white/10 backdrop-blur-sm space-y-4">
+        <div className="bg-white/5 p-4 md:p-6 rounded-3xl border border-white/10 backdrop-blur-sm space-y-4">
           <Input label="Adresse *" name="address" value={formData.address} onChange={handleChange} error={errors.address} />
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
               <Input label="Code Postal *" name="zipcode" value={formData.zipcode} onChange={handleChange} error={errors.zipcode} />
               <Input label="Ville *" name="city" value={formData.city} onChange={handleChange} error={errors.city} />
           </div>
@@ -46,10 +46,7 @@ export default function StepContact({ formData, handleChange, errors }) {
 
         <div className="pt-2">
           <label className="flex items-center gap-4 cursor-pointer group p-4 rounded-2xl hover:bg-white/5 transition-all border border-transparent hover:border-white/10">
-            <div className="relative">
-                <input type="checkbox" name="newsletter" checked={formData.newsletter} onChange={handleChange} className="appearance-none w-6 h-6 rounded-md border-2 border-white/30 bg-black/30 checked:bg-blue-500 checked:border-blue-500 transition-all cursor-pointer"/>
-                <svg className={`absolute top-1 left-1 w-4 h-4 text-white pointer-events-none transition-opacity ${formData.newsletter ? 'opacity-100' : 'opacity-0'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-            </div>
+            <input type="checkbox" name="newsletter" checked={formData.newsletter} onChange={handleChange} className="checkbox checkbox-primary checkbox-sm border-white/30 bg-black/30" />
             <span className="text-sm text-gray-300 group-hover:text-white transition-colors select-none">Je souhaite recevoir la newsletter du festival.</span>
           </label>
         </div>

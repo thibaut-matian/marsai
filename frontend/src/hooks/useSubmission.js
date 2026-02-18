@@ -4,6 +4,7 @@ export function useSubmission() {
   // --- 1. STATE (Les données) ---
   const [step, setStep] = useState(1);
   const [errors, setErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const [formData, setFormData] = useState({
     // IDENTITÉ
@@ -202,7 +203,7 @@ export function useSubmission() {
       else {
         // C'est ici que se fera l'envoi au serveur plus tard
         console.log("Dossier validé :", formData);
-        alert("Dossier envoyé avec succès ! ");
+        setIsSubmitted(true);
       }
     }
   };
@@ -217,6 +218,8 @@ export function useSubmission() {
     setStep,
     formData,
     errors,
+    isSubmitted,
+    setIsSubmitted,
     handleChange,
     handleFileChange,
     handleStillsChange,
