@@ -1,4 +1,5 @@
 const { Op } = require('sequelize');
+const emailService = require('../services/emailService');
 const { Movie, Note, MovieReport } = require('../models');
 
 class AdminMovieController {
@@ -41,6 +42,21 @@ class AdminMovieController {
             });
         }
     }
+
+    static async handleContactEmail(req, res) {
+    const { to, subject, message } = req.body;
+
+    try {
+      // 2. Le controller appelle le service
+      await emailService.sendMailToDirector(to, subject, message);
+
+      // 3. Le controller répond au Front-end
+      res.status(200).json({ success: true, message: "Email envoyé !" });
+    } catch (error) {
+      console.error("Erreur dans le controller email:", error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  }
 }
 
 module.exports = AdminMovieController;

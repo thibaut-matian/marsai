@@ -1,10 +1,9 @@
 import React from 'react';
-import { Mail, X, Send } from "lucide-react";
+import { Mail, X, Send, Tag } from "lucide-react"; // Ajout de l'icône Tag pour le sujet
 
-const ContactModal = ({ isOpen, onClose, data, onSend }) => {
+const ContactModal = ({ isOpen, onClose, data, onSend, loading }) => {
   if (!isOpen || !data) return null;
 
-  // On prépare un petit helper pour le libellé du statut (vu que c'est un chiffre)
   const statusLabels = { 0: "En attente", 1: "Validé", 2: "Refusé", 3: "Signalé" };
   const currentStatusText = statusLabels[data.status] || "Inconnu";
 
@@ -26,12 +25,14 @@ const ContactModal = ({ isOpen, onClose, data, onSend }) => {
               <Mail className="text-amber-500" />
             </div>
             <h3 className="text-xl font-bold text-amber-500">
-              {/* CHANGEMENT : data.realisateur -> data.director */}
               Contacter {data.director}
             </h3>
           </div>
 
+          {/* onSubmit utilise la fonction onSend passée en props */}
           <form onSubmit={onSend} className="space-y-5">
+            
+            {/* DESTINATAIRE (Lecture seule) */}
             <div className="form-control w-full">
               <label className="label">
                 <span className="label-text text-gray-500 uppercase text-xs font-bold">Destinataire</span>
@@ -44,16 +45,32 @@ const ContactModal = ({ isOpen, onClose, data, onSend }) => {
               />
             </div>
 
+            {/* SUJET (Nouveau champ !) */}
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text text-gray-500 uppercase text-xs font-bold">Objet</span>
+              </label>
+              <input 
+                type="text"
+                name="subject" // Important pour le récupérer dans onSend
+                required
+                className="input input-bordered bg-black/30 border-white/10 focus:border-amber-500 text-white w-full text-sm outline-none"
+                defaultValue={data.status === 3 ? `Signalement de votre vidéo : ${data.title}` : `Information MarsAI : ${data.title}`}
+              />
+            </div>
+
+            {/* MESSAGE */}
             <div className="form-control w-full">
               <label className="label">
                 <span className="label-text text-gray-500 uppercase text-xs font-bold">Message</span>
               </label>
               <textarea 
+                name="message" // Important pour le récupérer dans onSend
                 required
                 key={data.id}
                 className="textarea textarea-bordered bg-black/30 border-white/10 focus:border-amber-500 text-white h-32 w-full text-sm outline-none"
                 defaultValue={
-                  data.status === 3 // Si le statut est "Signalé"
+                  data.status === 3 
                     ? `Bonjour ${data.director},\n\nVotre vidéo "${data.title}" a été signalée.\n\nAprès vérification, nous vous informons que celle-ci va être traitée par notre équipe de modération.`
                     : `Bonjour ${data.director},\n\nNous vous contactons concernant votre film "${data.title}" dont le statut actuel est : ${currentStatusText}.\n\nNous aurions besoin de précisions complémentaires.`
                 }
@@ -62,11 +79,22 @@ const ContactModal = ({ isOpen, onClose, data, onSend }) => {
 
             <div className="modal-action">
               <button 
-                type="submit" 
-                className="btn w-full bg-amber-500 hover:bg-amber-400 text-black border-none font-bold flex gap-2"
-              >
-                <Send size={18} /> Envoyer le message
-              </button>
+      type="submit" 
+      disabled={!data.email || loading}
+      className={`btn w-full font-bold flex gap-2 ${loading ? 'btn-disabled' : 'bg-amber-500 hover:bg-amber-400 text-black border-none'}`}
+    >
+      {loading ? (
+        <>
+          <span className="loading loading-spinner"></span>
+          Envoi en cours...
+        </>
+      ) : (
+        <>
+          <Send size={18} /> 
+          {data.email ? "Envoyer le message" : "Email manquant"}
+        </>
+      )}
+    </button>
             </div>
           </form>
         </div>

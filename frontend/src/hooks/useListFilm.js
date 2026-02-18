@@ -44,11 +44,6 @@ export default function useListFilm() {
     }
   };
 
-  const handleSendEmail = (e) => {
-    e.preventDefault();
-    alert(`Email envoyé au réalisateur de : ${selectedMovie.title}`);
-    setSelectedMovie(null);
-  };
 
   // Adaptation selon les valeurs de `is_selected` (0, 1, 2, 3) renvoyées par Sequelize
   const getBadgeClass = (status) => {
@@ -74,7 +69,6 @@ export default function useListFilm() {
     getBadgeClass, 
     getStatusText,
     handleDelete, 
-    handleSendEmail, 
     selectedMovie, 
     setSelectedMovie,
     refreshMovies: fetchMovies 

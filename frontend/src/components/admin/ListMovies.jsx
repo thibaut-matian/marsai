@@ -4,6 +4,7 @@ import usePagination from "../../hooks/usePagination";
 import PaginationControls from "../../components/pagination"; 
 import { Eye, Mail, Trash2, Clapperboard, User } from "lucide-react";
 import ContactModal from "../../components/features/contactModal";
+import { useEmailSend } from "../../hooks/useEmailSend";
 
 const ListMovies = () => {
   // 1. On récupère les nouveaux états et fonctions utilitaires
@@ -14,16 +15,27 @@ const ListMovies = () => {
     getBadgeClass, 
     getStatusText, // Ajouté pour transformer le 0/1 en texte
     handleDelete, 
-    handleSendEmail, 
     selectedMovie, 
     setSelectedMovie 
   } = useListFilm();
+
+  const { sendEmail, loading: emailLoading } = useEmailSend();
+
+    const handleSendEmail = async (e) => {
+    if (!selectedMovie?.email) return;
+    await sendEmail(
+      e,
+      selectedMovie.email,
+      selectedMovie.title,
+      () => setSelectedMovie(null),
+    );
+  };
   
   const pagination = usePagination(movies, 20);
 
   // 2. Gestion de l'attente des données (très important pour éviter les crashs)
-  if (loading) return <div className="p-10 text-center text-blue-400 animate-pulse font-bold">Chargement des films de MarsAI...</div>;
-  if (error) return <div className="p-10 text-center text-red-500 font-bold">⚠️ Erreur : {error}</div>;
+ if (loading) return <div className="p-10 text-center text-blue-400 animate-pulse font-bold">Chargement des films de MarsAI...</div>;
+  if (error)   return <div className="p-10 text-center text-red-500 font-bold">⚠️ Erreur : {error}</div>;
 
   return (
     <div className="p-6">
@@ -94,11 +106,12 @@ const ListMovies = () => {
         <PaginationControls pagination={pagination} label="films" />
       </div>
 
-      <ContactModal 
-        isOpen={!!selectedMovie}
-        data={selectedMovie} 
-        onClose={() => setSelectedMovie(null)} 
-        onSend={handleSendEmail} 
+       <ContactModal
+        isOpen={!!selectedMovie}               
+        data={selectedMovie}
+        onClose={() => setSelectedMovie(null)}
+        onSend={handleSendEmail}               
+        loading={emailLoading}               
       />
     </div>
   );
