@@ -6,11 +6,24 @@ import { Eye, Mail, Trash2, Clapperboard, User } from "lucide-react";
 import ContactModal from "../../components/features/contactModal";
 
 const ListMovies = () => {
-  // On récupère tout ce qui est nécessaire du hook
-  const { movies, getBadgeClass, handleDelete, handleSendEmail, selectedMovie, setSelectedMovie } = useListFilm();
+  // 1. On récupère les nouveaux états et fonctions utilitaires
+  const { 
+    movies, 
+    loading, 
+    error, 
+    getBadgeClass, 
+    getStatusText, // Ajouté pour transformer le 0/1 en texte
+    handleDelete, 
+    handleSendEmail, 
+    selectedMovie, 
+    setSelectedMovie 
+  } = useListFilm();
   
-  // La pagination utilise maintenant 'movies' (l'état)
   const pagination = usePagination(movies, 20);
+
+  // 2. Gestion de l'attente des données (très important pour éviter les crashs)
+  if (loading) return <div className="p-10 text-center text-blue-400 animate-pulse font-bold">Chargement des films de MarsAI...</div>;
+  if (error) return <div className="p-10 text-center text-red-500 font-bold">⚠️ Erreur : {error}</div>;
 
   return (
     <div className="p-6">
@@ -32,18 +45,24 @@ const ListMovies = () => {
                 <td>
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400"><Clapperboard size={20} /></div>
-                    <div className="font-bold text-md">{film.titre}</div>
+                    {/* CHANGEMENT : film.titre -> film.title */}
+                    <div className="font-bold text-md">{film.title}</div>
                   </div>
                 </td>
                 <td>
                   <div className="flex items-center gap-2 text-gray-300 italic">
-                    <User size={14} className="text-gray-500" /> {film.realisateur}
+                    {/* CHANGEMENT : film.realisateur -> film.director */}
+                    <User size={14} className="text-gray-500" /> {film.director}
                   </div>
                 </td>
-                <td className="max-w-md italic text-gray-400 text-sm line-clamp-1">{film.description}</td>
+                {/* CHANGEMENT : film.description -> film.vo_desc (ou en_desc selon ton API) */}
+                <td className="max-w-md italic text-gray-400 text-sm line-clamp-1">
+                  {film.vo_desc || film.description}
+                </td>
                 <td className="text-center">
-                  <div className={`badge ${getBadgeClass(film.statut)} py-3 px-4 font-semibold whitespace-nowrap`}>
-                    {film.statut}
+                  {/* CHANGEMENT : On utilise status pour la classe et getStatusText pour le texte */}
+                  <div className={`badge ${getBadgeClass(film.status)} py-3 px-4 font-semibold whitespace-nowrap`}>
+                    {getStatusText(film.status)}
                   </div>
                 </td>
                 <td>
@@ -53,14 +72,14 @@ const ListMovies = () => {
                     </button>
                     <button 
                       className="btn btn-square btn-sm bg-amber-500/20 hover:bg-amber-500 border border-amber-500 text-amber-500 hover:text-black transition-all"
-                      onClick={() => setSelectedMovie(film)} // Ouvre la modale}
+                      onClick={() => setSelectedMovie(film)} 
                       title="Contacter le réalisateur"
                     >
                       <Mail size={18} />
                     </button>
                     <button 
                       className="btn btn-square btn-sm bg-red-600/20 hover:bg-red-600 border border-red-600 text-red-500 hover:text-white transition-all"
-                      onClick={() => handleDelete(film.id, film.titre)}
+                      // onClick={() => handleDelete(film.id, film.title)}
                       title="Supprimer"
                     >
                       <Trash2 size={18} />
@@ -75,7 +94,6 @@ const ListMovies = () => {
         <PaginationControls pagination={pagination} label="films" />
       </div>
 
-      {/* MODALE DE CONTACT RÉUTILISABLE */}
       <ContactModal 
         isOpen={!!selectedMovie}
         data={selectedMovie} 
