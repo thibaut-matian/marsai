@@ -50,10 +50,6 @@ const Movie = sequelize.define(
       },
       // Validation système : Minimum 18 ans révolus
     },
-    bio: {
-      type: DataTypes.STRING(500),
-      allowNull: false,
-    },
     country: {
       type: DataTypes.STRING(100),
       allowNull: false,
