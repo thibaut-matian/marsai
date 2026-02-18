@@ -4,25 +4,28 @@ import axios from 'axios';
 export const useEmailSend = () => {
     const [loading, setLoading] = useState(false);
 
-    const sendEmail = async (e, recipientEmail, movieTitle, callback) => {
+    // now accept an optional director name as the fourth argument
+    const sendEmail = async (e, recipientEmail, movieTitle, director, callback) => {
         e.preventDefault();
         setLoading(true);
 
-        // Extraction des données du formulaire (Sujet et Message)
         const formData = new FormData(e.target);
         const subject = formData.get('subject');
         const message = formData.get('message');
 
         try {
-            const response = await axios.post("http://localhost:3000/api/admin/send-email", {
+            const payload = {
                 to: recipientEmail,
-                subject: subject,
-                message: message
-            });
+                subject,
+                message,
+            };
+            if (director) payload.director = director; // forward if provided
+
+            const response = await axios.post("http://localhost:3000/api/admin/send-email", payload);
 
             if (response.data.success) {
                 alert("🚀 Email envoyé avec succès !");
-                if (callback) callback(); // Pour fermer la modale par exemple
+                if (callback) callback();
             }
         } catch (err) {
             console.error("Erreur envoi mail:", err);

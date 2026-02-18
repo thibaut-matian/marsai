@@ -23,7 +23,7 @@ class AdminMovieController {
             const formattedMovies = movies.map(movie => ({
                 id: movie.id,
                 title: movie.vo_title,
-                realisator: `${movie.firstname} ${movie.lastname}`,
+                director: `${movie.firstname} ${movie.lastname}`,
                 description: movie.vo_desc,
                 status: movie.is_selected,
                 email: movie.mail

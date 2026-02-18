@@ -25,7 +25,7 @@ const ContactModal = ({ isOpen, onClose, data, onSend, loading }) => {
               <Mail className="text-amber-500" />
             </div>
             <h3 className="text-xl font-bold text-amber-500">
-              Contacter {data.director}
+              Contacter {data.director?.trim()}
             </h3>
           </div>
 
@@ -41,7 +41,7 @@ const ContactModal = ({ isOpen, onClose, data, onSend, loading }) => {
                 type="text" 
                 disabled 
                 className="input input-bordered bg-black/30 border-white/5 text-gray-400 italic w-full" 
-                value={`${data.director} (${data.email || 'email non renseigné'})`} 
+                value={`${data.director?.trim()} (${data.email || 'email non renseigné'})`} 
               />
             </div>
 
@@ -71,8 +71,8 @@ const ContactModal = ({ isOpen, onClose, data, onSend, loading }) => {
                 className="textarea textarea-bordered bg-black/30 border-white/10 focus:border-amber-500 text-white h-32 w-full text-sm outline-none"
                 defaultValue={
                   data.status === 3 
-                    ? `Bonjour ${data.director},\n\nVotre vidéo "${data.title}" a été signalée.\n\nAprès vérification, nous vous informons que celle-ci va être traitée par notre équipe de modération.`
-                    : `Bonjour ${data.director},\n\nNous vous contactons concernant votre film "${data.title}" dont le statut actuel est : ${currentStatusText}.\n\nNous aurions besoin de précisions complémentaires.`
+                    ? `Bonjour ${data.director?.trim()},\n\nVotre vidéo "${data.title}" a été signalée.\n\nAprès vérification, nous vous informons que celle-ci va être traitée par notre équipe de modération.`
+                    : `Bonjour ${data.director?.trim()},\n\nNous vous contactons concernant votre film "${data.title}" dont le statut actuel est : ${currentStatusText}.\n\nNous aurions besoin de précisions complémentaires.`
                 }
               />
             </div>

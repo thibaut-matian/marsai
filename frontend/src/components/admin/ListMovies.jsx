@@ -7,7 +7,6 @@ import ContactModal from "../../components/features/contactModal";
 import { useEmailSend } from "../../hooks/useEmailSend";
 
 const ListMovies = () => {
-  // 1. On récupère les nouveaux états et fonctions utilitaires
   const { 
     movies, 
     loading, 
@@ -27,6 +26,7 @@ const ListMovies = () => {
       e,
       selectedMovie.email,
       selectedMovie.title,
+      selectedMovie.director,    // now part of the payload
       () => setSelectedMovie(null),
     );
   };
@@ -64,7 +64,7 @@ const ListMovies = () => {
                 <td>
                   <div className="flex items-center gap-2 text-gray-300 italic">
                     {/* CHANGEMENT : film.realisateur -> film.director */}
-                    <User size={14} className="text-gray-500" /> {film.director}
+                    <User size={14} className="text-gray-500" /> {film.director?.trim()}
                   </div>
                 </td>
                 {/* CHANGEMENT : film.description -> film.vo_desc (ou en_desc selon ton API) */}
