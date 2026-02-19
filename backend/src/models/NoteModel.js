@@ -5,26 +5,31 @@ const Note = sequelize.define(
   "Notes",
   {
     id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
     user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
     movie_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
     feedback: {
-        type: DataTypes.STRING(500),
-        allowNull: true,
+      type: DataTypes.STRING(500),
+      allowNull: true,
     },
     decision: {
-        type: DataTypes.ENUM("aime", "n'aime pas", "a discuter"),
-        allowNull: true,
+      type: DataTypes.ENUM("j'aime", "je n'aime pas", "à discuter"),
+      allowNull: true,
     },
-  });
+  },
+  {
+    tableName: "notes",
+    timestamps: false,
+  },
+);
 
 module.exports = Note;
