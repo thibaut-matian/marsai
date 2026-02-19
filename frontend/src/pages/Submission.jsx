@@ -8,7 +8,7 @@ import StepDetails from "../components/submission/StepDetails";
 export default function Submission() {
 const navigate = useNavigate();
 const { 
-step, formData, errors, isSubmitted, handleChange, handleFileChange, handleStillsChange, 
+step, formData, errors, isSubmitted, isLoading, handleChange, handleFileChange, handleStillsChange, 
 setCustomValue, addTeamMember, removeTeamMember, updateTeamMember, 
 handleNext, handlePrev 
 } = useSubmission();
@@ -44,10 +44,23 @@ return (
 
         {/* NAVIGATION */}
         <div className="mt-8 md:mt-12 pt-6 md:pt-8 flex flex-col sm:flex-row gap-4 md:gap-6 border-t border-white/10">
-        {step > 1 && <button type="button" onClick={handlePrev} className="btn btn-outline border-white/20 text-white/70 hover:bg-white/10 hover:text-white hover:border-white/20 sm:w-1/3 rounded-2xl h-12 md:h-14 order-2 sm:order-1">← Retour</button>}
-        <button type="button" onClick={handleNext} className={`btn flex-1 rounded-2xl h-12 md:h-14 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-[length:200%_auto] hover:bg-[position:right_center] text-white font-bold border-0 shadow-[0_5px_20px_-5px_rgba(99,102,241,0.6)] transition-all duration-500 order-1 sm:order-2 ${step === 1 ? 'w-full' : ''}`}>
-            {step === 4 ? "Envoyer " : "Suivant →"}
-        </button>
+          {step > 1 && !isLoading && (
+            <button type="button" onClick={handlePrev} className="btn btn-outline border-white/20 text-white/70 hover:bg-white/10 hover:text-white hover:border-white/20 sm:w-1/3 rounded-2xl h-12 md:h-14 order-2 sm:order-1">
+              ← Retour
+            </button>
+          )}
+          <button 
+            type="button" 
+            onClick={handleNext} 
+            disabled={isLoading}
+            className={`btn flex-1 rounded-2xl h-12 md:h-14 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-[length:200%_auto] hover:bg-[position:right_center] text-white font-bold border-0 shadow-[0_5px_20px_-5px_rgba(99,102,241,0.6)] transition-all duration-500 order-1 sm:order-2 ${step === 1 ? 'w-full' : ''} ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            {isLoading ? (
+              <span className="loading loading-spinner loading-md"></span>
+            ) : (
+              step === 4 ? "Envoyer 🚀" : "Suivant →"
+            )}
+          </button>
         </div>
     </form>
     </div>
@@ -57,7 +70,10 @@ return (
       <dialog open className="modal modal-open">
         <div className="modal-box bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border border-white/20 text-center mx-4">
           <h3 className="font-bold text-xl md:text-2xl bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">Candidature envoyée !</h3>
-          <p className="py-4 text-sm md:text-base text-white/70">Votre dossier a été soumis avec succès. Nous reviendrons vers vous très bientôt.</p>
+          <p className="py-4 text-sm md:text-base text-white/70">
+            Votre dossier a été soumis avec succès. Vous avez reçu un token d'accès unique.
+          </p>
+          <p className="text-xs text-white/50 mb-4">Consultez la console pour voir votre token JWT</p>
           <div className="modal-action justify-center">
             <button onClick={handleCloseModal} className="btn bg-gradient-to-r from-blue-600 to-purple-600 border-0 text-white rounded-xl px-6 md:px-8 text-sm md:text-base">
               Retour à l'accueil
