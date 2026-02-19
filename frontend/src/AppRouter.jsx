@@ -8,6 +8,7 @@ import AdminLayout from "./components/admin/layout/AdminLayout.jsx";
 import MainLayout from "./components/layout/MainLayout.jsx";
 import Submission from "./pages/Submission.jsx";
 import LoginJury from "./pages/jury/Login.jsx";
+import PasswordForm from "./components/features/auth/PasswordForm.jsx";
 import JuryVote from "./pages/jury/JuryVote.jsx";
 import DashboardJury from "./pages/jury/DashboardJury.jsx";
 import Galerie from "./pages/Galerie.jsx";
@@ -42,7 +43,8 @@ function AppRouter() {
         {/* 3. Routes Jury et login (Autonomes, avec leur propre Navbar interne) */}
         {/* On la met en dehors des layouts pour qu'elle soit en plein écran avec son propre style */}
         <Route path="/jury/DashboardJury" element={<DashboardJury />} />
-        <Route path="/login" element={<LoginJury />} />
+        <Route path="/jury/login" element={<LoginJury />} />
+        <Route path="/jury/set-password" element={<PasswordForm />} />
         <Route path="/jury/RankingJury" element={<RankingJury />} />
         <Route path="/jury/JuryVote" element={<JuryVote />} />
         {/* <Route path="/login" element={<LoginForm />} /> */}
