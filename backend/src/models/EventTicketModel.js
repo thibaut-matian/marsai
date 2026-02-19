@@ -1,29 +1,26 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/Database");
 
-const User = sequelize.define(
-  "User",
+const EventTicket = sequelize.define(
+  "EventTicket",
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    mail: {
-      type: DataTypes.STRING(255),
+    ticket_type_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      validate: {
-        isEmail: true,
+      references: {
+        model: "ticket_types",
+        key: "id",
       },
     },
-    password: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-    },
-    token: {
+    email: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      unique: true,
+      validate: { isEmail: true },
     },
     firstname: {
       type: DataTypes.STRING(100),
@@ -33,28 +30,26 @@ const User = sequelize.define(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
-    mobile: {
+    qr_token: {
       type: DataTypes.STRING(255),
       allowNull: false,
+      unique: true,
     },
-    role_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "roles",
-        key: "id",
-      },
-    },
-    is_active: {
+    is_scanned: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: true,
+      defaultValue: false,
+    },
+    reserved_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
     },
   },
   {
-    tableName: "staff",
+    tableName: "event_tickets",
     timestamps: false,
+    charset: "utf8mb4",
+    collate: "utf8mb4_general_ci",
   },
 );
 
-module.exports = User;
+module.exports = EventTicket;
