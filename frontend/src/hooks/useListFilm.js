@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 
 export default function useListFilm() {
@@ -6,69 +6,50 @@ export default function useListFilm() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('all');
 
-  // Fonction pour récupérer les films
   const fetchMovies = async () => {
     try {
       setLoading(true);
-      // Avec Axios, on récupère directement l'objet "data" de la réponse
       const response = await axios.get("http://localhost:3000/api/admin/movie");
-      
-      // Ton contrôleur renvoie : { success: true, count: X, data: [...] }
-      // Axios place le corps de la réponse dans response.data
-      console.log("Réponse du serveur:", response.data); // Pour vérifier la structure de la réponse
-      setMovies(response.data.data); 
+      setMovies(response.data.data || []); 
       setError(null);
     } catch (err) {
-      // Axios capture les erreurs HTTP (404, 500, etc.) automatiquement
-      setError("Impossible de charger les films. Vérifiez que le serveur est lancé.");
-      console.error("Erreur Axios:", err.response?.data || err.message);
+      setError("Impossible de charger les films.");
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchMovies();
-  }, []);
+  useEffect(() => { fetchMovies(); }, []);
 
-  const handleDelete = async (id, title) => {
-    if (window.confirm(`Confirmez-vous la suppression du film : ${title} ?`)) {
-      try {
-        // Optionnel : si tu as une route DELETE côté back
-        // await axios.delete(`http://localhost:3000/api/admin/movie/${id}`);
-        setMovies(movies.filter((movie) => movie.id !== id));
-      } catch (err) {
-        alert("Erreur lors de la suppression");
-      }
-    }
-  };
+// Dans ton hook useListFilm.js, vérifie cette partie :
+const filteredMovies = useMemo(() => {
+  if (statusFilter === 'all') return movies;
+  return movies.filter(film => String(film.status) === String(statusFilter)); 
+  // On utilise "status" ici si c'est ce que ton tableau affiche
+}, [movies, statusFilter]);
 
-
-  // Adaptation selon les valeurs de `is_selected` (0, 1, 2, 3) renvoyées par Sequelize
   const getBadgeClass = (status) => {
-    switch (status) {
-      case 1: return "badge-success text-white"; // Validé
-      case 2: return "badge-error text-white";   // Refusé
-      case 3: return "badge-warning text-white"; // Signalé
-      case 0: return "badge-info text-white";    // En attente
-      default: return "badge-ghost";
-    }
+    const classes = { 0: "badge-info", 1: "badge-success", 2: "badge-error", 3: "badge-warning" };
+    return `${classes[status] || "badge-ghost"} text-white`;
   };
 
-  // Petite fonction utilitaire pour transformer le chiffre en texte dans ton tableau
   const getStatusText = (status) => {
     const labels = { 0: "En attente", 1: "Validé", 2: "Refusé", 3: "Signalé" };
     return labels[status] || "Inconnu";
   };
 
   return { 
-    movies,
+    movies,           
+    filteredMovies,   
+    statusFilter,     
+    setStatusFilter,  
     loading,
     error,
     getBadgeClass, 
     getStatusText,
-    handleDelete, 
     selectedMovie, 
     setSelectedMovie,
     refreshMovies: fetchMovies 
