@@ -103,23 +103,21 @@ class TicketController {
         firstname,
         lastname,
         qr_token,
-        event_date,
       });
 
       // 7. Générer l'image QR code en base64 pour l'afficher sur le front
       const qr_code_image = await QRCode.toDataURL(qr_token);
 
-      // 8. Envoyer l'email de confirmation avec le billet PDF (sans bloquer la réponse si ça échoue)
+      // 8. Envoyer l'email de confirmation (sans bloquer la réponse si ça échoue)
       emailService
-        .sendTicketConfirmationPDF({
+        .sendTicketConfirmation({
           email,
           firstname,
           lastname,
           ticket_type: ticketType.name,
           qr_token,
-          event_date,
         })
-        .catch((err) => console.error("Erreur envoi email PDF:", err));
+        .catch((err) => console.error("Erreur envoi email confirmation:", err));
 
       res.status(201).json({
         success: true,
@@ -133,7 +131,6 @@ class TicketController {
           qr_token: ticket.qr_token,
           qr_code_image, // image base64 à afficher directement dans un <img>
           reserved_at: ticket.reserved_at,
-          event_date: ticket.event_date,
         },
       });
     } catch (error) {

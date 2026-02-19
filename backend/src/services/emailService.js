@@ -64,9 +64,7 @@ const sendTicketConfirmation = async (ticket) => {
       },
     ],
   });
-};
-
-/**
+}; /**
  * Génère un PDF de billet avec le QR code et les infos du ticket via Puppeteer
  * Retourne un Buffer
  */

@@ -135,20 +135,6 @@ EventTicket.belongsTo(TicketType, {
 });
 
 // =============================================
-// 5. TICKET RELATIONS
-// =============================================
-
-// TicketType - EventTicket
-TicketType.hasMany(EventTicket, {
-  foreignKey: "ticket_type_id",
-  as: "tickets"
-});
-EventTicket.belongsTo(TicketType, {
-  foreignKey: "ticket_type_id",
-  as: "ticketType"
-});
-
-// =============================================
 // EXPORTS
 // =============================================
 
