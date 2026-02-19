@@ -134,12 +134,9 @@ const Movie = sequelize.define(
     },
     subtitle_url: {
       type: DataTypes.STRING(255),
-      allowNull: false, // Obligatoire si présence de voix [cite: 43]
+      allowNull: true, // Obligatoire si présence de voix [cite: 43]
     },
-    award_id: {
-      type: DataTypes.INTEGER,
-      defaultValue: 1,
-    },
+ 
     is_selected: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
