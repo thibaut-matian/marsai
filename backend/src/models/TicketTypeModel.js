@@ -17,11 +17,6 @@ const TicketType = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    event_date: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-      defaultValue: "",
-    },
   },
   {
     tableName: "ticket_types",

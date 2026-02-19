@@ -5,6 +5,7 @@ const { EventTicket, TicketType } = require("../models");
 const emailService = require("../services/emailService");
 
 class TicketController {
+
   /**
    * GET /api/tickets/types
    * Retourne les types de billets avec le nombre de places restantes
@@ -29,7 +30,7 @@ class TicketController {
             remaining: type.capacity - reserved,
             available: type.capacity - reserved > 0,
           };
-        }),
+        })
       );
 
       res.status(200).json({ success: true, data: result });
@@ -55,8 +56,7 @@ class TicketController {
       if (!ticket_type_id || !email || !firstname || !lastname) {
         return res.status(400).json({
           success: false,
-          message:
-            "Tous les champs sont obligatoires (ticket_type_id, email, firstname, lastname)",
+          message: "Tous les champs sont obligatoires (ticket_type_id, email, firstname, lastname)",
         });
       }
 
@@ -68,7 +68,6 @@ class TicketController {
           message: "Type de billet introuvable",
         });
       }
-      const event_date = ticketType.event_date;
 
       // 3. Vérifier qu'il reste des places
       const reserved = await EventTicket.count({
@@ -88,8 +87,7 @@ class TicketController {
       if (alreadyBooked) {
         return res.status(409).json({
           success: false,
-          message:
-            "Vous avez déjà réservé ce type de billet avec cette adresse email",
+          message: "Vous avez déjà réservé ce type de billet avec cette adresse email",
         });
       }
 
@@ -103,23 +101,19 @@ class TicketController {
         firstname,
         lastname,
         qr_token,
-        event_date,
       });
 
       // 7. Générer l'image QR code en base64 pour l'afficher sur le front
       const qr_code_image = await QRCode.toDataURL(qr_token);
 
-      // 8. Envoyer l'email de confirmation avec le billet PDF (sans bloquer la réponse si ça échoue)
-      emailService
-        .sendTicketConfirmationPDF({
-          email,
-          firstname,
-          lastname,
-          ticket_type: ticketType.name,
-          qr_token,
-          event_date,
-        })
-        .catch((err) => console.error("Erreur envoi email PDF:", err));
+      // 8. Envoyer l'email de confirmation (sans bloquer la réponse si ça échoue)
+      emailService.sendTicketConfirmation({
+        email,
+        firstname,
+        lastname,
+        ticket_type: ticketType.name,
+        qr_token,
+      }).catch((err) => console.error("Erreur envoi email confirmation:", err));
 
       res.status(201).json({
         success: true,
@@ -133,7 +127,6 @@ class TicketController {
           qr_token: ticket.qr_token,
           qr_code_image, // image base64 à afficher directement dans un <img>
           reserved_at: ticket.reserved_at,
-          event_date: ticket.event_date,
         },
       });
     } catch (error) {
@@ -156,9 +149,7 @@ class TicketController {
 
       const tickets = await EventTicket.findAll({
         where,
-        include: [
-          { model: TicketType, as: "ticketType", attributes: ["id", "name"] },
-        ],
+        include: [{ model: TicketType, as: "ticketType", attributes: ["id", "name"] }],
         order: [["reserved_at", "DESC"]],
       });
 
@@ -185,17 +176,13 @@ class TicketController {
       const { qr_token } = req.body;
 
       if (!qr_token) {
-        return res
-          .status(400)
-          .json({ success: false, message: "QR token manquant" });
+        return res.status(400).json({ success: false, message: "QR token manquant" });
       }
 
       const ticket = await EventTicket.findOne({ where: { qr_token } });
 
       if (!ticket) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Billet introuvable" });
+        return res.status(404).json({ success: false, message: "Billet introuvable" });
       }
 
       if (ticket.is_scanned) {
@@ -237,16 +224,12 @@ class TicketController {
       const ticket = await EventTicket.findByPk(id);
 
       if (!ticket) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Réservation introuvable" });
+        return res.status(404).json({ success: false, message: "Réservation introuvable" });
       }
 
       await ticket.destroy();
 
-      res
-        .status(200)
-        .json({ success: true, message: "Réservation annulée avec succès" });
+      res.status(200).json({ success: true, message: "Réservation annulée avec succès" });
     } catch (error) {
       res.status(500).json({
         success: false,
