@@ -46,14 +46,10 @@ class MovieController {
       // ✅ UPLOAD VERS YOUTUBE
       console.log('3️⃣ Upload vers YouTube...');
       try {
-        // Créer un fichier temporaire
-        const tempDir = path.join(__dirname, '../../temp');
-        await fs.mkdir(tempDir, { recursive: true });
+        // Créer un stream depuis le buffer
+        const videoStream = Readable.from(files.video[0].buffer);
         
-        const tempPath = path.join(tempDir, `${Date.now()}-${files.video[0].originalname}`);
-        await fs.writeFile(tempPath, files.video[0].buffer);
-
-        console.log('   📁 Fichier temporaire créé:', tempPath);
+        console.log('   📤 Upload direct depuis le buffer...');
 
         // Upload sur YouTube
         const response = await youtube.videos.insert({
@@ -66,22 +62,18 @@ class MovieController {
               categoryId: '1', // Film & Animation
             },
             status: {
-              privacyStatus: 'unlisted',
+              privacyStatus: 'unlisted', // Non répertorié
               selfDeclaredMadeForKids: false
             },
           },
           media: {
-            body: require('fs').createReadStream(tempPath)
+            body: videoStream
           },
         });
 
         youtube_id = response.data.id;
         console.log('✅ YouTube ID:', youtube_id);
         console.log('📺 URL YouTube: https://youtube.com/watch?v=' + youtube_id);
-
-        // Supprimer le fichier temporaire
-        await fs.unlink(tempPath);
-        console.log('   🗑️ Fichier temporaire supprimé');
 
       } catch (youtubeError) {
         console.error('⚠️ Erreur upload YouTube:', youtubeError.message);
