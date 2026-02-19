@@ -1,5 +1,6 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useEventPlanning } from "../hook/useEventPlanning";
 
 export default function Planning() {
@@ -12,6 +13,8 @@ export default function Planning() {
         toggleFriday, 
         toggleSaturday 
     } = useEventPlanning();
+
+    const navigate = useNavigate();
 
     const EventCard = ({ event }) => (
         <div className="group card bg-white/5 border border-white/20 shadow-md cursor-pointer hover:border-white/40 hover:bg-white/10 hover:shadow-lg transition-all duration-300">
@@ -165,7 +168,9 @@ export default function Planning() {
                 </div>
 
                 <div className="flex justify-center pb-12">
-                    <button className="btn bg-white text-black border-none font-semibold hover:bg-white/80 transition">
+                    <button
+                        onClick={() => navigate("/reservation")}
+                        className="btn bg-white text-black border-none font-semibold hover:bg-white/80 transition">
                         JE RÉSERVE MA PLACE
                     </button>
                 </div>
