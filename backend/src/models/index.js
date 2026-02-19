@@ -8,6 +8,7 @@ const Note = require("./NoteModel");
 const MovieSocial = require("./MovieSocialModel");
 const SocialMedia = require("./SocialMediaModel");
 const Event = require("./EventModel");
+const EventType = require("./EventTypeModel");
 const EventTicket = require("./EventTicketModel");
 const TicketType = require("./TicketTypeModel");
 const MovieReport = require("./MovieReportModel");
@@ -134,6 +135,20 @@ EventTicket.belongsTo(TicketType, {
 });
 
 // =============================================
+// 5. TICKET RELATIONS
+// =============================================
+
+// TicketType - EventTicket
+TicketType.hasMany(EventTicket, {
+  foreignKey: "ticket_type_id",
+  as: "tickets"
+});
+EventTicket.belongsTo(TicketType, {
+  foreignKey: "ticket_type_id",
+  as: "ticketType"
+});
+
+// =============================================
 // EXPORTS
 // =============================================
 
@@ -148,6 +163,7 @@ module.exports = {
   MovieSocial,
   SocialMedia,
   Event,
+  EventType,
   EventTicket,
   TicketType,
   MovieReport,
