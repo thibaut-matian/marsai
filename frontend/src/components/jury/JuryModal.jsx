@@ -7,6 +7,7 @@ export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
     firstname: '',
     lastname: '',
     email: '',
+    mobile: '',
     role: 'jury',
     isActive: true,
   });
@@ -32,6 +33,7 @@ export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
         firstname: jury.firstname || '',
         lastname: jury.lastname || '',
         email: jury.email || '',
+        mobile: jury.mobile || '',
         role: jury.role || 'jury',
         isActive: jury.isActive ?? true,
       });
@@ -99,13 +101,20 @@ export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
             <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} required disabled={isEditMode} className="w-full p-3 bg-black/30 border border-white/20 rounded-lg text-white disabled:opacity-50" />
           </div>
 
-          <div className="flex items-center justify-between">
-            <label htmlFor="role" className="text-sm text-white/70">Rôle</label>
-            <select id="role" name="role" value={formData.role} onChange={handleInputChange} className="p-3 bg-black/30 border border-white/20 rounded-lg text-white">
-              <option value="jury">Jury</option>
-              <option value="jury_senior">Jury Senior</option>
-              <option value="jury_president">Président du Jury</option>
-            </select>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="mobile" className="block text-sm text-white/70 mb-2">Mobile</label>
+              <input type="tel" id="mobile" name="mobile" value={formData.mobile} onChange={handleInputChange}
+               className="w-full p-3 bg-black/30 border border-white/20 rounded-lg text-white" />
+            </div>
+            <div>
+              <label htmlFor="role" className="block text-sm text-white/70 mb-2">Rôle</label>
+              <select id="role" name="role" value={formData.role} onChange={handleInputChange} className="w-full p-3 bg-black/30 border border-white/20 rounded-lg text-white">
+                <option value="jury">Jury</option>
+                <option value="jury_senior">Jury Senior</option>
+                <option value="jury_president">Président du Jury</option>
+              </select>
+            </div>
           </div>
 
           <div className="flex items-center gap-4">
