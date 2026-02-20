@@ -104,7 +104,7 @@ export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label htmlFor="mobile" className="block text-sm text-white/70 mb-2">Mobile</label>
-              <input type="tel" id="mobile" name="mobile" value={formData.mobile} onChange={handleInputChange}
+              <input type="tel" id="mobile" maxLength="13" name="mobile" value={formData.mobile} onChange={handleInputChange}
                className="w-full p-3 bg-black/30 border border-white/20 rounded-lg text-white" />
             </div>
             <div>
