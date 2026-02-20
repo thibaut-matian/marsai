@@ -5,6 +5,7 @@ const UserRoutes = require('./UserRoutes');
 const MovieRoutes = require('./MovieRoutes');
 const AdminMovieRoutes = require('./AdminMovieRoutes');
 const TicketRoutes = require('./TicketRoutes');
+const YoutubeAuthRoutes = require('./YoutubeAuthRoutes'); 
 
 // Routes publiques
 router.use('/users', UserRoutes);
