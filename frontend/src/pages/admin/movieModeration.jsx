@@ -1,5 +1,5 @@
 import React from "react";  
-import ListFilms from "../../components/admin/ListMovies";
+import ListMovies from "../../components/admin/ListMovies";
 import ReportTable from "../../components/admin/Report";
 import { Clapperboard, List, AlertCircle } from "lucide-react";
 
@@ -24,7 +24,7 @@ export default function MovieModeration() {
                     <List size={20} />
                     <h2 className="text-xl font-semibold uppercase tracking-wider">Base de données des films</h2>
                 </div>
-                <ListFilms />
+                <ListMovies />
             </div>
         </div>
     );

@@ -5,8 +5,9 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const sequelize = require("./src/config/Database");
+const { Movie, Squad, User, Role } = require("./src/models");
 
-const routes = require('./src/routes');
+const routes = require("./src/routes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,7 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes API
-app.use('/api', routes);
+app.use("/api", routes);
 
 // Route de bienvenue
 app.get("/", (req, res) => {
@@ -63,34 +64,51 @@ app.post("/api/movies/submit", async (req, res) => {
 app.post("/api/auth/login", async (req, res) => {
   const { email, password } = req.body;
 
-  console.log("1. Reçu du front:", { email, password });
-
   if (!email || !password)
     return res.status(400).json({ message: "Champs manquants" });
 
-  const mockUser = {
-    email: "admin@test.com",
-    password: "123456",
-    role: "admin",
-  };
+  try {
+    // 1. Chercher l'utilisateur dans la table staff par son email
+    const user = await User.findOne({
+      where: { mail: email, is_active: 1 },
+      include: [{ model: Role, as: "role" }],
+    });
 
-  if (email !== mockUser.email || password !== mockUser.password) {
-    return res.status(401).json({ message: "Utilisateur inconnu (Mock)" });
+    // 2. Utilisateur introuvable
+    if (!user) {
+      return res.status(401).json({ message: "Identifiants incorrects" });
+    }
+
+    // 3. Vérifier le mot de passe avec bcrypt
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Identifiants incorrects" });
+    }
+
+    // 4. Générer un JWT
+    const secret = process.env.JWT_SECRET;
+    const token = jwt.sign({ id: user.id, role: user.role.name }, secret, {
+      expiresIn: "8h",
+    });
+
+    // 5. Retourner le token et les infos utiles au front
+    return res.status(200).json({
+      success: true,
+      token,
+      user: {
+        id: user.id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        mail: user.mail,
+        role: user.role.name,
+      },
+    });
+  } catch (error) {
+    console.error("Erreur login:", error);
+    return res
+      .status(500)
+      .json({ message: "Erreur serveur", error: error.message });
   }
-
-  // --- FIN MOCK ---
-
-  // Ici, on compare le mot de passe envoyé avec le hash (pour l'exercice, on va accepter "123456" sans hash valide pour simplifier le test si tu n'as pas généré de vrai hash)
-  // Pour que ça marche VRAIMENT avec bcrypt maintenant, il faudrait un vrai hash.
-  // SIMPLIFICATION POUR CE TEST DE CONNEXION :
-  //    const match = (password === "123456");
-
-  // const secret = process.env.JWT_SECRET || 'secret_par_defaut';
-  //   // Génération du token
-  //   const token = jwt.sign({ id: mockUser._id }, secret, { expiresIn: '1h' });
-
-  console.log("2. Connexion réussie, envoi du rôle");
-  return res.json({ role: mockUser.role });
 });
 
 // Gestion des erreurs 404

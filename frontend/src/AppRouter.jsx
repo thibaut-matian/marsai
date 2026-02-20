@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import FAQ from "./pages/FAQ.jsx";
 import Planning from "./pages/Planning.jsx";
+import Reservation from "./pages/Reservation.jsx";
 import Dashboard from "./pages/admin/Dashboard.jsx";
 import JuryManagement from "./pages/admin/JuryManagement.jsx";
 import AdminLayout from "./components/admin/layout/AdminLayout.jsx";
@@ -24,6 +25,7 @@ function AppRouter() {
           <Route path="/" element={<Home />} />
           <Route path="/FAQ" element={<FAQ />} />
           <Route path="/planning" element={<Planning />} />
+          <Route path="/reservation" element={<Reservation />} />
           <Route path="/submission" element={<Submission />} />
           <Route path="/submit-movie" element={<Submission />} />
           {/* Galerie s'affiche à la phase 2 */}
