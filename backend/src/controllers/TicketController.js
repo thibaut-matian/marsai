@@ -110,12 +110,13 @@ class TicketController {
 
       // 8. Envoyer l'email de confirmation (sans bloquer la réponse si ça échoue)
       emailService
-        .sendTicketConfirmation({
+        .sendTicketConfirmationPDF({
           email,
           firstname,
           lastname,
           ticket_type: ticketType.name,
           qr_token,
+          event_date, // Ajout de la date de l'événement
         })
         .catch((err) => console.error("Erreur envoi email confirmation:", err));
 
