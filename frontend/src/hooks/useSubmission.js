@@ -131,6 +131,9 @@ export function useSubmission() {
     return age >= 18;
   };
 
+  // Vérifie si la chaîne ne contient que des chiffres
+  const onlyDigits = (str) => /^\d+$/.test(str);
+
   const validateStep = (currentStep) => {
     let newErrors = {};
     let isValid = true;
@@ -157,18 +160,26 @@ export function useSubmission() {
       if (!formData.country.trim()) newErrors.country = "Pays requis.";
       if (!formData.marketingSource)
         newErrors.marketingSource = "Source requise.";
+      // Validation chiffres uniquement
+      if (formData.zipcode && !onlyDigits(formData.zipcode))
+        newErrors.zipcode = "Code Postal : chiffres uniquement.";
+      if (formData.mobile && !onlyDigits(formData.mobile))
+        newErrors.mobile = "Mobile : chiffres uniquement.";
+      if (
+        formData.telephone &&
+        formData.telephone.length > 0 &&
+        !onlyDigits(formData.telephone)
+      )
+        newErrors.telephone = "Téléphone : chiffres uniquement.";
     }
 
     // ÉTAPE 3 : Assets & Tech
     if (currentStep === 3) {
       if (!formData.videoFile) newErrors.videoFile = "Fichier vidéo requis.";
       if (!formData.filmUrl.trim()) newErrors.filmUrl = "Lien YouTube requis.";
-
-      // Si "Besoin de sous-titres" est coché, le fichier est obligatoire
       if (formData.needsSubtitles && !formData.subtitleFile) {
         newErrors.subtitleFile = "Fichier .srt requis.";
       }
-
       if (!formData.thumbnailFile)
         newErrors.thumbnailFile = "Vignette requise.";
       if (!formData.filmTitleOriginal.trim())
@@ -176,6 +187,9 @@ export function useSubmission() {
       if (!formData.filmDuration) newErrors.filmDuration = "Durée requise.";
       if (!formData.aiClassification)
         newErrors.aiClassification = "Classification IA requise.";
+      // Validation chiffres uniquement
+      if (formData.filmDuration && !onlyDigits(formData.filmDuration))
+        newErrors.filmDuration = "Durée : chiffres uniquement.";
     }
 
     // ÉTAPE 4 : Synopsis
@@ -199,27 +213,24 @@ export function useSubmission() {
 
   const handleNext = () => {
     if (validateStep(step)) {
-      if (step < 4) setStep(step + 1);
-      else {
-        // C'est ici que se fera l'envoi au serveur plus tard
-        console.log("Dossier validé :", formData);
+      if (step === 4) {
+        // Dernière étape, soumettre le formulaire
         setIsSubmitted(true);
+      } else {
+        setStep((prev) => prev + 1);
       }
     }
   };
 
   const handlePrev = () => {
-    if (step > 1) setStep(step - 1);
+    setStep((prev) => Math.max(prev - 1, 1));
   };
 
-  // --- 6. EXPORT (On rend tout accessible) ---
   return {
     step,
-    setStep,
-    formData,
     errors,
     isSubmitted,
-    setIsSubmitted,
+    formData,
     handleChange,
     handleFileChange,
     handleStillsChange,
