@@ -2,27 +2,26 @@ const express = require('express');
 const router = express.Router();
 
 const UserRoutes = require('./UserRoutes');
-const MovieRoutes = require('./MovieRoutes'); // ✅ Ajouté
+const MovieRoutes = require('./MovieRoutes');
 const AdminMovieRoutes = require('./AdminMovieRoutes');
+const TicketRoutes = require('./TicketRoutes');
+const YoutubeAuthRoutes = require('./YoutubeAuthRoutes'); // ⬅️ AJOUTÉ
 
 // Routes publiques
 router.use('/users', UserRoutes);
-router.use('/movies', MovieRoutes); // ✅ Ajouté - Route pour la soumission publique
+router.use('/movies', MovieRoutes);
+router.use('/', YoutubeAuthRoutes); // ⬅️ AJOUTÉ - Routes d'authentification YouTube
 
 // Routes admin (protégées)
 router.use('/admin', AdminMovieRoutes);
+router.use('/tickets', TicketRoutes);
 
 // Route de test
 router.get('/test', (req, res) => {
-  res.json({ message: '✅ API Routes fonctionnent !', routes: ['/users', '/movies', '/admin'] });
+  res.json({ 
+    message: '✅ API Routes fonctionnent !', 
+    routes: ['/users', '/movies', '/admin', '/tickets', '/auth/youtube'] 
+  });
 });
-const userRoutes = require('./UserRoutes');
-const adminRoutes = require('./AdminMovieRoutes');
-const ticketRoutes = require('./TicketRoutes');
-
-// Utiliser les routes users
-router.use('/', userRoutes);
-router.use('/admin', adminRoutes);
-router.use('/tickets', ticketRoutes);
 
 module.exports = router;
