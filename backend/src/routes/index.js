@@ -4,6 +4,8 @@ const router = express.Router();
 const UserRoutes = require('./UserRoutes');
 const MovieRoutes = require('./MovieRoutes'); // ✅ Ajouté
 const AdminMovieRoutes = require('./AdminMovieRoutes');
+const TicketRoutes = require('./TicketRoutes');
+
 
 // Routes publiques
 router.use('/users', UserRoutes);
@@ -16,13 +18,9 @@ router.use('/admin', AdminMovieRoutes);
 router.get('/test', (req, res) => {
   res.json({ message: '✅ API Routes fonctionnent !', routes: ['/users', '/movies', '/admin'] });
 });
-const userRoutes = require('./UserRoutes');
-const adminRoutes = require('./AdminMovieRoutes');
-const ticketRoutes = require('./TicketRoutes');
+
 
 // Utiliser les routes users
-router.use('/', userRoutes);
-router.use('/admin', adminRoutes);
-router.use('/tickets', ticketRoutes);
+router.use('/tickets', TicketRoutes);
 
 module.exports = router;

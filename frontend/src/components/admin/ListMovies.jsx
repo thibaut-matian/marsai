@@ -114,7 +114,10 @@ const ListMovies = () => {
                       >
                         <Mail size={18} />
                       </button>
-                      <button className="btn btn-square btn-sm bg-red-600/20 hover:bg-red-600 border border-red-600 text-red-500 hover:text-white transition-all">
+                      <button 
+                        className="btn btn-square btn-sm bg-red-600/20 hover:bg-red-600 border border-red-600 text-red-500 hover:text-white transition-all"
+                        onClick={() => handleDelete(film.id)}
+                      > 
                         <Trash2 size={18} />
                       </button>
                     </div>

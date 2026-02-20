@@ -41,6 +41,17 @@ const filteredMovies = useMemo(() => {
     return labels[status] || "Inconnu";
   };
 
+  const handleDelete = async (id) => {
+  if (window.confirm("Es-tu sûr de vouloir supprimer ce film ?")) {
+    try {
+      await axios.delete(`http://localhost:3000/api/admin/movie/${id}`);
+      setMovies(movies.filter(m => m.id !== id)); 
+    } catch (err) {
+      alert("Erreur lors de la suppression");
+    }
+  }
+};
+
   return { 
     movies,           
     filteredMovies,   
@@ -52,6 +63,7 @@ const filteredMovies = useMemo(() => {
     getStatusText,
     selectedMovie, 
     setSelectedMovie,
+    handleDelete,
     refreshMovies: fetchMovies 
   };
 }
