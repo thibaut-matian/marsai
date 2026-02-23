@@ -2,6 +2,7 @@ const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const { User, Role } = require("../models");
+const { sendJuryInvitation } = require("../services/emailService");
 
 class UserController {
   static async getUsers(req, res) {
@@ -189,6 +190,25 @@ class UserController {
       }
       
       const user = await User.create(userData);
+
+      // 8. Envoyer l'email d'invitation si c'est un jury
+      console.log(`Rôle créé: "${roleExists.name}" - Contient jury? ${roleExists.name.toLowerCase().includes('jury')}`);
+      
+      try {
+        if (roleExists.name.toLowerCase().includes('jury')) {
+          console.log('Tentative d\'envoi d\'email d\'invitation...');
+          await sendJuryInvitation({
+            mail: user.mail,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            role: roleExists.name
+          });
+          console.log(`Email d'invitation envoyé à ${user.mail}`);
+        }
+      } catch (emailError) {
+        console.error('Erreur envoi email:', emailError.message);
+        // Ne pas faire échouer la création de l'utilisateur pour un problème d'email
+      }
 
       res.status(201).json({
         success: true,

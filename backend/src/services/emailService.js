@@ -159,8 +159,58 @@ const sendTicketConfirmationPDF = async (ticket) => {
   });
 };
 
+/**
+ * Envoie l'email d'invitation jury avec un lien vers le dashboard
+ */
+const sendJuryInvitation = async (jury) => {
+  const dashboardUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/jury/DashboardJury`;
+  
+  return transporter.sendMail({
+    from: `"MarsAI Festival" <${process.env.EMAIL_USER}>`,
+    to: jury.mail,
+    subject: `🎭 Invitation Jury - MarsAI Festival`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; background: #000; color: #fff; padding: 32px; border-radius: 12px;">
+        <h1 style="text-align: center; font-weight: 300; letter-spacing: 4px;">MARS AI FESTIVAL</h1>
+        <hr style="border-color: rgba(255,255,255,0.2); margin: 24px 0;" />
+        
+        <p>Bonjour <strong>${jury.firstname} ${jury.lastname}</strong>,</p>
+        <p>Vous avez été sélectionné(e) comme membre du jury pour le MarsAI Festival.</p>
+
+        <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 20px; margin: 24px 0;">
+          <p style="margin: 4px 0;"><span style="color: #aaa;">Rôle :</span> <strong>${jury.role}</strong></p>
+          <p style="margin: 4px 0;"><span style="color: #aaa;">Email :</span> ${jury.mail}</p>
+        </div>
+
+        <p style="color: #aaa; font-size: 14px; margin: 20px 0;">
+          Accédez à votre espace jury pour découvrir les œuvres à évaluer et commencer le processus de notation.
+        </p>
+
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${dashboardUrl}" 
+             style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                    color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; 
+                    font-weight: bold; font-size: 16px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+            🎭 Accéder à mon espace jury
+          </a>
+        </div>
+
+        <hr style="border-color: rgba(255,255,255,0.2); margin: 24px 0;" />
+        <p style="text-align: center; color: #666; font-size: 11px;">
+          Ce lien vous donne accès à votre espace personnel de jury. Gardez cet email précieusement.
+        </p>
+      </div>
+    `,
+  });
+};
+
+//
+
+//
 module.exports = {
   sendMailToDirector,
+  sendMailToJury,
+  sendJuryInvitation,
   sendTicketConfirmation,
   sendTicketConfirmationPDF,
 };
