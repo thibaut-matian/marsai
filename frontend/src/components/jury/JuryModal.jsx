@@ -128,8 +128,7 @@ export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
                 <Trash2 size={18} /> Supprimer
               </button>
             )}
-            <button type="submit" disabled={isSubmitting} className="flex-1 px-4 py-3 bg-blue-600 text-white font-bold rounded-lg flex items-center justify-center gap-2 disabled:opacity-50">
-              <Save size={18} /> {isSubmitting ? 'Sauvegarde...' : 'Sauvegarder'}
+            <button type="submit" disabled={isSubmitting} className="flex-1 px-4 py-3 bg-blue-600 text-white font-bold rounded-lg flex items-center justify-center gap-2 disabled:opacity-50">{isSubmitting ? 'En cours d\'envoi d\'invitation...' : 'Envoyer l\'invitation'}
             </button>
           </footer>
         </form>
