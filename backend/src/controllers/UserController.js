@@ -112,21 +112,17 @@ class UserController {
 
   static async createUser(req, res) {
     try {
-      const { mail, password, firstname, lastname, mobile, role_id } = req.body;
-
+      // Debug : afficher req.body
+      console.log("DEBUG req.body:", req.body);
+      console.log("DEBUG req.headers:", req.headers['content-type']);
+      
+      const { mail, password, firstname, lastname, mobile, role } = req.body;
+      
       // 1. Vérifier que tous les champs obligatoires sont présents
-      if (
-        !mail ||
-        !password ||
-        !firstname ||
-        !lastname ||
-        !mobile ||
-        !role_id
-      ) {
+      if (!mail || !firstname || !lastname || !mobile) {
         return res.status(400).json({
           success: false,
-          message:
-            "Tous les champs sont obligatoires (mail, password, firstname, lastname, mobile, role_id)",
+          message: "Les champs email, firstname, lastname et mobile sont obligatoires",
         });
       }
 
@@ -139,32 +135,60 @@ class UserController {
         });
       }
 
-      // 3. Vérifier que le rôle existe
-      const role = await Role.findByPk(role_id);
-      if (!role) {
+      // 3. Gérer le rôle
+      let roleId;
+      if (role) {
+        // Chercher le rôle par son nom
+        const roleRecord = await Role.findOne({
+          where: { name: { [Op.like]: role } }
+        });
+        
+        if (!roleRecord) {
+          return res.status(400).json({
+            success: false,
+            message: `Rôle "${role}" non trouvé`,
+          });
+        }
+        
+        roleId = roleRecord.id;
+      }
+      
+      // 4. Vérifier que le rôle existe
+      const roleExists = await Role.findByPk(roleId);
+      if (!roleExists) {
         return res.status(400).json({
           success: false,
           message: "Rôle invalide",
         });
       }
 
-      // 4. Hasher le mot de passe
-      const hashedPassword = await bcrypt.hash(password, 10);
+      // 5.  Hasher le mot de passe
+      let hashedPassword;
+      if(password){
+        hashedPassword = await bcrypt.hash(password, 10);
+      }
+      
 
-      // 5. Générer un token unique
+      // 6. Générer un token unique
       const token = crypto.randomBytes(32).toString("hex");
 
-      // 6. Créer l'utilisateur
-      const user = await User.create({
+      // 7. Créer l'utilisateur
+      const userData = {
         mail,
-        password: hashedPassword,
         token,
         firstname,
         lastname,
         mobile,
-        role_id,
+        role_id: roleId,
         is_active: 1,
-      });
+      };
+      
+      // Ajouter le password seulement s'il existe
+      if (hashedPassword) {
+        userData.password = hashedPassword;
+      }
+      
+      const user = await User.create(userData);
 
       res.status(201).json({
         success: true,
@@ -175,7 +199,7 @@ class UserController {
           firstname: user.firstname,
           lastname: user.lastname,
           mobile: user.mobile,
-          role: role.name,
+          role: roleExists.name,
         },
       });
     } catch (error) {

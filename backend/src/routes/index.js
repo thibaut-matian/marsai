@@ -19,6 +19,7 @@ router.get('/test', (req, res) => {
 const userRoutes = require('./UserRoutes');
 const adminRoutes = require('./AdminMovieRoutes');
 const ticketRoutes = require('./TicketRoutes');
+//Fin route de test
 
 // Utiliser les routes users
 router.use('/', userRoutes);
