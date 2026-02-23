@@ -32,9 +32,9 @@ export function useSubmission() {
 
     // ASSETS FILM
     videoFile: null,
-    filmUrl: "", // YouTube URL
+    filmUrl: "", // Toujours envoyé, même vide
     needsSubtitles: false,
-    subtitleFile: null,
+    subtitleFile: null, // Toujours envoyé, même vide
     thumbnailFile: null,
     stillsFiles: [],
 
@@ -171,6 +171,10 @@ export function useSubmission() {
         !onlyDigits(formData.telephone)
       )
         newErrors.telephone = "Téléphone : chiffres uniquement.";
+      if (formData.mobile && formData.mobile.length > 13)
+        newErrors.mobile = "Mobile : 13 chiffres max.";
+      if (formData.telephone && formData.telephone.length > 13)
+        newErrors.telephone = "Téléphone : 13 chiffres max.";
     }
 
     // ÉTAPE 3 : Assets & Tech
@@ -189,6 +193,7 @@ export function useSubmission() {
       // Validation chiffres uniquement
       if (formData.filmDuration && !onlyDigits(formData.filmDuration))
         newErrors.filmDuration = "Durée : chiffres uniquement.";
+      // YouTube et sous-titres : toujours envoyés (déjà gérés par défaut)
     }
 
     // ÉTAPE 4 : Synopsis
@@ -227,6 +232,42 @@ export function useSubmission() {
     setStep((prev) => Math.max(prev - 1, 1));
   };
 
+  // --- 6. ENVOI DES DONNÉES ---
+
+  const submitForm = async () => {
+    // Préparation des données
+    const dataToSubmit = {
+      ...formData,
+      step,
+      videoFile: formData.videoFile ? formData.videoFile.name : null,
+      subtitleFile: formData.subtitleFile ? formData.subtitleFile.name : null,
+      thumbnailFile: formData.thumbnailFile
+        ? formData.thumbnailFile.name
+        : null,
+      stillsFiles: formData.stillsFiles.map((file) => file.name),
+    };
+
+    // Envoi des données
+    try {
+      const response = await fetch("/api/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSubmit),
+      });
+
+      if (!response.ok) throw new Error("Erreur lors de l'envoi des données.");
+
+      const result = await response.json();
+      console.log("Succès :", result);
+      return result;
+    } catch (error) {
+      console.error("Erreur :", error);
+      throw error;
+    }
+  };
+
   return {
     step,
     errors,
@@ -241,5 +282,6 @@ export function useSubmission() {
     updateTeamMember,
     handleNext,
     handlePrev,
+    submitForm,
   };
 }

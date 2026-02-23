@@ -33,10 +33,11 @@ export default function StepContact({ formData, handleChange, errors }) {
           <label className="block text-sm text-gray-300 mb-2 ml-3 font-medium">Source *</label>
           <select name="marketingSource" value={formData.marketingSource} onChange={handleChange} className={`w-full h-14 px-6 rounded-2xl bg-gray-900 border border-gray-700 text-white outline-none backdrop-blur-md appearance-none cursor-pointer ${errors.marketingSource ? 'border-red-500' : ''}`}>
                 <option className="bg-gray-900" value="">-- Comment avez-vous connu marsAI ? --</option>
-                <option className="bg-gray-900" value="socials">Réseaux Sociaux</option>
-                <option className="bg-gray-900" value="press">Presse</option>
-                <option className="bg-gray-900" value="Entourage">Entourage</option>
-                <option className="bg-gray-900" value="other">Autre</option>
+                <option className="bg-gray-900" value="socials">socials</option>
+                <option className="bg-gray-900" value="friends">friends</option>
+                <option className="bg-gray-900" value="schools">schools</option>
+                <option className="bg-gray-900" value="ads">ads</option>
+                <option className="bg-gray-900" value="works">works</option>
           </select>
           {errors.marketingSource && (
             <p className="text-red-400 text-xs mt-1 ml-3 font-medium animate-pulse">{errors.marketingSource}</p>
