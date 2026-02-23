@@ -1,21 +1,23 @@
 import React, { useState } from "react";
 import { Plus, Minus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import videoFAQ from "../assets/videos/videoFAQ.mp4";
 
 export default function FAQ() {
+  const { t } = useTranslation();
   const [activeIndex, setActiveIndex] = useState(null);
 
   const questions = [
-    "Quels sont les prix décernés lors du festival ?", 
-    "Quelle doit être la durée du court-métrage soumis ?",
-    "Puis-je soumettre plusieurs films ?",
-    "Puis-je modifier ma soumission après l’avoir envoyée ?",
-    "Une équipe peut-elle soumettre un film ?",
-    "Comment l’intelligence artificielle doit-elle être intégrée dans le film ?",
-    "Quels sont les critères d’évaluation des films soumis ?",
-    "Comment serai-je informé(e) de la bonne réception de ma soumission ?",
-    "Les films soumis seront-ils rendus publics ?",
-    "Où puis-je consulter le règlement et les conditions de participation ?",
+    t('faq.q1'),
+    t('faq.q2'),
+    t('faq.q3'),
+    t('faq.q4'),
+    t('faq.q5'),
+    t('faq.q6'),
+    t('faq.q7'),
+    t('faq.q8'),
+    t('faq.q9'),
+    t('faq.q10'),
   ];
 
   const toggleQuestion = (index) => {

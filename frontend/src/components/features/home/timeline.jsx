@@ -1,13 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-
-const steps = [
-  { id: 1, label: 'INSCRIPTIONS' },
-  { id: 2, label: 'DÉLIBÉRATION' },
-  { id: 3, label: 'FESTIVAL' },
-];
+import { useTranslation } from 'react-i18next';
 
 const MovieTimeline = ({ activeStep = 2 }) => {
+  const { t } = useTranslation();
+
+  const steps = [
+    { id: 1, label: t('home.timeline.registrations') },
+    { id: 2, label: t('home.timeline.deliberation') },
+    { id: 3, label: t('home.timeline.festival') },
+  ];
   return (
     <div className="bg-black w-full py-20 md:py-32 px-10 overflow-hidden">
       <div className="max-w-5xl mx-auto relative">
