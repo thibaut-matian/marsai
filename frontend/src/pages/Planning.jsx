@@ -1,7 +1,7 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useEventPlanning } from "../hook/useEventPlanning";
+import { useEventPlanning } from "../hooks/useEventPlanning";
 
 export default function Planning() {
     const { 
