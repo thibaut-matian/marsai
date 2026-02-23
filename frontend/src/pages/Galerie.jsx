@@ -3,8 +3,12 @@ import PaginationControls from '../components/pagination';
 import { Flag } from 'lucide-react';
 import { countryCodes, getFlagClass } from '../constants/countryCodes';
 import useResponsiveImages from '../hooks/useResponsiveImages';
+import ModalDetails from '../components/features/movies/ModalDetails';
 
 export default function Galerie() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
   // Données simulées : 50 images (10 pages × 5 images)
   // Liste des noms de pays disponibles pour assignation aléatoire
   const countryNames = Object.keys(countryCodes);
@@ -96,7 +100,14 @@ return (
 {/* Galerie d'images */}
     <div className="grid mr-8 ml-8 grid-cols-1 md:grid-cols-3 gap-6 mt-10 mb-10 px-4">
       {currentImages.map((image) => (
-        <div key={image.id} className="rounded-lg shadow-md overflow-hidden bg-white/5 relative">
+        <div 
+          key={image.id} 
+          className="rounded-lg shadow-md overflow-hidden bg-white/5 relative cursor-pointer transition-transform hover:scale-105"
+          onClick={() => {
+            setSelectedImage(image);
+            setIsModalOpen(true);
+          }}
+        >
           {/* Conteneur de l'image avec flou localisé */}
           <div className="h-64 flex items-center justify-center bg-gray-100 relative">
             {/* Flou localisé sur le coin supérieur gauche */}
@@ -140,6 +151,15 @@ return (
     <div className="flex justify-center mb-10">
       <PaginationControls pagination={paginationData} />
     </div>
+
+    {/* Modal Details */}
+    {isModalOpen && selectedImage && (
+      <ModalDetails 
+        movie={selectedImage}
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)}
+      />
+    )}
   </div>
 );
 }
