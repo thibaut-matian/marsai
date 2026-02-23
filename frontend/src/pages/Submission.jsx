@@ -19,7 +19,7 @@ const handleCloseModal = () => {
 
 return (
 <div data-theme="marsai" className="min-h-screen bg-gray-900 text-gray-200 px-4 pt-20 pb-8 md:py-20 font-sans flex flex-col md:items-center md:justify-center font-light">
-    <div className="w-full max-w-3xl bg-gray-900 border border-gray-700 p-6 md:p-8 rounded-lg relative overflow-hidden">
+    <div className="w-full max-w-3xl bg-gray-950 border border-gray-700 p-6 md:p-8 rounded-lg relative overflow-hidden shadow-xl shadow-black/40">
     {/* HEADER PROGRESSION */}
     <div className="mb-8 md:mb-10">
         <h1 className="text-2xl md:text-3xl font-bold text-center mb-4 md:mb-6 text-gray-200">Candidature MarsAI</h1>
@@ -46,7 +46,7 @@ return (
             type="button" 
             onClick={handleNext} 
             disabled={isLoading}
-            className={`flex-1 rounded h-10 md:h-12 border border-gray-700 bg-black text-white font-bold transition-all order-1 sm:order-2 ${step === 1 ? 'w-full' : ''} ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`flex-1 rounded h-10 md:h-12 border-0 bg-blue-900 text-white font-bold transition-all order-1 sm:order-2 ${step === 1 ? 'w-full' : ''} ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-800'}`}
           >
             {isLoading ? (
               <span className="loading loading-spinner loading-md"></span>
