@@ -5,6 +5,7 @@ export function useSubmission() {
   const [step, setStep] = useState(1);
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     // IDENTITÉ
@@ -215,10 +216,22 @@ export function useSubmission() {
 
   // --- 5. NAVIGATION ---
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (validateStep(step)) {
       if (step === 4) {
-        setIsSubmitted(true);
+        // Étape finale : soumettre le formulaire
+        console.log('🚀 [FRONTEND] Soumission du formulaire...');
+        setIsLoading(true);
+        try {
+          await submitForm();
+          console.log('✅ [FRONTEND] Soumission réussie !');
+          setIsSubmitted(true);
+        } catch (error) {
+          console.error('❌ [FRONTEND] Erreur soumission:', error);
+          alert('Erreur lors de l\'envoi. Vérifiez la console.');
+        } finally {
+          setIsLoading(false);
+        }
       } else {
         setStep((prev) => prev + 1);
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -235,35 +248,75 @@ export function useSubmission() {
   // --- 6. ENVOI DES DONNÉES ---
 
   const submitForm = async () => {
-    // Préparation des données
-    const dataToSubmit = {
-      ...formData,
-      step,
-      videoFile: formData.videoFile ? formData.videoFile.name : null,
-      subtitleFile: formData.subtitleFile ? formData.subtitleFile.name : null,
-      thumbnailFile: formData.thumbnailFile
-        ? formData.thumbnailFile.name
-        : null,
-      stillsFiles: formData.stillsFiles.map((file) => file.name),
-    };
+    console.log('📦 [FRONTEND] Préparation FormData...');
+    
+    // Créer un FormData pour les fichiers
+    const form = new FormData();
 
-    // Envoi des données
+    // ✅ FICHIERS OBLIGATOIRES
+    if (formData.videoFile) {
+      console.log('  📹 Vidéo:', formData.videoFile.name, `(${(formData.videoFile.size / 1024 / 1024).toFixed(2)} MB)`);
+      form.append('video', formData.videoFile);
+    }
+    if (formData.thumbnailFile) {
+      console.log('  🖼️ Poster:', formData.thumbnailFile.name);
+      form.append('poster', formData.thumbnailFile);
+    }
+
+    // ✅ FICHIERS OPTIONNELS
+    if (formData.subtitleFile) {
+      console.log('  📝 Sous-titre:', formData.subtitleFile.name);
+      form.append('subtitle', formData.subtitleFile);
+    }
+
+    // ✅ DONNÉES TEXTE (mapping vers les noms attendus par le backend)
+    form.append('mail', formData.email || '');
+    form.append('gender', formData.civilite === 'M' ? 'M' : 'F');
+    form.append('lastname', formData.lastname || '');
+    form.append('firstname', formData.firstname || '');
+    form.append('birthdate', formData.birthdate || '');
+    form.append('bio', formData.directorNoteFR || 'N/A');
+    form.append('country', formData.country || '');
+    form.append('city', formData.city || '');
+    form.append('zip_code', formData.zipcode || '');
+    form.append('street', formData.address || '');
+    form.append('phone', formData.telephone || '');
+    form.append('mobile', formData.mobile || '');
+    form.append('actual_job', formData.profession || '');
+    form.append('known_at', formData.marketingSource || '');
+    form.append('duration', formData.filmDuration || '30');
+    form.append('prod_type', '1'); // Type de production par défaut
+    form.append('language', formData.filmLanguage || 'FR');
+    form.append('vo_title', formData.filmTitleOriginal || '');
+    form.append('en_title', formData.filmTitleEN || formData.filmTitleOriginal || '');
+    form.append('vo_desc', formData.synopsisFR || '');
+    form.append('en_desc', formData.synopsisEN || formData.synopsisFR || '');
+    form.append('ia_used', formData.aiClassification || 'N/A');
+    form.append('creative_method', formData.aiMethodology || 'N/A');
+
+    console.log('📤 [FRONTEND] Envoi vers /api/movies...');
+    console.log('  → Endpoint: http://localhost:3000/api/movies');
+
     try {
-      const response = await fetch("/api/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataToSubmit),
+      const response = await fetch('http://localhost:3000/api/movies', {
+        method: 'POST',
+        body: form,
+        // ⚠️ Ne PAS définir Content-Type, le navigateur le fait automatiquement avec le boundary
       });
 
-      if (!response.ok) throw new Error("Erreur lors de l'envoi des données.");
+      console.log('📡 [FRONTEND] Réponse reçue:', response.status, response.statusText);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ [FRONTEND] Erreur HTTP:', errorText);
+        throw new Error(`Erreur ${response.status}: ${errorText}`);
+      }
 
       const result = await response.json();
-      console.log("Succès :", result);
+      console.log('✅ [FRONTEND] Résultat:', result);
       return result;
     } catch (error) {
-      console.error("Erreur :", error);
+      console.error('💥 [FRONTEND] Exception:', error);
       throw error;
     }
   };
@@ -272,6 +325,7 @@ export function useSubmission() {
     step,
     errors,
     isSubmitted,
+    isLoading,
     formData,
     handleChange,
     handleFileChange,

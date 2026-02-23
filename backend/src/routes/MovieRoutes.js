@@ -3,13 +3,15 @@ const router = express.Router();
 const MovieController = require("../controllers/MovieController");
 const { upload } = require("../middlewares/Upload");
 
-// Route debug pour tester la soumission de film
+// ✅ CHANGEZ "/movies" en "/"
 router.post(
-  "/movies",
+  "/",
   (req, res, next) => {
-    console.log("🚀 ROUTE /movies ATTEINTE !");
+    console.log("🚀 ROUTE POST /api/movies ATTEINTE !");
     console.log("📍 Method:", req.method);
     console.log("📍 URL:", req.originalUrl);
+    console.log("📦 Body:", req.body);
+    console.log("📁 Files:", req.files);
     next();
   },
   upload.fields([

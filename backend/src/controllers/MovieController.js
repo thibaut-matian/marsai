@@ -1,7 +1,7 @@
 const Movie = require("../models/MovieModel");
 const MovieAward = require("../models/MovieAwardModel");
 const { uploadToScaleway, deleteFromScaleway } = require("../config/scaleway");
-const { youtube } = require("../config/youtube");
+const { youtube } = require("../config/Youtube");
 const { sendMailToDirector } = require("../services/emailService");
 const fs = require("fs").promises;
 const path = require("path");

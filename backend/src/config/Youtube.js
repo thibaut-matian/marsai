@@ -7,11 +7,12 @@ const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_REDIRECT_URI
 );
 
-// Si le refresh token existe, on le charge
+// ✅ Définir le refresh token au démarrage
 if (process.env.YOUTUBE_REFRESH_TOKEN) {
   oauth2Client.setCredentials({
     refresh_token: process.env.YOUTUBE_REFRESH_TOKEN
   });
+  console.log('✅ YouTube Refresh Token chargé');
 }
 
 const youtube = google.youtube({
@@ -19,25 +20,24 @@ const youtube = google.youtube({
   auth: oauth2Client
 });
 
-// Fonction pour générer l'URL d'authentification
+// ✅ AJOUTE CES FONCTIONS SI ELLES N'EXISTENT PAS
 function getAuthUrl() {
-  const scopes = [
-    'https://www.googleapis.com/auth/youtube.upload',
-    'https://www.googleapis.com/auth/youtube',
-  ];
-
   return oauth2Client.generateAuthUrl({
     access_type: 'offline',
-    scope: scopes,
-    prompt: 'consent',
+    scope: ['https://www.googleapis.com/auth/youtube.upload'],
+    prompt: 'consent' // Force un nouveau refresh token
   });
 }
 
-// Fonction pour échanger le code contre un token
 async function getTokenFromCode(code) {
   const { tokens } = await oauth2Client.getToken(code);
   oauth2Client.setCredentials(tokens);
   return tokens;
 }
 
-module.exports = { youtube, oauth2Client, getAuthUrl, getTokenFromCode };
+module.exports = {
+  oauth2Client,
+  youtube,
+  getAuthUrl,      // ✅ Export
+  getTokenFromCode // ✅ Export
+};
