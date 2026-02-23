@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'; // Ajout de useEffect pour le reset de page
+import React, { useEffect, useState } from 'react'; // Ajout de useState pour la modal détails
 import useListFilm from "../../hooks/useListFilm";
 import usePagination from "../../hooks/usePagination";
 import PaginationControls from "../../components/pagination"; 
@@ -6,6 +6,7 @@ import { Eye, Mail, Trash2, Clapperboard, User } from "lucide-react";
 import ContactModal from "../../components/features/contactModal";
 import { useEmailSend } from "../../hooks/useEmailSend";
 import Filtre from "./filtre";
+import ModalDetails from "../features/movies/ModalDetails";
 
 const ListMovies = () => {
   const { 
@@ -17,9 +18,16 @@ const ListMovies = () => {
     handleDelete, 
     selectedMovie, 
     setSelectedMovie,
-    statusFilter,   // Vient de ton hook
-    setStatusFilter, // Vient de ton hook
-    filteredMovies,  // Vient de ton hook
+    statusFilter, 
+    setStatusFilter, 
+    filteredMovies, 
+    detailMovie,
+    isModalOpen,
+     setIsModalOpen,
+     handleOpenModal, 
+    isDetailOpen,
+    handleOpenDetail,
+    handleCloseDetail
   } = useListFilm();
 
   const { sendEmail, loading: emailLoading } = useEmailSend();
@@ -34,6 +42,7 @@ const ListMovies = () => {
       () => setSelectedMovie(null),
     );
   };
+
   
   // On branche la pagination sur les films filtrés
   const pagination = usePagination(filteredMovies, 20);
@@ -105,7 +114,8 @@ const ListMovies = () => {
 
                   <td className="align-middle">
                     <div className="flex justify-center items-center gap-2">
-                      <button className="btn btn-square btn-sm bg-blue-600 hover:bg-blue-500 border-none text-white">
+                      <button className="btn btn-square btn-sm bg-blue-600 hover:bg-blue-500 border-none text-white" key={film.id} onClick={() => 
+                        handleOpenDetail(film)}>
                         <Eye size={18} />
                       </button>
                       <button 
@@ -138,6 +148,14 @@ const ListMovies = () => {
           onSend={handleSendEmail}               
           loading={emailLoading}               
         />
+
+        {isDetailOpen && (
+          <ModalDetails 
+            movie={detailMovie} 
+            onClose={handleCloseDetail} 
+          />
+        )}
+
       </div>
     </div>
   );
