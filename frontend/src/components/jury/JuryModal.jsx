@@ -6,7 +6,7 @@ export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
-    email: '',
+    mail: '',
     mobile: '',
     role: 'jury',
     isActive: true,
@@ -32,7 +32,7 @@ export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
       setFormData({
         firstname: jury.firstname || '',
         lastname: jury.lastname || '',
-        email: jury.email || '',
+        mail: jury.mail || '',
         mobile: jury.mobile || '',
         role: jury.role || 'jury',
         isActive: jury.isActive ?? true,
@@ -97,8 +97,8 @@ export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
           </div>
           
           <div>
-            <label htmlFor="email" className="block text-sm text-white/70 mb-2">Email</label>
-            <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} required disabled={isEditMode} className="w-full p-3 bg-black/30 border border-white/20 rounded-lg text-white disabled:opacity-50" />
+            <label htmlFor="mail" className="block text-sm text-white/70 mb-2">Email</label>
+            <input type="email" id="mail" name="mail" value={formData.mail} onChange={handleInputChange} required disabled={isEditMode} className="w-full p-3 bg-black/30 border border-white/20 rounded-lg text-white disabled:opacity-50" />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

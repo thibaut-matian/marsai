@@ -13,11 +13,17 @@ export const useJuryManagement = () => {
     try {
       setIsLoadingData(true);
       setError(null);
-      const juryData = await juryService.getAll();
+      const response = await juryService.getAll();
+      console.log('Réponse API getAll:', response); // Debug
+      
+      // Vérifier si la réponse a une propriété 'data'
+      const juryData = Array.isArray(response) ? response : (response?.data || []);
       setJuryList(juryData);
+      console.log("JURYDATA usejurymanagment", juryData)
     } catch (err) {
       console.error('Erreur lors du chargement des jurys:', err);
       setError('Impossible de charger les jurys');
+      setJuryList([]); // S'assurer que c'est toujours un tableau
     } finally {
       setIsLoadingData(false);
     }

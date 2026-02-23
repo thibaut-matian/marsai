@@ -7,8 +7,13 @@ export const useJuryStats = (juryList) => {
 
   // Statistiques calculées côté client (plus rapide)
   const localStats = useMemo(() => {
+    // Vérifier que juryList est bien un tableau
+    if (!Array.isArray(juryList)) {
+      return { total: 0, active: 0, inactive: 0 };
+    }
+    
     const total = juryList.length;
-    const active = juryList.filter(jury => jury.isActive).length;
+    const active = juryList.filter(jury => jury.is_active).length;
     const inactive = total - active;
 
     return { total, active, inactive };
