@@ -250,7 +250,6 @@ export function useSubmission() {
   const submitForm = async () => {
     console.log('📦 [FRONTEND] Préparation FormData...');
     
-    // Créer un FormData pour les fichiers
     const form = new FormData();
 
     // ✅ FICHIERS OBLIGATOIRES
@@ -271,7 +270,18 @@ export function useSubmission() {
 
     // ✅ DONNÉES TEXTE (mapping vers les noms attendus par le backend)
     form.append('mail', formData.email || '');
-    form.append('gender', formData.civilite === 'M' ? 'M' : 'F');
+    // ✅ FIX : Comparaison avec les VRAIES valeurs stockées
+    let genderValue = 'other'; // Par défaut = other
+    if (formData.civilite === 'm.') {  // ← Changé de 'M' à 'm.'
+      genderValue = 'm.';
+    } else if (formData.civilite === 'mrs.') {  // ← Changé de 'F' à 'mrs.'
+      genderValue = 'mrs.';
+    }
+    // Si 'other', reste 'other'
+    
+    console.log(`  👤 Gender: "${formData.civilite}" → "${genderValue}"`);
+    form.append('gender', genderValue);
+    
     form.append('lastname', formData.lastname || '');
     form.append('firstname', formData.firstname || '');
     form.append('birthdate', formData.birthdate || '');
