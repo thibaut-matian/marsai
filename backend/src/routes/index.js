@@ -5,12 +5,12 @@ const UserRoutes = require('./UserRoutes');
 const MovieRoutes = require('./MovieRoutes');
 const AdminMovieRoutes = require('./AdminMovieRoutes');
 const TicketRoutes = require('./TicketRoutes');
-const YoutubeAuthRoutes = require('./YoutubeAuthRoutes'); // ⬅️ AJOUTÉ
+const YoutubeAuthRoutes = require('./YoutubeAuthRoutes');
 
 // Routes publiques
 router.use('/users', UserRoutes);
 router.use('/movies', MovieRoutes);
-router.use('/', YoutubeAuthRoutes); // ⬅️ AJOUTÉ - Routes d'authentification YouTube
+router.use('/', YoutubeAuthRoutes); 
 
 // Routes admin (protégées)
 router.use('/admin', AdminMovieRoutes);

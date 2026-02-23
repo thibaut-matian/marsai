@@ -7,6 +7,25 @@ export default function useListFilm() {
   const [error, setError] = useState(null);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [statusFilter, setStatusFilter] = useState('all');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+const [detailMovie, setDetailMovie] = useState(null);
+ const [isDetailOpen, setIsDetailOpen] = useState(false);
+  
+    const handleOpenModal = (movie) => {
+      setSelectedMovie(movie);
+      setIsModalOpen(true);
+    };
+
+    const handleOpenDetail = (movie) => {
+      setDetailMovie(movie);
+      setIsDetailOpen(true);
+    };
+
+    const handleCloseDetail = () => {
+      setIsDetailOpen(false);
+      setDetailMovie(null);
+    };
 
   const fetchMovies = async () => {
     try {
@@ -41,6 +60,18 @@ const filteredMovies = useMemo(() => {
     return labels[status] || "Inconnu";
   };
 
+  const handleDelete = async (id) => {
+  if (window.confirm("Es-tu sûr de vouloir supprimer ce film ?")) {
+    try {
+      await axios.delete(`http://localhost:3000/api/admin/movie/${id}`);
+      setMovies(movies.filter(m => m.id !== id)); 
+    } catch (err) {
+      alert("Erreur lors de la suppression");
+    }
+  }
+};
+
+
   return { 
     movies,           
     filteredMovies,   
@@ -52,6 +83,14 @@ const filteredMovies = useMemo(() => {
     getStatusText,
     selectedMovie, 
     setSelectedMovie,
+    handleDelete,
+    isModalOpen,
+    setIsModalOpen,
+    handleOpenModal,
+    detailMovie,
+    isDetailOpen,
+    handleOpenDetail,
+    handleCloseDetail,
     refreshMovies: fetchMovies 
   };
 }
