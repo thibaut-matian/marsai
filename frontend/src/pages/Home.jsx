@@ -38,6 +38,26 @@ export default function Home() {
 
       <MovieTimeline />
 
+      {/* À propos Section */}
+      <div className="pb-16 bg-black">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 text-white uppercase tracking-widest">
+            À PROPOS
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 max-w-5xl mx-auto">
+            <p className="text-sm md:text-base text-white/80 leading-relaxed">
+              Bienvenue sur notre plateforme dédiée aux créateurs de contenu. Nous sommes une communauté passionnée 
+              qui célèbre la créativité, l'innovation et le talent sous toutes ses formes.
+            </p>
+            <p className="text-sm md:text-base text-white/80 leading-relaxed">
+              Notre mission est de fournir une plateforme inclusive où les créateurs peuvent partager leurs œuvres, 
+              obtenir des retours constructifs d'experts reconnus et avoir l'opportunité de voir leurs projets reconnus 
+              et récompensés.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <hr />
 
       {/* Criteres de soumission */}

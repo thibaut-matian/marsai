@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "aws-sdk": "^2.1693.0",
+    "@aws-sdk/client-s3": "^3.995.0",
+    "@aws-sdk/lib-storage": "^3.995.0",
     "axios": "^1.13.2",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
@@ -11,14 +12,20 @@
     "multer": "^2.0.2",
     "mysql2": "^3.17.0",
     "nodemailer": "^8.0.1",
-    "nodemon": "^3.1.11",
     "puppeteer": "^24.37.4",
     "qrcode": "^1.5.4",
+    "qs": "^6.15.0",
     "sequelize": "^6.37.7"
   },
   "scripts": {
     "start": "nodemon server.js",
     "dev": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "overrides": {
+    "minimatch": "^10.2.1"
   }
 }
