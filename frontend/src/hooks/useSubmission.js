@@ -176,7 +176,6 @@ export function useSubmission() {
     // ÉTAPE 3 : Assets & Tech
     if (currentStep === 3) {
       if (!formData.videoFile) newErrors.videoFile = "Fichier vidéo requis.";
-      if (!formData.filmUrl.trim()) newErrors.filmUrl = "Lien YouTube requis.";
       if (formData.needsSubtitles && !formData.subtitleFile) {
         newErrors.subtitleFile = "Fichier .srt requis.";
       }
@@ -217,7 +216,10 @@ export function useSubmission() {
         setIsSubmitted(true);
       } else {
         setStep((prev) => prev + 1);
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
