@@ -3,15 +3,21 @@ const router = express.Router();
 const MovieController = require("../controllers/MovieController");
 const { upload } = require("../middlewares/Upload");
 
-// Créer un film (candidature) avec upload
+// Route debug pour tester la soumission de film
 router.post(
-  "/",
+  "/movies",
+  (req, res, next) => {
+    console.log("🚀 ROUTE /movies ATTEINTE !");
+    console.log("📍 Method:", req.method);
+    console.log("📍 URL:", req.originalUrl);
+    next();
+  },
   upload.fields([
     { name: "video", maxCount: 1 },
     { name: "poster", maxCount: 1 },
     { name: "subtitle", maxCount: 1 },
   ]),
-  MovieController.create
+  MovieController.create,
 );
 
 // Récupérer un film par token JWT

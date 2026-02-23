@@ -214,7 +214,6 @@ export function useSubmission() {
   const handleNext = () => {
     if (validateStep(step)) {
       if (step === 4) {
-        // Dernière étape, soumettre le formulaire
         setIsSubmitted(true);
       } else {
         setStep((prev) => prev + 1);
