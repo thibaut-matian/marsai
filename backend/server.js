@@ -6,92 +6,112 @@ require("dotenv").config();
 
 const sequelize = require("./src/config/Database");
 const { Movie, Squad, User, Role } = require("./src/models");
-
 const routes = require("./src/routes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors());
+console.log('🚀 ════════════════════════════════════════════════════════════');
+console.log('🚀 DÉMARRAGE DU SERVEUR MARSAI BACKEND');
+console.log('🚀 ════════════════════════════════════════════════════════════');
+
+// Middleware CORS
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes API
+// ✅ LOG GLOBAL : Toutes les requêtes qui arrivent
+app.use((req, res, next) => {
+  console.log('');
+  console.log('═'.repeat(80));
+  console.log(`📨 ${req.method} ${req.originalUrl}`);
+  console.log(`🕒 ${new Date().toISOString()}`);
+  console.log(`📍 IP: ${req.ip}`);
+  console.log(`📋 Content-Type: ${req.headers['content-type']}`);
+  next();
+});
+
+// ✅ Routes API principales (incluant MovieController)
+console.log('📂 Chargement des routes depuis /src/routes...');
 app.use("/api", routes);
 
 // Route de bienvenue
 app.get("/", (req, res) => {
+  console.log('✅ Route racine "/" appelée');
   res.json({ message: "Bienvenue sur l'API marsAI" });
 });
 
 /**
- * ROUTE DE SOUMISSION D'UNE ŒUVRE (Spécifications marsAI)
- * Cette route enregistre le film ET les membres de l'équipe (module dynamique)
+ * ⚠️ ATTENTION : Cette route pourrait ENTRER EN CONFLIT avec /api/movies
+ * Si vous utilisez MovieController, commentez ou supprimez cette route
  */
-app.post("/api/movies/submit", async (req, res) => {
-  try {
-    // movieData contient les infos du film, teamMembers est le tableau des collaborateurs
-    const { movieData, teamMembers } = req.body;
-
-    // Création du film et de son équipe en une seule fois
-    const result = await Movie.create(
-      {
-        ...movieData,
-        team: teamMembers,
-      },
-      {
-        include: [{ model: Squad, as: "team" }],
-      },
-    );
-
-    res.status(201).json({
-      message: "Soumission réussie !",
-      movieId: result.id,
-    });
-  } catch (error) {
-    console.error("Erreur lors de la soumission :", error);
-    res.status(400).json({
-      message: "Échec de la soumission. Vérifiez les champs obligatoires (*).",
-      error: error.message,
-    });
-  }
-});
+// app.post("/api/movies/submit", async (req, res) => {
+//   console.log('⚠️ Route /api/movies/submit (ancienne) appelée');
+//   try {
+//     const { movieData, teamMembers } = req.body;
+//     const result = await Movie.create(
+//       {
+//         ...movieData,
+//         team: teamMembers,
+//       },
+//       {
+//         include: [{ model: Squad, as: "team" }],
+//       },
+//     );
+//     res.status(201).json({
+//       message: "Soumission réussie !",
+//       movieId: result.id,
+//     });
+//   } catch (error) {
+//     console.error("❌ Erreur soumission:", error);
+//     res.status(400).json({
+//       message: "Échec de la soumission",
+//       error: error.message,
+//     });
+//   }
+// });
 
 /**
  * ROUTE LOGIN (Authentification Admin)
  */
 app.post("/api/auth/login", async (req, res) => {
+  console.log('🔐 Tentative de connexion...');
   const { email, password } = req.body;
 
-  if (!email || !password)
+  if (!email || !password) {
+    console.log('❌ Champs manquants');
     return res.status(400).json({ message: "Champs manquants" });
+  }
 
   try {
-    // 1. Chercher l'utilisateur dans la table staff par son email
+    console.log('🔍 Recherche utilisateur:', email);
     const user = await User.findOne({
       where: { mail: email, is_active: 1 },
       include: [{ model: Role, as: "role" }],
     });
 
-    // 2. Utilisateur introuvable
     if (!user) {
+      console.log('❌ Utilisateur introuvable');
       return res.status(401).json({ message: "Identifiants incorrects" });
     }
 
-    // 3. Vérifier le mot de passe avec bcrypt
+    console.log('🔑 Vérification mot de passe...');
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
+      console.log('❌ Mot de passe incorrect');
       return res.status(401).json({ message: "Identifiants incorrects" });
     }
 
-    // 4. Générer un JWT
+    console.log('✅ Connexion réussie:', user.firstname, user.lastname);
     const secret = process.env.JWT_SECRET;
     const token = jwt.sign({ id: user.id, role: user.role.name }, secret, {
       expiresIn: "8h",
     });
 
-    // 5. Retourner le token et les infos utiles au front
     return res.status(200).json({
       success: true,
       token,
@@ -104,32 +124,44 @@ app.post("/api/auth/login", async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Erreur login:", error);
-    return res
-      .status(500)
-      .json({ message: "Erreur serveur", error: error.message });
+    console.error("❌ Erreur login:", error);
+    return res.status(500).json({ message: "Erreur serveur", error: error.message });
   }
 });
 
 // Gestion des erreurs 404
 app.use((req, res) => {
+  console.error('❌ 404 - Route non trouvée:', req.method, req.originalUrl);
   res.status(404).json({ message: "Route non trouvée" });
 });
 
-// --- DÉMARRAGE DU SERVEUR ---
+// Gestion des erreurs globales
+app.use((err, req, res, next) => {
+  console.error('❌ ERREUR SERVEUR GLOBALE:', err.message);
+  console.error('Stack:', err.stack);
+  res.status(500).json({ 
+    message: "Erreur serveur", 
+    error: err.message 
+  });
+});
 
+// --- DÉMARRAGE DU SERVEUR ---
 const startServer = async () => {
   try {
-    // On essaie de se connecter à la base de données
+    console.log('🔌 Connexion à la base de données...');
     await sequelize.authenticate();
-    console.log("Connexion à MySQL réussie !");
+    console.log('✅ Connexion MySQL réussie !');
 
-    // Si ça marche, on lance le serveur
     app.listen(PORT, () => {
-      console.log(`Serveur démarré sur le port ${PORT}`);
+      console.log('');
+      console.log('✅ ════════════════════════════════════════════════════════════');
+      console.log(`✅ Serveur démarré sur http://localhost:${PORT}`);
+      console.log('✅ ════════════════════════════════════════════════════════════');
+      console.log('');
     });
   } catch (error) {
-    console.error(" Impossible de se connecter à la base de données:", error);
+    console.error("❌ Impossible de se connecter à la base de données:", error);
+    process.exit(1);
   }
 };
 
