@@ -11,32 +11,32 @@ router.post("/validate-invitation", UserController.validateInvitationToken);
 
 // Routes Users (protégées)
 router.get(
-  "/users",
+  "/",
   // authenticate,
   // authorize("super_admin", "admin"),
   UserController.getUsers,
 );
 router.get(
-  "/users/:id",
+  "/:id",
   // authenticate,
   // authorize("super_admin", "admin"),
   UserController.getUserById,
 );
 router.post(
-  "/users",
+  "/",
   // authenticate,
   // authorize("super_admin"),
   UserController.createUser,
 );
 
 router.put(
-  "/users/:id",
+  "/:id",
   // authenticate,
   // authorize("super_admin"),
   UserController.updateUser,
 );
 router.delete(
-  "/users/:id",
+  "/:id",
   // authenticate,
   // authorize("super_admin"),
   UserController.deleteUser,
