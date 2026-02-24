@@ -6,6 +6,34 @@ const [isOpen, setIsOpen] = useState(false);
 const navigate = useNavigate();
 const location = useLocation();
 
+ // Fonction pour décoder le JWT et extraire les infos utilisateur
+  const getUserFromToken = () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return null;
+    
+    try {
+      // Décoder la partie payload du JWT (partie du milieu)
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      console.log('Infos utilisateur extraites du token:', payload);
+      return payload;
+    } catch (error) {
+      console.error('Erreur décodage token:', error);
+      return null;
+    }
+  };
+
+  // Initialiser directement l'état avec les infos utilisateur
+  const [userInfo, setUserInfo] = useState(() => getUserFromToken());
+
+  console.log('User info in Navbar:', userInfo);
+
+  // Fonction pour générer les initiales à partir du prénom et nom
+  const getInitials = (firstName, lastName) => {
+    if (!firstName && !lastName) return 'JU'; // Jury par défaut
+    const initials = `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase();
+    return initials || 'JU';
+  };
+
 // Empêcher le scroll du body quand le menu mobile est ouvert
 useEffect(() => {
 if (isOpen) {
@@ -83,12 +111,18 @@ return (
         <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="btn btn-ghost gap-3 hover:bg-purple-500/10">
                 <div className="text-right hidden lg:block">
-                    <p className="text-sm font-bold text-white">Marro Veronique</p>
-                    <p className="text-[10px] text-gray-400 uppercase tracking-wider">Jury 2026</p>
+                    <p className="text-sm font-bold text-white">
+                        {userInfo ? `${userInfo.firstname || ''} ${userInfo.lastname || ''}`.trim() || 'Membre Jury' : 'Chargement...'}
+                    </p>
+                    <p className="text-[10px] text-gray-400 uppercase tracking-wider">
+                        {userInfo?.role?.name || 'Jury 2026'}
+                    </p>
                 </div>
                 <div className="avatar placeholder">
                     <div className="w-10 h-10 rounded-full ring-2 ring-purple-500 ring-offset-2 ring-offset-[#100b18] bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-                        <span className="text-white text-sm font-bold">VM</span>
+                        <span className="text-white text-sm font-bold">
+                            {userInfo ? getInitials(userInfo.firstname, userInfo.lastname) : 'JU'}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -147,13 +181,17 @@ return (
             <div className="flex flex-col items-center">
                 <div className="avatar placeholder mb-4">
                     <div className="w-24 h-24 rounded-full ring-2 ring-purple-500 ring-offset-2 ring-offset-[#1a1425] bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-                        <span className="text-white text-2xl font-bold">VM</span>
+                        <span className="text-white text-2xl font-bold">
+                            {userInfo ? getInitials(userInfo.firstname, userInfo.lastname) : 'JU'}
+                        </span>
                     </div>
                 </div>
-                <h3 className="text-xl font-bold text-white">Vero Marro</h3>
+                <h3 className="text-xl font-bold text-white">
+                    {userInfo ? `${userInfo.firstname || ''} ${userInfo.lastname || ''}`.trim() || 'Membre Jury' : 'Chargement...'}
+                </h3>
                 <div className="badge bg-purple-500/20 border-purple-500/50 text-purple-400 mt-2 gap-1">
                     <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>
-                    Membre du Jury
+                    {userInfo?.role?.name || 'Membre du Jury'}
                 </div>
             </div>
 
