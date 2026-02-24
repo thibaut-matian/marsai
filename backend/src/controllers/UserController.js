@@ -336,8 +336,8 @@ class UserController {
       // 2. Générer les tokens d'accès
       const payload = {
         id: user.id,
-        firstName: user.firstname,  // Conversion en camelCase
-        lastName: user.lastname,    // Conversion en camelCase
+        firstName: user.firstname,
+        lastName: user.lastname,
         mail: user.mail,
         role: user.role.name,
         iat: Math.floor(Date.now() / 1000),
