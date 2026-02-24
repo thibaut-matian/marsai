@@ -112,7 +112,7 @@ return (
             <div tabIndex={0} role="button" className="btn btn-ghost gap-3 hover:bg-purple-500/10">
                 <div className="text-right hidden lg:block">
                     <p className="text-sm font-bold text-white">
-                        {userInfo ? `${userInfo.firstname || ''} ${userInfo.lastname || ''}`.trim() || 'Membre Jury' : 'Chargement...'}
+                        {userInfo ? `${userInfo.firstName || ''} ${userInfo.lastName || ''}`.trim() || 'Membre Jury' : 'Chargement...'}
                     </p>
                     <p className="text-[10px] text-gray-400 uppercase tracking-wider">
                         {userInfo?.role?.name || 'Jury 2026'}
@@ -121,7 +121,7 @@ return (
                 <div className="avatar placeholder">
                     <div className="w-10 h-10 rounded-full ring-2 ring-purple-500 ring-offset-2 ring-offset-[#100b18] bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
                         <span className="text-white text-sm font-bold">
-                            {userInfo ? getInitials(userInfo.firstname, userInfo.lastname) : 'JU'}
+                            {userInfo ? getInitials(userInfo.firstName, userInfo.lastName) : 'JU'}
                         </span>
                     </div>
                 </div>
@@ -187,7 +187,7 @@ return (
                     </div>
                 </div>
                 <h3 className="text-xl font-bold text-white">
-                    {userInfo ? `${userInfo.firstname || ''} ${userInfo.lastname || ''}`.trim() || 'Membre Jury' : 'Chargement...'}
+                    {userInfo ? `${userInfo.firstName || ''} ${userInfo.lastName || ''}`.trim() || 'Membre Jury' : 'Chargement...'}
                 </h3>
                 <div className="badge bg-purple-500/20 border-purple-500/50 text-purple-400 mt-2 gap-1">
                     <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>

@@ -78,11 +78,14 @@ import { useEffect, useState } from "react";
           if (existingUser) {
             setUserInfo(existingUser);
           }
+          console.log('Aucun token d\'invitation trouvé, user info from existing token:', existingUser);
         }
       };
 
       handleTokenValidation();
     }, []);
+
+    console.log('Rendu Dashboard avec userInfo:', userInfo);
 
     return (
         <div className="min-h-screen bg-[#100b18] text-white font-sans overflow-x-hidden">
@@ -93,7 +96,7 @@ import { useEffect, useState } from "react";
             {/* HEADER : SALUTATION */}
             <header className="mb-16">
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                    Bonjour, <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">{userInfo.firstname}</span> 👋
+                    Bonjour, <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">{userInfo.firstName}</span> 👋
                 </h1>
                 <p className="text-xl text-gray-400">Prêt(e) à découvrir les pépites de demain ?</p>
             </header>
