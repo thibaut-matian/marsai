@@ -1,0 +1,69 @@
+{
+  "nav": {
+    "planning": "Events",
+    "faq": "FAQ",
+    "submit": "Submit a Movie",
+    "home": "Home"
+  },
+  "footer": {
+    "submit": "Submit a Movie",
+    "legal": "Legal",
+    "cgu": "Terms of Use",
+    "privacy": "Privacy",
+    "faq": "FAQ"
+  },
+  "common": {
+    "fr": "Français",
+    "en": "English"
+  },
+  "home": {
+    "start": "Get Started",
+    "about": "ABOUT US",
+    "welcome": "Welcome to our platform dedicated to content creators. We are a passionate community that celebrates creativity, innovation and talent in all its forms.",
+    "mission": "Our mission is to provide an inclusive platform where creators can share their work, get constructive feedback from recognized experts and have the opportunity to see their projects recognized and rewarded.",
+    "criteria": "Submission Criteria",
+    "criteriaList": ["Wear glasses", "Enjoy terrible jokes", "Able to imitate Dylan", "Be named Thibaut Matian"],
+    "rewards": "Rewards",
+    "rewardsList": ["All-inclusive trip to Maubeuge", "A collection of Philippe Etchebest's jokes", "The right to wear sunglasses indoors", "A signed photo of Thibaut"],
+    "jury": "OUR JURY",
+    "juryDesc": "Discover the experts who evaluate our projects and guarantee the quality of our platform.",
+    "timeline": {
+      "registrations": "REGISTRATIONS",
+      "deliberation": "DELIBERATION",
+      "festival": "FESTIVAL"
+    }
+  },
+  "pages": {
+    "planning": "Events",
+    "faq": "FAQ",
+    "reservation": "Booking",
+    "submission": "Movie Submission",
+    "gallery": "Gallery"
+  },
+  "faq": {
+    "q1": "What are the prizes awarded at the festival?",
+    "q2": "What should be the duration of the short film submitted?",
+    "q3": "Can I submit multiple films?",
+    "q4": "Can I modify my submission after sending it?",
+    "q5": "Can a team submit a film?",
+    "q6": "How should artificial intelligence be integrated into the film?",
+    "q7": "What are the evaluation criteria for submitted films?",
+    "q8": "How will I be notified of my submission receipt?",
+    "q9": "Will submitted films be made public?",
+    "q10": "Where can I find the rules and conditions of participation?"
+  },
+  "planning": {
+    "title": "EVENTS",
+    "friday": "FRIDAY",
+    "saturday": "SATURDAY",
+    "reserve": "BOOK MY SEAT"
+  },
+  "reservation": {
+    "title": "Booking",
+    "selectType": "Ticket Type",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "submit": "Book"
+  }
+}

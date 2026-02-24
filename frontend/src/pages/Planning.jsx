@@ -1,9 +1,11 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { useEventPlanning } from "../hooks/useEventPlanning";
 
 export default function Planning() {
+    const { t } = useTranslation();
     const { 
         fridayOpen, 
         saturdayOpen, 
@@ -93,7 +95,7 @@ export default function Planning() {
             `}</style>
             <div className="container mx-auto px-4 pb-12 pt-28">
                 <h1 className="text-4xl md:text-5xl font-light text-center mb-12 tracking-widest">
-                    EVENEMENTS
+                    {t('planning.title')}
                 </h1>
 
                 <div className="max-w-6xl mx-auto mb-8">
@@ -106,7 +108,7 @@ export default function Planning() {
                                 onClick={toggleFriday}
                                 className="w-full p-6 text-left bg-white/5 hover:bg-white/10 transition flex justify-between items-center md:hidden"
                             >
-                                <h1 className="text-4xl font-normal">VENDREDI</h1>
+                                <h1 className="text-4xl font-normal">{t('planning.friday')}</h1>
                                 <span className={`text-white text-2xl transition duration-300 transform ${fridayOpen ? 'rotate-180' : ''}`}>
                                     <ChevronDown />
                                 </span>
@@ -114,7 +116,7 @@ export default function Planning() {
 
                             {/* DESKTOP HEADER */}
                             <div className="hidden md:block p-6 bg-white/5">
-                                <h1 className="text-4xl font-normal text-center">VENDREDI</h1>
+                                <h1 className="text-4xl font-normal text-center">{t('planning.friday')}</h1>
                                 <hr className="border-white/30 mt-4" />
                             </div>
 
@@ -139,7 +141,7 @@ export default function Planning() {
                                 onClick={toggleSaturday}
                                 className="w-full p-6 text-left bg-white/5 hover:bg-white/10 transition flex justify-between items-center md:hidden"
                             >
-                                <h1 className="text-4xl font-normal">SAMEDI</h1>
+                                <h1 className="text-4xl font-normal">{t('planning.saturday')}</h1>
                                 <span className={`text-white text-2xl transition transform duration-300 ${saturdayOpen ? 'rotate-180' : ''}`}>
                                     <ChevronDown />
                                 </span>
@@ -147,7 +149,7 @@ export default function Planning() {
 
                             {/* DESKTOP HEADER */}
                             <div className="hidden md:block p-6 bg-white/5">
-                                <h1 className="text-4xl font-normal text-center">SAMEDI</h1>
+                                <h1 className="text-4xl font-normal text-center">{t('planning.saturday')}</h1>
                                 <hr className="border-white/30 mt-4" />
                             </div>
 
@@ -171,7 +173,7 @@ export default function Planning() {
                     <button
                         onClick={() => navigate("/reservation")}
                         className="btn bg-white text-black border-none font-semibold hover:bg-white/80 transition">
-                        JE RÉSERVE MA PLACE
+                        {t('planning.reserve')}
                     </button>
                 </div>
             </div>

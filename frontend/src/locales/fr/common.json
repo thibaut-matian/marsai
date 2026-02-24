@@ -1,0 +1,69 @@
+{
+  "nav": {
+    "planning": "Événements",
+    "faq": "FAQ",
+    "submit": "Soumettre un film",
+    "home": "Accueil"
+  },
+  "footer": {
+    "submit": "Soumettre un film",
+    "legal": "Mentions Légales",
+    "cgu": "CGU",
+    "privacy": "Politique de Confidentialité",
+    "faq": "FAQ"
+  },
+  "common": {
+    "fr": "Français",
+    "en": "English"
+  },
+  "home": {
+    "start": "Commencer",
+    "about": "À PROPOS",
+    "welcome": "Bienvenue sur notre plateforme dédiée aux créateurs de contenu. Nous sommes une communauté passionnée qui célèbre la créativité, l'innovation et le talent sous toutes ses formes.",
+    "mission": "Notre mission est de fournir une plateforme inclusive où les créateurs peuvent partager leurs œuvres, obtenir des retours constructifs d'experts reconnus et avoir l'opportunité de voir leurs projets reconnus et récompensés.",
+    "criteria": "Critères de soumission",
+    "criteriaList": ["Porter des lunettes", "Aimer les blagues de beauf", "Savoir imiter Dylan", "S'appeler Thibaut Matian"],
+    "rewards": "Récompenses",
+    "rewardsList": ["Un voyage tout compris à Maubeuge", "Une collection de blagues de Philippe Etchebest", "Le droit de porter des lunettes de soleil en intérieur", "Une photo dédicácée de Thibaut"],
+    "jury": "NOTRE JURY",
+    "juryDesc": "Découvrez les experts qui évaluent nos projets et garantissent la qualité de notre plateforme.",
+    "timeline": {
+      "registrations": "INSCRIPTIONS",
+      "deliberation": "DÉLIBÉRATION",
+      "festival": "FESTIVAL"
+    }
+  },
+  "pages": {
+    "planning": "Événements",
+    "faq": "FAQ",
+    "reservation": "Réservation",
+    "submission": "Soumission de film",
+    "gallery": "Galerie"
+  },
+  "faq": {
+    "q1": "Quels sont les prix décernés lors du festival ?",
+    "q2": "Quelle doit être la durée du court-métrage soumis ?",
+    "q3": "Puis-je soumettre plusieurs films ?",
+    "q4": "Puis-je modifier ma soumission après l'avoir envoyée ?",
+    "q5": "Une équipe peut-elle soumettre un film ?",
+    "q6": "Comment l'intelligence artificielle doit-elle être intégrée dans le film ?",
+    "q7": "Quels sont les critères d'évaluation des films soumis ?",
+    "q8": "Comment serai-je informé(e) de la bonne réception de ma soumission ?",
+    "q9": "Les films soumis seront-ils rendus publics ?",
+    "q10": "Où puis-je consulter le règlement et les conditions de participation ?"
+  },
+  "planning": {
+    "title": "ÉVÉNEMENTS",
+    "friday": "VENDREDI",
+    "saturday": "SAMEDI",
+    "reserve": "JE RÉSERVE MA PLACE"
+  },
+  "reservation": {
+    "title": "Réservation",
+    "selectType": "Type de billet",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "Email",
+    "submit": "Réserver"
+  }
+}
