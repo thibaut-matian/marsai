@@ -21,25 +21,28 @@ export default function Reservation() {
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState("");
 
+  // ─── Chargement des types de billets ──────────────────────────────────────
   useEffect(() => {
     const fetchTicketTypes = async () => {
       try {
         const response = await getAPI.getTicketTypes();
-        setTicketTypes(response.data.data || response.data || []);
+        // Gestion de la structure de réponse API (data.data ou data direct)
+        setTicketTypes(response.data?.data || response.data || []);
         setLoadingTypes(false);
       } catch (err) {
-        setError("Impossible de charger les types de billets.");
+        setError(t('reservation.errorLoadingTypes'));
         setLoadingTypes(false);
       }
     };
     fetchTicketTypes();
-  }, []);
+  }, [t]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setError("");
   };
 
+  // ─── Soumission du formulaire ─────────────────────────────────────────────
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -51,53 +54,46 @@ export default function Reservation() {
         ticket_type_id: parseInt(form.ticket_type_id),
       });
 
-      setSuccess(response.data.data || response.data);
+      // Si la requête réussit
+      setSuccess(response.data?.data || response.data);
     } catch (err) {
-      const errorMessage = err.response?.data?.message || "Erreur réseau, veuillez réessayer.";
+      // Récupération du message d'erreur du serveur ou message générique
+      const errorMessage = err.response?.data?.message || t('reservation.errorNetwork');
       setError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // ─── Page de confirmation ────────────────────────────────────────────────
+  // ─── Page de confirmation (Succès) ────────────────────────────────────────
   if (success) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
         <div className="card bg-white/5 border border-white/20 w-full max-w-md shadow-xl">
           <div className="card-body items-center text-center gap-4">
             <div className="text-6xl">🎟️</div>
-            <h2 className="card-title text-2xl tracking-widest font-light">RÉSERVATION CONFIRMÉE</h2>
-
-            <div className="w-full space-y-2 text-left text-sm">
-              <p className="label-text text-gray-400 uppercase tracking-widest text-xs">Vos informations</p>
-              <div className="bg-white/5 rounded-xl p-4 space-y-2">
-                <p><span className="text-gray-400">Nom : </span>{success.firstname} {success.lastname}</p>
-                <p><span className="text-gray-400">Email : </span>{success.email}</p>
-                <p><span className="text-gray-400">Billet : </span>{success.ticket_type}</p>
-              </div>
-              <p className="label-text text-gray-400 uppercase tracking-widest text-xs pt-2">Votre QR code</p>
-              <div className="flex justify-center bg-white rounded-xl p-4">
-                <img src={success.qr_code_image} alt="QR Code" className="w-48 h-48" />
-              </div>
-              <p className="text-gray-500 text-xs text-center">Présentez ce QR code à l'entrée. Un email de confirmation vous a été envoyé.</p>
-            </div>
-
-            <div className="card-actions w-full pt-2">
-              <button
-                onClick={() => navigate("/planning")}
-                className="btn btn-neutral w-full"
-              >
-                ← Retour au planning
-              </button>
-            </div>
+            <h2 className="card-title text-2xl tracking-widest font-light">{t('reservation.title')}</h2>
+            <p className="text-lg text-green-400 font-bold">{t('reservation.success')}</p>
+            <button 
+              onClick={() => navigate('/planning')} 
+              className="btn btn-outline btn-sm border-gray-700 text-white hover:bg-gray-800 hover:border-gray-700 rounded-full text-xs md:text-sm mt-4 cursor-pointer"
+            >
+              {t('reservation.backToPlanning')}
+            </button>
           </div>
         </div>
       </div>
     );
   }
 
-  // ─── Formulaire ──────────────────────────────────────────────────────────
+  // Mapping local pour traduire les noms de tickets connus venant de la DB
+  const ticketNameMap = {
+    'Pass Vendredi': 'ticketTypes.friday',
+    'Pass Samedi': 'ticketTypes.saturday',
+    'Pass 2 Jours': 'ticketTypes.weekend',
+  };
+
+  // ─── Formulaire de réservation ───────────────────────────────────────────
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
       <div className="card bg-white/5 border border-white/20 w-full max-w-lg shadow-xl mt-20 mb-10">
@@ -105,7 +101,9 @@ export default function Reservation() {
 
           {/* Header */}
           <div className="text-center">
-            <h2 className="card-title justify-center text-3xl font-light tracking-widest">{t('reservation.title').toUpperCase()}</h2>
+            <h2 className="card-title justify-center text-3xl font-light tracking-widest">
+                {t('reservation.title').toUpperCase()}
+            </h2>
             <p className="text-gray-400 text-sm mt-1">{t('reservation.selectType')}</p>
           </div>
 
@@ -113,7 +111,9 @@ export default function Reservation() {
 
             {/* Choix du billet */}
             <fieldset className="fieldset">
-              <legend className="fieldset-legend text-xs uppercase tracking-widest text-gray-400">{t('reservation.selectType')}</legend>
+              <legend className="fieldset-legend text-xs uppercase tracking-widest text-gray-400">
+                {t('reservation.selectType')}
+              </legend>
               {loadingTypes ? (
                 <div className="flex justify-center py-4">
                   <span className="loading loading-spinner loading-md text-white"></span>
@@ -141,10 +141,12 @@ export default function Reservation() {
                           onChange={handleChange}
                           className="radio radio-sm border-white checked:bg-white"
                         />
-                        <span className="font-medium text-sm">{type.name}</span>
+                        <span className="font-medium text-sm">
+                            {ticketNameMap[type.name] ? t(ticketNameMap[type.name]) : type.name}
+                        </span>
                       </div>
                       <span className={`badge badge-sm ${type.available ? (type.remaining < 50 ? "badge-error" : "badge-ghost") : "badge-error"}`}>
-                        {type.available ? `${type.remaining} places` : "Complet"}
+                        {type.available ? `${type.remaining} ${t('reservation.places') || 'places'}` : t('reservation.full') || "Complet"}
                       </span>
                     </label>
                   ))}
@@ -219,7 +221,7 @@ export default function Reservation() {
               onClick={() => navigate("/planning")}
               className="btn btn-ghost w-full text-gray-500"
             >
-              ← Retour au planning
+              ← {t('reservation.backToPlanning')}
             </button>
 
           </form>
