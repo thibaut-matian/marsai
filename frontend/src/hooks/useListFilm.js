@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
-import axios from "axios";
+import { useEffect, useMemo, useState } from "react";
+import getAPI from "../services/getAPI";
 
 export default function useListFilm() {
   const [movies, setMovies] = useState([]);
@@ -30,7 +30,7 @@ const [detailMovie, setDetailMovie] = useState(null);
   const fetchMovies = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:3000/api/admin/movie");
+      const response = await getAPI.getAdminMovies();
       setMovies(response.data.data || []); 
       setError(null);
     } catch (err) {
@@ -63,7 +63,7 @@ const filteredMovies = useMemo(() => {
   const handleDelete = async (id) => {
   if (window.confirm("Es-tu sûr de vouloir supprimer ce film ?")) {
     try {
-      await axios.delete(`http://localhost:3000/api/admin/movie/${id}`);
+      await getAPI.deleteMovie(id);
       setMovies(movies.filter(m => m.id !== id)); 
     } catch (err) {
       alert("Erreur lors de la suppression");

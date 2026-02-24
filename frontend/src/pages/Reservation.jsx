@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
-
-const API_URL = "http://localhost:3000/api";
+import { useNavigate } from "react-router-dom";
+import getAPI from "../services/getAPI";
 
 export default function Reservation() {
   const navigate = useNavigate();
@@ -22,17 +21,20 @@ export default function Reservation() {
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState("");
 
+  // ─── Chargement des types de billets ──────────────────────────────────────
   useEffect(() => {
-    fetch(`${API_URL}/tickets/types`)
-      .then((res) => res.json())
-      .then((data) => {
-        setTicketTypes(data.data || []);
+    const fetchTicketTypes = async () => {
+      try {
+        const response = await getAPI.getTicketTypes();
+        // Gestion de la structure de réponse API (data.data ou data direct)
+        setTicketTypes(response.data?.data || response.data || []);
         setLoadingTypes(false);
-      })
-      .catch(() => {
+      } catch (err) {
         setError(t('reservation.errorLoadingTypes'));
         setLoadingTypes(false);
-      });
+      }
+    };
+    fetchTicketTypes();
   }, [t]);
 
   const handleChange = (e) => {
@@ -40,37 +42,30 @@ export default function Reservation() {
     setError("");
   };
 
+  // ─── Soumission du formulaire ─────────────────────────────────────────────
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError("");
 
     try {
-      const res = await fetch(`${API_URL}/tickets`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...form,
-          ticket_type_id: parseInt(form.ticket_type_id),
-        }),
+      const response = await getAPI.reserveTicket({
+        ...form,
+        ticket_type_id: parseInt(form.ticket_type_id),
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.message || t('reservation.errorGeneric'));
-        return;
-      }
-
-      setSuccess(data.data);
+      // Si la requête réussit
+      setSuccess(response.data?.data || response.data);
     } catch (err) {
-      setError(t('reservation.errorNetwork'));
+      // Récupération du message d'erreur du serveur ou message générique
+      const errorMessage = err.response?.data?.message || t('reservation.errorNetwork');
+      setError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // ─── Page de confirmation ────────────────────────────────────────────────
+  // ─── Page de confirmation (Succès) ────────────────────────────────────────
   if (success) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
@@ -79,7 +74,10 @@ export default function Reservation() {
             <div className="text-6xl">🎟️</div>
             <h2 className="card-title text-2xl tracking-widest font-light">{t('reservation.title')}</h2>
             <p className="text-lg text-green-400 font-bold">{t('reservation.success')}</p>
-            <button onClick={() => navigate('/planning')} className="btn btn-outline btn-sm border-gray-700 text-white hover:bg-gray-800 hover:border-gray-700 rounded-full text-xs md:text-sm mt-4 cursor-pointer">
+            <button 
+              onClick={() => navigate('/planning')} 
+              className="btn btn-outline btn-sm border-gray-700 text-white hover:bg-gray-800 hover:border-gray-700 rounded-full text-xs md:text-sm mt-4 cursor-pointer"
+            >
               {t('reservation.backToPlanning')}
             </button>
           </div>
@@ -88,14 +86,14 @@ export default function Reservation() {
     );
   }
 
-  // Mapping local pour traduire les noms de tickets connus
+  // Mapping local pour traduire les noms de tickets connus venant de la DB
   const ticketNameMap = {
     'Pass Vendredi': 'ticketTypes.friday',
     'Pass Samedi': 'ticketTypes.saturday',
     'Pass 2 Jours': 'ticketTypes.weekend',
   };
 
-  // ─── Formulaire ──────────────────────────────────────────────────────────
+  // ─── Formulaire de réservation ───────────────────────────────────────────
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
       <div className="card bg-white/5 border border-white/20 w-full max-w-lg shadow-xl mt-20 mb-10">
@@ -103,7 +101,9 @@ export default function Reservation() {
 
           {/* Header */}
           <div className="text-center">
-            <h2 className="card-title justify-center text-3xl font-light tracking-widest">{t('reservation.title').toUpperCase()}</h2>
+            <h2 className="card-title justify-center text-3xl font-light tracking-widest">
+                {t('reservation.title').toUpperCase()}
+            </h2>
             <p className="text-gray-400 text-sm mt-1">{t('reservation.selectType')}</p>
           </div>
 
@@ -111,7 +111,9 @@ export default function Reservation() {
 
             {/* Choix du billet */}
             <fieldset className="fieldset">
-              <legend className="fieldset-legend text-xs uppercase tracking-widest text-gray-400">{t('reservation.selectType')}</legend>
+              <legend className="fieldset-legend text-xs uppercase tracking-widest text-gray-400">
+                {t('reservation.selectType')}
+              </legend>
               {loadingTypes ? (
                 <div className="flex justify-center py-4">
                   <span className="loading loading-spinner loading-md text-white"></span>
@@ -139,10 +141,12 @@ export default function Reservation() {
                           onChange={handleChange}
                           className="radio radio-sm border-white checked:bg-white"
                         />
-                        <span className="font-medium text-sm">{ticketNameMap[type.name] ? t(ticketNameMap[type.name]) : type.name}</span>
+                        <span className="font-medium text-sm">
+                            {ticketNameMap[type.name] ? t(ticketNameMap[type.name]) : type.name}
+                        </span>
                       </div>
                       <span className={`badge badge-sm ${type.available ? (type.remaining < 50 ? "badge-error" : "badge-ghost") : "badge-error"}`}>
-                        {type.available ? `${type.remaining} places` : "Complet"}
+                        {type.available ? `${type.remaining} ${t('reservation.places') || 'places'}` : t('reservation.full') || "Complet"}
                       </span>
                     </label>
                   ))}

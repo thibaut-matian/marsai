@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { ticketService } from "../services/ticketService";
+import { useEffect, useState } from "react";
+import getAPI from "../services/getAPI";
 
 export const useTicketReservation = () => {
   const [ticketTypes, setTicketTypes] = useState([]);
@@ -19,8 +19,8 @@ export const useTicketReservation = () => {
   useEffect(() => {
     const fetchTypes = async () => {
       try {
-        const types = await ticketService.getTypes();
-        setTicketTypes(types);
+        const response = await getAPI.getTicketTypes();
+        setTicketTypes(response.data.data || response.data);
       } catch (err) {
         setError("Impossible de charger les billets disponibles.");
       } finally {
@@ -42,7 +42,7 @@ export const useTicketReservation = () => {
     setSuccess(null);
 
     try {
-      const result = await ticketService.reserve(form);
+      const result = await getAPI.reserveTicket(form);
       setSuccess(result.data);
       setForm({ ticket_type_id: "", firstname: "", lastname: "", email: "" });
     } catch (err) {
