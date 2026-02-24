@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function useSubmission() {
+export function useSubmission(t) {
   // --- 1. STATE (Les données) ---
   const [step, setStep] = useState(1);
   const [errors, setErrors] = useState({});
@@ -72,8 +72,11 @@ export function useSubmission() {
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     if (files && files[0]) {
+      console.log("handleFileChange:", name, files[0]); // DEBUG
       setFormData((prev) => ({ ...prev, [name]: files[0] }));
       if (errors[name]) setErrors((prev) => ({ ...prev, [name]: null }));
+    } else {
+      console.log("handleFileChange: aucun fichier sélectionné"); // DEBUG
     }
   };
 
@@ -180,20 +183,21 @@ export function useSubmission() {
 
     // ÉTAPE 3 : Assets & Tech
     if (currentStep === 3) {
-      if (!formData.videoFile) newErrors.videoFile = "Fichier vidéo requis.";
+      if (!formData.videoFile) newErrors.videoFile = t("form.errors.videoFile");
       if (formData.needsSubtitles && !formData.subtitleFile) {
-        newErrors.subtitleFile = "Fichier .srt requis.";
+        newErrors.subtitleFile = t("form.errors.subtitleFile");
       }
       if (!formData.thumbnailFile)
-        newErrors.thumbnailFile = "Vignette requise.";
+        newErrors.thumbnailFile = t("form.errors.thumbnailFile");
       if (!formData.filmTitleOriginal.trim())
-        newErrors.filmTitleOriginal = "Titre requis.";
-      if (!formData.filmDuration) newErrors.filmDuration = "Durée requise.";
+        newErrors.filmTitleOriginal = t("form.errors.filmTitleOriginal");
+      if (!formData.filmDuration)
+        newErrors.filmDuration = t("form.errors.filmDuration");
       if (!formData.aiClassification)
-        newErrors.aiClassification = "Classification IA requise.";
+        newErrors.aiClassification = t("form.errors.aiClassification");
       // Validation chiffres uniquement
       if (formData.filmDuration && !onlyDigits(formData.filmDuration))
-        newErrors.filmDuration = "Durée : chiffres uniquement.";
+        newErrors.filmDuration = t("form.errors.filmDurationDigits");
       // YouTube et sous-titres : toujours envoyés (déjà gérés par défaut)
     }
 
@@ -220,15 +224,15 @@ export function useSubmission() {
     if (validateStep(step)) {
       if (step === 4) {
         // Étape finale : soumettre le formulaire
-        console.log('🚀 [FRONTEND] Soumission du formulaire...');
+        console.log("🚀 [FRONTEND] Soumission du formulaire...");
         setIsLoading(true);
         try {
           await submitForm();
-          console.log('✅ [FRONTEND] Soumission réussie !');
+          console.log("✅ [FRONTEND] Soumission réussie !");
           setIsSubmitted(true);
         } catch (error) {
-          console.error('❌ [FRONTEND] Erreur soumission:', error);
-          alert('Erreur lors de l\'envoi. Vérifiez la console.');
+          console.error("❌ [FRONTEND] Erreur soumission:", error);
+          alert("Erreur lors de l'envoi. Vérifiez la console.");
         } finally {
           setIsLoading(false);
         }
@@ -248,85 +252,94 @@ export function useSubmission() {
   // --- 6. ENVOI DES DONNÉES ---
 
   const submitForm = async () => {
-    console.log('📦 [FRONTEND] Préparation FormData...');
-    
+    console.log("📦 [FRONTEND] Préparation FormData...");
+
     const form = new FormData();
 
     // ✅ FICHIERS OBLIGATOIRES
     if (formData.videoFile) {
-      console.log('  📹 Vidéo:', formData.videoFile.name, `(${(formData.videoFile.size / 1024 / 1024).toFixed(2)} MB)`);
-      form.append('video', formData.videoFile);
+      console.log(
+        "  📹 Vidéo:",
+        formData.videoFile.name,
+        `(${(formData.videoFile.size / 1024 / 1024).toFixed(2)} MB)`,
+      );
+      form.append("video", formData.videoFile);
     }
     if (formData.thumbnailFile) {
-      console.log('  🖼️ Poster:', formData.thumbnailFile.name);
-      form.append('poster', formData.thumbnailFile);
+      console.log("  🖼️ Poster:", formData.thumbnailFile.name);
+      form.append("poster", formData.thumbnailFile);
     }
 
     // ✅ FICHIERS OPTIONNELS
     if (formData.subtitleFile) {
-      console.log('  📝 Sous-titre:', formData.subtitleFile.name);
-      form.append('subtitle', formData.subtitleFile);
+      console.log("  📝 Sous-titre:", formData.subtitleFile.name);
+      form.append("subtitle", formData.subtitleFile);
     }
 
     // ✅ DONNÉES TEXTE (mapping vers les noms attendus par le backend)
-    form.append('mail', formData.email || '');
-    // ✅ FIX : Comparaison avec les VRAIES valeurs stockées
-    let genderValue = 'other'; // Par défaut = other
-    if (formData.civilite === 'm.') {  // ← Changé de 'M' à 'm.'
-      genderValue = 'm.';
-    } else if (formData.civilite === 'mrs.') {  // ← Changé de 'F' à 'mrs.'
-      genderValue = 'mrs.';
+    form.append("mail", formData.email || "");
+    // ✅ FIX : Correspondance avec les valeurs attendues par la base
+    let genderValue = "other"; // Par défaut = other
+    if (formData.civilite === "M") {
+      genderValue = "m.";
+    } else if (formData.civilite === "Mme") {
+      genderValue = "mrs.";
     }
-    // Si 'other', reste 'other'
-    
-    console.log(`  👤 Gender: "${formData.civilite}" → "${genderValue}"`);
-    form.append('gender', genderValue);
-    
-    form.append('lastname', formData.lastname || '');
-    form.append('firstname', formData.firstname || '');
-    form.append('birthdate', formData.birthdate || '');
-    form.append('bio', formData.directorNoteFR || 'N/A');
-    form.append('country', formData.country || '');
-    form.append('city', formData.city || '');
-    form.append('zip_code', formData.zipcode || '');
-    form.append('street', formData.address || '');
-    form.append('phone', formData.telephone || '');
-    form.append('mobile', formData.mobile || '');
-    form.append('actual_job', formData.profession || '');
-    form.append('known_at', formData.marketingSource || '');
-    form.append('duration', formData.filmDuration || '30');
-    form.append('prod_type', '1'); // Type de production par défaut
-    form.append('language', formData.filmLanguage || 'FR');
-    form.append('vo_title', formData.filmTitleOriginal || '');
-    form.append('en_title', formData.filmTitleEN || formData.filmTitleOriginal || '');
-    form.append('vo_desc', formData.synopsisFR || '');
-    form.append('en_desc', formData.synopsisEN || formData.synopsisFR || '');
-    form.append('ia_used', formData.aiClassification || 'N/A');
-    form.append('creative_method', formData.aiMethodology || 'N/A');
+    // Si 'Iel', reste 'other'
+    form.append("gender", genderValue);
 
-    console.log('📤 [FRONTEND] Envoi vers /api/movies...');
-    console.log('  → Endpoint: http://localhost:3000/api/movies');
+    form.append("lastname", formData.lastname || "");
+    form.append("firstname", formData.firstname || "");
+    form.append("birthdate", formData.birthdate || "");
+    form.append("bio", formData.directorNoteFR || "N/A");
+    form.append("country", formData.country || "");
+    form.append("city", formData.city || "");
+    form.append("zip_code", formData.zipcode || "");
+    form.append("street", formData.address || "");
+    form.append("phone", formData.telephone || "");
+    form.append("mobile", formData.mobile || "");
+    form.append("actual_job", formData.profession || "");
+    form.append("known_at", formData.marketingSource || "");
+    form.append("duration", formData.filmDuration || "30");
+    form.append("prod_type", "1"); // Type de production par défaut
+    form.append("language", formData.filmLanguage || "FR");
+    form.append("vo_title", formData.filmTitleOriginal || "");
+    form.append(
+      "en_title",
+      formData.filmTitleEN || formData.filmTitleOriginal || "",
+    );
+    form.append("vo_desc", formData.synopsisFR || "");
+    form.append("en_desc", formData.synopsisEN || formData.synopsisFR || "");
+    form.append("ia_used", formData.aiClassification || "N/A");
+    form.append("creative_method", formData.aiMethodology || "N/A");
+
+    console.log("📤 [FRONTEND] Envoi vers /api/movies...");
+    console.log("  → Endpoint: http://localhost:3000/api/movies");
 
     try {
-      const response = await fetch('http://localhost:3000/api/movies', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3000/api/movies", {
+        method: "POST",
         body: form,
         // ⚠️ Ne PAS définir Content-Type, le navigateur le fait automatiquement avec le boundary
       });
 
-      console.log('📡 [FRONTEND] Réponse reçue:', response.status, response.statusText);
+      console.log(
+        "📡 [FRONTEND] Réponse reçue:",
+        response.status,
+        response.statusText,
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('❌ [FRONTEND] Erreur HTTP:', errorText);
+        console.error("❌ [FRONTEND] Erreur HTTP:", errorText);
         throw new Error(`Erreur ${response.status}: ${errorText}`);
       }
 
       const result = await response.json();
-      console.log('✅ [FRONTEND] Résultat:', result);
+      console.log("✅ [FRONTEND] Résultat:", result);
       return result;
     } catch (error) {
-      console.error('💥 [FRONTEND] Exception:', error);
+      console.error("💥 [FRONTEND] Exception:", error);
       throw error;
     }
   };

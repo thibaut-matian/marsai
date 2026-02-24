@@ -88,7 +88,7 @@ export default function FAQ() {
             </div>
 
             <div className="collapse-content text-sm text-gray-300"> 
-              <p className="pt-2">Click the "Sign Up" button in the top right corner and follow the registration process.</p>
+              <p className="pt-2">{t(`faq.a${index+1}`)}</p>
             </div>
           </div>
         ))}

@@ -25,14 +25,14 @@ export default function Planning() {
                     <div className="avatar overflow-hidden rounded border border-white/30 group-hover:border-white/50 transition-colors">
                         <div className="w-24 h-16">
                             <img src={event.image}
-                                alt={event.title}
+                                alt={t(event.title)}
                                 className="object-cover group-hover:scale-110 transition-transform duration-300" />
                         </div>
                     </div>
                     <div className="flex-1">
-                        <h3 className="card-title text-sm text-white group-hover:text-white transition-colors line-clamp-1">{event.title}</h3>
+                        <h3 className="card-title text-sm text-white group-hover:text-white transition-colors line-clamp-1">{t(event.title)}</h3>
                         <p className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors font-semibold">{event.time}</p>
-                        <p className="text-xs text-gray-500 group-hover:text-gray-400 mt-1 transition-colors line-clamp-2">{event.description}</p>
+                        <p className="text-xs text-gray-500 group-hover:text-gray-400 mt-1 transition-colors line-clamp-2">{t(event.description)}</p>
                     </div>
                 </div>
             </div>
@@ -46,14 +46,14 @@ export default function Planning() {
                     <div className="avatar overflow-hidden rounded border border-white/30 group-hover:border-white/50 transition-colors">
                         <div className="w-24 h-16">
                             <img src={event.image}
-                                alt={event.title}
+                                alt={t(event.title)}
                                 className="object-cover group-hover:scale-110 transition-transform duration-300" />
                         </div>
                     </div>
                     <div className="flex-1">
-                        <h3 className="card-title text-sm text-white group-hover:text-white transition-colors line-clamp-1">{event.title}</h3>
+                        <h3 className="card-title text-sm text-white group-hover:text-white transition-colors line-clamp-1">{t(event.title)}</h3>
                         <p className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors font-semibold">{event.time}</p>
-                        <p className="text-xs text-gray-500 group-hover:text-gray-400 mt-1 transition-colors line-clamp-2">{event.description}</p>
+                        <p className="text-xs text-gray-500 group-hover:text-gray-400 mt-1 transition-colors line-clamp-2">{t(event.description)}</p>
                     </div>
                 </div>
             </div>

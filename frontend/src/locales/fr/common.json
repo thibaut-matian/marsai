@@ -16,47 +16,122 @@
     "fr": "Français",
     "en": "English"
   },
+  "submission": {
+    "title": "Candidature MarsAI",
+    "backToHome": "Retour à l'accueil",
+    "stepLabel": "ÉTAPE {{current}} / {{total}}",
+    "next": "Suivant",
+    "prev": "Retour",
+    "submit": "Envoyer",
+    "success": {
+      "title": "Candidature envoyée !",
+      "message": "Votre dossier a été soumis avec succès."
+    }
+  },
+  "form": {
+    "identityTitle": "Identité du Réalisateur",
+    "lastname": "Nom *",
+    "firstname": "Prénom *",
+    "birthdate": "Date de Naissance *",
+    "profession": "Métier actuel *",
+    "professionPlaceholder": "Réalisateur, Étudiant...",
+    "contactTitle": "Contact & E-Réputation",
+    "email": "Email *",
+    "telephone": "Téléphone Fixe",
+    "mobile": "Mobile *",
+    "address": "Adresse *",
+    "zipcode": "Code Postal *",
+    "city": "Ville *",
+    "country": "Pays *",
+    "socials": "Réseaux Sociaux (Optionnel)",
+    "youtube": "YouTube",
+    "instagram": "Instagram",
+    "linkedin": "LinkedIn",
+    "facebook": "Facebook",
+    "x": "X (Twitter)",
+    "source": "Source *",
+    "sourcePlaceholder": "-- Comment avez-vous connu marsAI ? --",
+    "sourceOptions": {
+      "socials": "Réseaux sociaux",
+      "friends": "Amis",
+      "schools": "Écoles",
+      "ads": "Publicités",
+      "works": "Travail"
+    },
+    "newsletter": "Je souhaite recevoir la newsletter du festival.",
+    "assetsTitle": "Livrables Multimédias",
+    "videoFile": "Fichier Source Vidéo *",
+    "videoReady": "Fichier prêt",
+    "videoPlaceholder": ".MP4, .MOV (Max 400 Mo)",
+    "youtubeUrl": "URL Source YouTube (optionnel)",
+    "accessibility": "ACCESSIBILITÉ",
+    "needsSubtitles": "Voix ou textes nécessitant des sous-titres",
+    "subtitleFile": "Fichier Sous-titres (.srt) *",
+    "thumbnail": "Vignette (16:9) *",
+    "stills": "Images du film (stills)",
+    "detailsTitle": "Détails du Film & Équipe",
+    "title": "Titre du film *",
+    "synopsis": "Synopsis *",
+    "synopsisPlaceholder": "Résumé du film en quelques lignes...",
+    "duration": "Durée (secondes) *",
+    "team": "Équipe du film",
+    "addMember": "Ajouter un membre",
+    "role": "Rôle",
+    "generation": "Génération",
+    "noCamera": "Aucune caméra utilisée",
+    "hybridProduction": "Production Hybride",
+    "mixedShooting": "Mélange tournage réel et IA",
+    "techStack": "Outils utilisés (IA) *",
+    "creativeMethodology": "Méthodologie créative *",
+    "civilite": "Civilité *",
+    "errors": {
+      "videoFile": "Fichier vidéo requis.",
+      "subtitleFile": "Fichier .srt requis.",
+      "thumbnailFile": "Vignette requise.",
+      "filmTitleOriginal": "Titre requis.",
+      "filmDuration": "Durée requise.",
+      "aiClassification": "Classification IA requise.",
+      "filmDurationDigits": "Durée : chiffres uniquement."
+    }
+  },
   "home": {
     "start": "Commencer",
     "about": "À PROPOS",
-    "welcome": "Bienvenue sur notre plateforme dédiée aux créateurs de contenu. Nous sommes une communauté passionnée qui célèbre la créativité, l'innovation et le talent sous toutes ses formes.",
-    "mission": "Notre mission est de fournir une plateforme inclusive où les créateurs peuvent partager leurs œuvres, obtenir des retours constructifs d'experts reconnus et avoir l'opportunité de voir leurs projets reconnus et récompensés.",
+    "welcome": "Bienvenue sur notre plateforme dédiée aux créateurs de contenu...",
+    "mission": "Notre mission est d'offrir une plateforme inclusive...",
     "criteria": "Critères de soumission",
-    "criteriaList": ["Porter des lunettes", "Aimer les blagues de beauf", "Savoir imiter Dylan", "S'appeler Thibaut Matian"],
+    "criteriaList": [
+      "Porter des lunettes",
+      "Aimer les blagues nulles",
+      "Savoir imiter Dylan",
+      "S’appeler Thibaut Matian"
+    ],
     "rewards": "Récompenses",
-    "rewardsList": ["Un voyage tout compris à Maubeuge", "Une collection de blagues de Philippe Etchebest", "Le droit de porter des lunettes de soleil en intérieur", "Une photo dédicácée de Thibaut"],
+    "rewardsList": [
+      "Voyage tout compris à Maubeuge",
+      "Un recueil des blagues de Philippe Etchebest"
+    ],
     "jury": "NOTRE JURY",
-    "juryDesc": "Découvrez les experts qui évaluent nos projets et garantissent la qualité de notre plateforme.",
+    "juryDesc": "Découvrez les experts qui évaluent nos projets.",
     "timeline": {
       "registrations": "INSCRIPTIONS",
       "deliberation": "DÉLIBÉRATION",
       "festival": "FESTIVAL"
     }
   },
-  "pages": {
-    "planning": "Événements",
-    "faq": "FAQ",
-    "reservation": "Réservation",
-    "submission": "Soumission de film",
-    "gallery": "Galerie"
-  },
-  "faq": {
-    "q1": "Quels sont les prix décernés lors du festival ?",
-    "q2": "Quelle doit être la durée du court-métrage soumis ?",
-    "q3": "Puis-je soumettre plusieurs films ?",
-    "q4": "Puis-je modifier ma soumission après l'avoir envoyée ?",
-    "q5": "Une équipe peut-elle soumettre un film ?",
-    "q6": "Comment l'intelligence artificielle doit-elle être intégrée dans le film ?",
-    "q7": "Quels sont les critères d'évaluation des films soumis ?",
-    "q8": "Comment serai-je informé(e) de la bonne réception de ma soumission ?",
-    "q9": "Les films soumis seront-ils rendus publics ?",
-    "q10": "Où puis-je consulter le règlement et les conditions de participation ?"
-  },
   "planning": {
     "title": "ÉVÉNEMENTS",
     "friday": "VENDREDI",
     "saturday": "SAMEDI",
-    "reserve": "JE RÉSERVE MA PLACE"
+    "event1": { "title": "Ouverture du festival", "description": "Discours d'ouverture et présentation du programme." },
+    "event2": { "title": "Conférence IA & Cinéma", "description": "Intervenants sur l'impact de l'IA dans la création cinématographique." },
+    "event3": { "title": "Projection 1", "description": "Première sélection de courts-métrages." },
+    "event4": { "title": "Atelier Deepfake", "description": "Démonstration et atelier pratique sur les deepfakes." },
+    "event5": { "title": "Pause déjeuner", "description": "Buffet et networking." },
+    "event6": { "title": "Projection 2", "description": "Deuxième sélection de courts-métrages." },
+    "event7": { "title": "Table ronde", "description": "Débat sur l'éthique de l'IA dans l'audiovisuel." },
+    "event8": { "title": "Soirée d'ouverture", "description": "DJ set et cocktail." },
+    "reserve": "Je réserve ma place"
   },
   "reservation": {
     "title": "Réservation",
@@ -64,6 +139,38 @@
     "firstName": "Prénom",
     "lastName": "Nom",
     "email": "Email",
-    "submit": "Réserver"
+    "submit": "Réserver",
+    "success": "Votre réservation a bien été prise en compte !",
+    "backToPlanning": "Retour au planning",
+    "errorLoadingTypes": "Erreur lors du chargement des types de billets.",
+    "errorGeneric": "Une erreur est survenue.",
+    "errorNetwork": "Erreur réseau, veuillez réessayer."
+  },
+  "ticketTypes": {
+    "friday": "Pass vendredi",
+    "saturday": "Pass samedi",
+    "weekend": "Pass 2 jours"
+  },
+  "faq": {
+    "q1": "Quels sont les prix remis lors du festival ?",
+    "a1": "Les prix incluent le Grand Prix du Jury, le Prix du Public, et d'autres distinctions spéciales.",
+    "q2": "Quelle doit être la durée du court-métrage soumis ?",
+    "a2": "La durée maximale autorisée est de 1 minute, générique inclus.",
+    "q3": "Comment puis-je soumettre mon film ?",
+    "a3": "Vous pouvez soumettre votre film via le formulaire de soumission disponible sur notre site.",
+    "q4": "Puis-je soumettre plusieurs films ?",
+    "a4": "Oui, chaque participant peut soumettre jusqu'à 3 films différents.",
+    "q5": "Le festival est-il ouvert aux étudiants ?",
+    "a5": "Oui, le festival est ouvert à tous, y compris aux étudiants.",
+    "q6": "Quels sont les critères de sélection ?",
+    "a6": "Les critères incluent l'originalité, la qualité artistique et l'intégration de l'IA.",
+    "q7": "Comment se déroule la sélection ?",
+    "a7": "Un jury d'experts visionne et sélectionne les films finalistes.",
+    "q8": "Les films doivent-ils être inédits ?",
+    "a8": "Oui, les films ne doivent pas avoir été diffusés publiquement avant le festival.",
+    "q9": "Y a-t-il des frais d’inscription ?",
+    "a9": "La participation au festival est gratuite.",
+    "q10": "Comment assister aux projections ?",
+    "a10": "Il suffit de réserver votre place via la page de réservation du site."
   }
 }

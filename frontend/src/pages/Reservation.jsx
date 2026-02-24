@@ -30,10 +30,10 @@ export default function Reservation() {
         setLoadingTypes(false);
       })
       .catch(() => {
-        setError("Impossible de charger les types de billets.");
+        setError(t('reservation.errorLoadingTypes'));
         setLoadingTypes(false);
       });
-  }, []);
+  }, [t]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -58,13 +58,13 @@ export default function Reservation() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || "Une erreur est survenue.");
+        setError(data.message || t('reservation.errorGeneric'));
         return;
       }
 
       setSuccess(data.data);
     } catch (err) {
-      setError("Erreur réseau, veuillez réessayer.");
+      setError(t('reservation.errorNetwork'));
     } finally {
       setIsSubmitting(false);
     }
@@ -77,35 +77,23 @@ export default function Reservation() {
         <div className="card bg-white/5 border border-white/20 w-full max-w-md shadow-xl">
           <div className="card-body items-center text-center gap-4">
             <div className="text-6xl">🎟️</div>
-            <h2 className="card-title text-2xl tracking-widest font-light">RÉSERVATION CONFIRMÉE</h2>
-
-            <div className="w-full space-y-2 text-left text-sm">
-              <p className="label-text text-gray-400 uppercase tracking-widest text-xs">Vos informations</p>
-              <div className="bg-white/5 rounded-xl p-4 space-y-2">
-                <p><span className="text-gray-400">Nom : </span>{success.firstname} {success.lastname}</p>
-                <p><span className="text-gray-400">Email : </span>{success.email}</p>
-                <p><span className="text-gray-400">Billet : </span>{success.ticket_type}</p>
-              </div>
-              <p className="label-text text-gray-400 uppercase tracking-widest text-xs pt-2">Votre QR code</p>
-              <div className="flex justify-center bg-white rounded-xl p-4">
-                <img src={success.qr_code_image} alt="QR Code" className="w-48 h-48" />
-              </div>
-              <p className="text-gray-500 text-xs text-center">Présentez ce QR code à l'entrée. Un email de confirmation vous a été envoyé.</p>
-            </div>
-
-            <div className="card-actions w-full pt-2">
-              <button
-                onClick={() => navigate("/planning")}
-                className="btn btn-neutral w-full"
-              >
-                ← Retour au planning
-              </button>
-            </div>
+            <h2 className="card-title text-2xl tracking-widest font-light">{t('reservation.title')}</h2>
+            <p className="text-lg text-green-400 font-bold">{t('reservation.success')}</p>
+            <button onClick={() => navigate('/planning')} className="btn btn-outline btn-sm border-gray-700 text-white hover:bg-gray-800 hover:border-gray-700 rounded-full text-xs md:text-sm mt-4 cursor-pointer">
+              {t('reservation.backToPlanning')}
+            </button>
           </div>
         </div>
       </div>
     );
   }
+
+  // Mapping local pour traduire les noms de tickets connus
+  const ticketNameMap = {
+    'Pass Vendredi': 'ticketTypes.friday',
+    'Pass Samedi': 'ticketTypes.saturday',
+    'Pass 2 Jours': 'ticketTypes.weekend',
+  };
 
   // ─── Formulaire ──────────────────────────────────────────────────────────
   return (
@@ -151,7 +139,7 @@ export default function Reservation() {
                           onChange={handleChange}
                           className="radio radio-sm border-white checked:bg-white"
                         />
-                        <span className="font-medium text-sm">{type.name}</span>
+                        <span className="font-medium text-sm">{ticketNameMap[type.name] ? t(ticketNameMap[type.name]) : type.name}</span>
                       </div>
                       <span className={`badge badge-sm ${type.available ? (type.remaining < 50 ? "badge-error" : "badge-ghost") : "badge-error"}`}>
                         {type.available ? `${type.remaining} places` : "Complet"}
@@ -229,7 +217,7 @@ export default function Reservation() {
               onClick={() => navigate("/planning")}
               className="btn btn-ghost w-full text-gray-500"
             >
-              ← Retour au planning
+              ← {t('reservation.backToPlanning')}
             </button>
 
           </form>
