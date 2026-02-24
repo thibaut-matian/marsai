@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-import { juryService } from '../services/juryService';
+import { useEffect, useMemo, useState } from 'react';
+import getAPI from '../services/getAPI';
 
 export const useJuryStats = (juryList) => {
   const [apiStats, setApiStats] = useState(null);
@@ -24,8 +24,8 @@ export const useJuryStats = (juryList) => {
     const fetchStats = async () => {
       try {
         setIsLoadingStats(true);
-        const stats = await juryService.getStats();
-        setApiStats(stats);
+        const response = await getAPI.getJuryStats();
+        setApiStats(response.data);
       } catch (error) {
         console.error('Erreur lors du chargement des stats:', error);
       } finally {

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import getAPI from "../services/getAPI";
 
 export function useSubmission() {
   // --- 1. STATE (Les données) ---
@@ -305,26 +306,11 @@ export function useSubmission() {
     form.append('creative_method', formData.aiMethodology || 'N/A');
 
     console.log('📤 [FRONTEND] Envoi vers /api/movies...');
-    console.log('  → Endpoint: http://localhost:3000/api/movies');
 
     try {
-      const response = await fetch('http://localhost:3000/api/movies', {
-        method: 'POST',
-        body: form,
-        // ⚠️ Ne PAS définir Content-Type, le navigateur le fait automatiquement avec le boundary
-      });
-
-      console.log('📡 [FRONTEND] Réponse reçue:', response.status, response.statusText);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ [FRONTEND] Erreur HTTP:', errorText);
-        throw new Error(`Erreur ${response.status}: ${errorText}`);
-      }
-
-      const result = await response.json();
-      console.log('✅ [FRONTEND] Résultat:', result);
-      return result;
+      const response = await getAPI.submitMovie(form);
+      console.log('✅ [FRONTEND] Résultat:', response.data);
+      return response.data;
     } catch (error) {
       console.error('💥 [FRONTEND] Exception:', error);
       throw error;

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from 'react';
+import getAPI from '../services/getAPI';
 
 const useRecentActivity = () => {
   const [recentActivity, setRecentActivity] = useState([]); // ✅ Tableau vide par défaut
@@ -10,10 +10,7 @@ const useRecentActivity = () => {
     const fetchActivity = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem('token');
-        const response = await axios.get('/api/admin/dashboard/activity', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const response = await getAPI.getDashboardActivity();
         setRecentActivity(response.data || []); // ✅ Fallback tableau vide
         setError(null);
       } catch (err) {

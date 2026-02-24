@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { X, Save, Trash2, User } from 'lucide-react';
-import { juryService } from '../../services/juryService';
+import { Trash2, User, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import getAPI from '../../services/getAPI';
 
 export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
   const [formData, setFormData] = useState({
@@ -54,9 +54,9 @@ export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
     setErrorMessage('');
     try {
       if (isEditMode) {
-        await juryService.update(jury.id, formData);
+        await getAPI.updateJury(jury.id, formData);
       } else {
-        await juryService.invite(formData);
+        await getAPI.inviteJury(formData);
       }
       onUpdate(); // Appelle la fonction pour rafraîchir la liste et fermer le modal
     } catch (error) {
