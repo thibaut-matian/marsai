@@ -6,7 +6,8 @@ export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
-    email: '',
+    mail: '',
+    mobile: '',
     role: 'jury',
     isActive: true,
   });
@@ -31,7 +32,8 @@ export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
       setFormData({
         firstname: jury.firstname || '',
         lastname: jury.lastname || '',
-        email: jury.email || '',
+        mail: jury.mail || '',
+        mobile: jury.mobile || '',
         role: jury.role || 'jury',
         isActive: jury.isActive ?? true,
       });
@@ -95,17 +97,24 @@ export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
           </div>
           
           <div>
-            <label htmlFor="email" className="block text-sm text-white/70 mb-2">Email</label>
-            <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} required disabled={isEditMode} className="w-full p-3 bg-black/30 border border-white/20 rounded-lg text-white disabled:opacity-50" />
+            <label htmlFor="mail" className="block text-sm text-white/70 mb-2">Email</label>
+            <input type="email" id="mail" name="mail" value={formData.mail} onChange={handleInputChange} required disabled={isEditMode} className="w-full p-3 bg-black/30 border border-white/20 rounded-lg text-white disabled:opacity-50" />
           </div>
 
-          <div className="flex items-center justify-between">
-            <label htmlFor="role" className="text-sm text-white/70">Rôle</label>
-            <select id="role" name="role" value={formData.role} onChange={handleInputChange} className="p-3 bg-black/30 border border-white/20 rounded-lg text-white">
-              <option value="jury">Jury</option>
-              <option value="jury_senior">Jury Senior</option>
-              <option value="jury_president">Président du Jury</option>
-            </select>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="mobile" className="block text-sm text-white/70 mb-2">Mobile</label>
+              <input type="tel" id="mobile" maxLength="13" name="mobile" value={formData.mobile} onChange={handleInputChange}
+               className="w-full p-3 bg-black/30 border border-white/20 rounded-lg text-white" />
+            </div>
+            <div>
+              <label htmlFor="role" className="block text-sm text-white/70 mb-2">Rôle</label>
+              <select id="role" name="role" value={formData.role} onChange={handleInputChange} className="w-full p-3 bg-black/30 border border-white/20 rounded-lg text-white">
+                <option value="jury">Jury</option>
+                <option value="jury_senior">Jury Senior</option>
+                <option value="jury_president">Président du Jury</option>
+              </select>
+            </div>
           </div>
 
           <div className="flex items-center gap-4">
@@ -119,8 +128,7 @@ export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
                 <Trash2 size={18} /> Supprimer
               </button>
             )}
-            <button type="submit" disabled={isSubmitting} className="flex-1 px-4 py-3 bg-blue-600 text-white font-bold rounded-lg flex items-center justify-center gap-2 disabled:opacity-50">
-              <Save size={18} /> {isSubmitting ? 'Sauvegarde...' : 'Sauvegarder'}
+            <button type="submit" disabled={isSubmitting} className="flex-1 px-4 py-3 bg-blue-600 text-white font-bold rounded-lg flex items-center justify-center gap-2 disabled:opacity-50">{isSubmitting ? 'En cours d\'envoi d\'invitation...' : 'Envoyer l\'invitation'}
             </button>
           </footer>
         </form>

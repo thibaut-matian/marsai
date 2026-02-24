@@ -1,16 +1,91 @@
     import { Link } from "react-router-dom";
-    import NavbarJury from "../../components/layout/NavbarJury.jsx";
+import NavbarJury from "../../components/layout/NavbarJury.jsx";
+import { useEffect, useState } from "react";
 
     export default function DashboardJury() {
-    // Simulation de données (Tu connecteras ça au backend plus tard)
-    const stats = {
-        totalFilms: 12,
-        watchedFilms: 4,
-        remainingTime: "3 jours",
-        userName: "Véro"
-    };
+  const [userInfo, setUserInfo] = useState({ firstname: "Jury" });
+
+  // Fonction pour décoder le JWT et extraire les infos utilisateur
+  const getUserFromToken = () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return null;
+    
+    try {
+      // Décoder la partie payload du JWT (partie du milieu)
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      console.log('Infos utilisateur extraites du token:', payload);
+      return payload;
+    } catch (error) {
+      console.error('Erreur décodage token:', error);
+      return null;
+    }
+  };
+
+  // Simulation de données (Tu connecteras ça au backend plus tard)
+  const stats = {
+      totalFilms: 12,
+      watchedFilms: 4,
+      remainingTime: "3 jours",
+      userName: userInfo.firstname || "Jury" // Utiliser le nom du token
+  };
 
     const progressPercentage = (stats.watchedFilms / stats.totalFilms) * 100;
+
+    const validateToken = async (token) => {
+      try {
+        const response = await fetch('http://localhost:3000/api/users/validate-invitation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ invitationToken: token })
+        });
+        
+        const data = await response.json();
+        
+        console.log('Status:', response.status);
+        console.log('Response data:', data);
+        
+        if (data.success) {
+          // Stocker les tokens dans localStorage
+          localStorage.setItem('accessToken', data.data.accessToken);
+          localStorage.setItem('refreshToken', data.data.refreshToken);
+          
+          // Mettre à jour les infos utilisateur
+          setUserInfo(data.data.user);
+          console.log('User info updated:', data.data.user);
+          
+          // Rediriger sans le token dans l'URL
+          window.history.replaceState({}, '', '/jury/DashboardJury');
+        } else {
+          console.error('Erreur serveur:', data.message);
+        }
+      } catch (error) {
+        console.error('Erreur validation:', error);
+      }
+    };
+
+    //Gestion token
+    useEffect(() => {
+      const handleTokenValidation = async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const invitationToken = urlParams.get('token');
+    
+        if (invitationToken) {
+          // Nouveau jury avec token d'invitation
+          await validateToken(invitationToken);
+        } else {
+          // Jury qui revient → récupérer infos depuis le token existant
+          const existingUser = getUserFromToken();
+          if (existingUser) {
+            setUserInfo(existingUser);
+          }
+          console.log('Aucun token d\'invitation trouvé, user info from existing token:', existingUser);
+        }
+      };
+
+      handleTokenValidation();
+    }, []);
+
+    console.log('Rendu Dashboard avec userInfo:', userInfo);
 
     return (
         <div className="min-h-screen bg-[#100b18] text-white font-sans overflow-x-hidden">
@@ -21,7 +96,7 @@
             {/* HEADER : SALUTATION */}
             <header className="mb-16">
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                    Bonjour, <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">{stats.userName}</span> 👋
+                    Bonjour, <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">{userInfo.firstName}</span> 👋
                 </h1>
                 <p className="text-xl text-gray-400">Prêt(e) à découvrir les pépites de demain ?</p>
             </header>

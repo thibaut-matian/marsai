@@ -1,7 +1,9 @@
 const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 const { User, Role } = require("../models");
+const { sendJuryInvitation } = require("../services/emailService");
 
 class UserController {
   static async getUsers(req, res) {
@@ -112,21 +114,17 @@ class UserController {
 
   static async createUser(req, res) {
     try {
-      const { mail, password, firstname, lastname, mobile, role_id } = req.body;
-
+      // Debug : afficher req.body
+      console.log("DEBUG req.body:", req.body);
+      console.log("DEBUG req.headers:", req.headers['content-type']);
+      
+      const { mail, password, firstname, lastname, mobile, role } = req.body;
+      
       // 1. Vérifier que tous les champs obligatoires sont présents
-      if (
-        !mail ||
-        !password ||
-        !firstname ||
-        !lastname ||
-        !mobile ||
-        !role_id
-      ) {
+      if (!mail || !firstname || !lastname || !mobile) {
         return res.status(400).json({
           success: false,
-          message:
-            "Tous les champs sont obligatoires (mail, password, firstname, lastname, mobile, role_id)",
+          message: "Les champs email, firstname, lastname et mobile sont obligatoires",
         });
       }
 
@@ -139,32 +137,82 @@ class UserController {
         });
       }
 
-      // 3. Vérifier que le rôle existe
-      const role = await Role.findByPk(role_id);
-      if (!role) {
+      // 3. Gérer le rôle
+      let roleId;
+      if (role) {
+        // Chercher le rôle par son nom
+        const roleRecord = await Role.findOne({
+          where: { name: { [Op.like]: role } }
+        });
+        
+        if (!roleRecord) {
+          return res.status(400).json({
+            success: false,
+            message: `Rôle "${role}" non trouvé`,
+          });
+        }
+        
+        roleId = roleRecord.id;
+      }
+      
+      // 4. Vérifier que le rôle existe
+      const roleExists = await Role.findByPk(roleId);
+      if (!roleExists) {
         return res.status(400).json({
           success: false,
           message: "Rôle invalide",
         });
       }
 
-      // 4. Hasher le mot de passe
-      const hashedPassword = await bcrypt.hash(password, 10);
+      // 5.  Hasher le mot de passe
+      let hashedPassword;
+      if(password){
+        hashedPassword = await bcrypt.hash(password, 10);
+      }
+      
 
-      // 5. Générer un token unique
+      // 6. Générer un token unique
       const token = crypto.randomBytes(32).toString("hex");
 
-      // 6. Créer l'utilisateur
-      const user = await User.create({
+      // 7. Créer l'utilisateur
+      const userData = {
         mail,
-        password: hashedPassword,
         token,
         firstname,
         lastname,
         mobile,
-        role_id,
+        role_id: roleId,
         is_active: 1,
-      });
+      };
+      
+      // Ajouter le password seulement s'il existe
+      if (hashedPassword) {
+        userData.password = hashedPassword;
+      }
+      
+      const user = await User.create(userData);
+
+      // 8. Envoyer l'email d'invitation si c'est un jury
+      console.log(`Rôle créé: "${roleExists.name}" - Contient jury? ${roleExists.name.toLowerCase().includes('jury')}`);
+      
+      try {
+        if (roleExists.name.toLowerCase().includes('jury')) {
+          console.log('Tentative d\'envoi d\'email d\'invitation...');
+          await sendJuryInvitation({
+            mail: user.mail,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            role: roleExists.name,
+            token: user.token
+          });
+          console.log(`✅ Email d'invitation envoyé à ${user.mail}`);
+        } else {
+          console.log('❌ Pas d\'email envoyé - ce n\'est pas un rôle jury');
+        }
+      } catch (emailError) {
+        console.error('Erreur envoi email:', emailError.message);
+        // Ne pas faire échouer la création de l'utilisateur pour un problème d'email
+      }
 
       res.status(201).json({
         success: true,
@@ -175,7 +223,7 @@ class UserController {
           firstname: user.firstname,
           lastname: user.lastname,
           mobile: user.mobile,
-          role: role.name,
+          role: roleExists.name,
         },
       });
     } catch (error) {
@@ -240,6 +288,96 @@ class UserController {
       res.status(500).json({
         success: false,
         message: "Erreur lors de la suppression de l'utilisateur",
+        error: error.message,
+      });
+    }
+  }
+
+  /**
+   * Valide le token d'invitation et génère les tokens d'accès
+   */
+  static async validateInvitationToken(req, res) {
+    try {
+      const { invitationToken } = req.body;
+
+      console.log(req.body);
+
+      if (!invitationToken) {
+        return res.status(400).json({
+          success: false,
+          message: "Token d'invitation requis",
+        });
+      }
+
+      // 1. Vérifier que le token d'invitation existe et est valide
+      const user = await User.findOne({
+        where: { token: invitationToken },
+        include: [{
+          model: Role,
+          as: "role",
+          attributes: ["id", "name"],
+        }],
+      });
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "Token d'invitation invalide",
+        });
+      }
+
+      if (!user.is_active) {
+        return res.status(403).json({
+          success: false,
+          message: "Compte désactivé",
+        });
+      }
+
+      // 2. Générer les tokens d'accès
+      const payload = {
+        id: user.id,
+        firstName: user.firstname,
+        lastName: user.lastname,
+        mail: user.mail,
+        role: user.role.name,
+        iat: Math.floor(Date.now() / 1000),
+      };
+
+      const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { 
+        expiresIn: '30m' // 30 minutes
+      });
+
+      const refreshToken = jwt.sign(
+        { id: user.id }, 
+        process.env.JWT_SECRET, { 
+          expiresIn: '7d' // 7 jours
+        }
+      );
+
+      // 3. Optionnel : Marquer le token d'invitation comme utilisé
+      // await user.update({ token: null }); // Désactive le token après première utilisation
+
+      console.log(`✅ Validation réussie pour ${user.mail} - Tokens générés`);
+
+      res.status(200).json({
+        success: true,
+        message: "Authentification réussie",
+        data: {
+          user: {
+            id: user.id,
+            mail: user.mail,
+            firstName: user.firstname,
+            lastName: user.lastname,
+            role: user.role.name,
+          },
+          accessToken,
+          refreshToken,
+        },
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Erreur lors de la validation du token",
         error: error.message,
       });
     }
