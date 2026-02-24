@@ -1,6 +1,7 @@
-    import { Link } from "react-router-dom";
+    import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import NavbarJury from "../../components/layout/NavbarJury.jsx";
-import { useEffect, useState } from "react";
+import getAPI from "../../services/getAPI";
 
     export default function DashboardJury() {
   const [userInfo, setUserInfo] = useState({ firstname: "Jury" });
@@ -33,15 +34,9 @@ import { useEffect, useState } from "react";
 
     const validateToken = async (token) => {
       try {
-        const response = await fetch('http://localhost:3000/api/users/validate-invitation', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ invitationToken: token })
-        });
+        const response = await getAPI.validateInvitation(token);
+        const data = response.data;
         
-        const data = await response.json();
-        
-        console.log('Status:', response.status);
         console.log('Response data:', data);
         
         if (data.success) {

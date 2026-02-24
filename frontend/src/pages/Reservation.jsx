@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
-
-const API_URL = "http://localhost:3000/api";
+import { useNavigate } from "react-router-dom";
+import getAPI from "../services/getAPI";
 
 export default function Reservation() {
   const navigate = useNavigate();
@@ -23,16 +22,17 @@ export default function Reservation() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(`${API_URL}/tickets/types`)
-      .then((res) => res.json())
-      .then((data) => {
-        setTicketTypes(data.data || []);
+    const fetchTicketTypes = async () => {
+      try {
+        const response = await getAPI.getTicketTypes();
+        setTicketTypes(response.data.data || response.data || []);
         setLoadingTypes(false);
-      })
-      .catch(() => {
+      } catch (err) {
         setError("Impossible de charger les types de billets.");
         setLoadingTypes(false);
-      });
+      }
+    };
+    fetchTicketTypes();
   }, []);
 
   const handleChange = (e) => {
@@ -46,25 +46,15 @@ export default function Reservation() {
     setError("");
 
     try {
-      const res = await fetch(`${API_URL}/tickets`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...form,
-          ticket_type_id: parseInt(form.ticket_type_id),
-        }),
+      const response = await getAPI.reserveTicket({
+        ...form,
+        ticket_type_id: parseInt(form.ticket_type_id),
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.message || "Une erreur est survenue.");
-        return;
-      }
-
-      setSuccess(data.data);
+      setSuccess(response.data.data || response.data);
     } catch (err) {
-      setError("Erreur réseau, veuillez réessayer.");
+      const errorMessage = err.response?.data?.message || "Erreur réseau, veuillez réessayer.";
+      setError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

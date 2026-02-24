@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import getAPI from '../services/getAPI';
 
 export const useEmailSend = () => {
     const [loading, setLoading] = useState(false);
@@ -21,7 +21,7 @@ export const useEmailSend = () => {
             };
             if (director) payload.director = director; // forward if provided
 
-            const response = await axios.post("http://localhost:3000/api/admin/send-email", payload);
+            const response = await getAPI.sendEmail(payload);
 
             if (response.data.success) {
                 alert("🚀 Email envoyé avec succès !");
