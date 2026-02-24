@@ -33,7 +33,7 @@ import { useEffect, useState } from "react";
 
     const validateToken = async (token) => {
       try {
-        const response = await fetch('http://localhost:3000/api/validate-invitation', {
+        const response = await fetch('http://localhost:3000/api/users/validate-invitation', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ invitationToken: token })
