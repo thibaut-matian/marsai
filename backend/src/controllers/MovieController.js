@@ -18,7 +18,7 @@ class MovieController {
 
       const files = req.files;
       const {
-        mail, gender, lastname, firstname, birthdate, bio,
+        mail, gender, lastname, firstname, birthdate,
         country, city, zip_code, street, phone, mobile,
         actual_job, known_at, duration, prod_type, language,
         vo_title, en_title, vo_desc, en_desc, ia_used, creative_method
@@ -116,7 +116,6 @@ class MovieController {
         lastname,
         firstname,
         birthdate,
-        bio: bio || 'N/A',
         country,
         city,
         zip_code,
