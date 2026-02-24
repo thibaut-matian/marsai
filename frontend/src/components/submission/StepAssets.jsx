@@ -1,4 +1,4 @@
-  import { Input, glassTextAreaClasses } from "./FormUI";
+import { Input, glassTextAreaClasses } from "./FormUI";
 
   export default function StepAssets({ formData, handleChange, handleFileChange, handleStillsChange, setCustomValue, errors }) {
     return (
@@ -15,7 +15,7 @@
           </label>
           {errors.videoFile && <p className="absolute bottom-2 left-0 w-full text-center text-red-400 text-xs font-bold">{errors.videoFile}</p>}
         </div>
-        <Input label="URL Source YouTube *" name="filmUrl" value={formData.filmUrl} onChange={handleChange} placeholder="https://youtube.com/..." error={errors.filmUrl} />
+        <Input label="URL Source YouTube (optionnel)" name="filmUrl" value={formData.filmUrl} onChange={handleChange} placeholder="https://youtube.com/..." error={errors.filmUrl} />
 
         {/* 2. ACCESSIBILITÉ */}
         <div className="bg-white/5 p-4 md:p-6 rounded-3xl border border-white/10 backdrop-blur-sm">

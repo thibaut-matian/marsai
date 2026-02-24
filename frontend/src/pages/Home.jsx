@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import MovieTimeline from '../components/features/home/timeline';
 import teaserVideo from '../assets/videos/Teaser.mp4';
 import juryImage1 from '../assets/img/test-etchebest.jpg';
@@ -10,6 +11,7 @@ import juryImage4 from '../assets/img/test-winx.png';
 export default function Home() {
   const navigate = useNavigate();
   const scrollRef = useRef(null);
+  const { t } = useTranslation();
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -31,12 +33,29 @@ export default function Home() {
           <button
             onClick={() => navigate('/submit-movie')}
             className="text-base sm:text-lg border border-white/80 bg-white/10 backdrop-blur-md rounded-lg px-4 sm:px-6 py-2 sm:py-3 hover:bg-white hover:text-black transition-colors duration-300">
-            Commencer
+            {t('home.start')}
           </button>
         </div>
       </div>
 
       <MovieTimeline />
+
+      {/* À propos Section */}
+      <div className="pb-16 bg-black">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 text-white uppercase tracking-widest">
+            {t('home.about')}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 max-w-5xl mx-auto">
+            <p className="text-sm md:text-base text-white/80 leading-relaxed">
+              {t('home.welcome')}
+            </p>
+            <p className="text-sm md:text-base text-white/80 leading-relaxed">
+              {t('home.mission')}
+            </p>
+          </div>
+        </div>
+      </div>
 
       <hr />
 
@@ -44,16 +63,11 @@ export default function Home() {
       <div className="py-12 md:py-16 bg-black overflow-hidden">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 text-white uppercase tracking-widest">
-            Critères de soumission
+            {t('home.criteria')}
           </h2>
 
           <div className="max-w-2xl mx-auto flex flex-col gap-4 md:gap-6">
-            {[
-              "Porter des lunettes",
-              "Aimer les blagues de beauf",
-              "Savoir imiter Dylan",
-              "S'appeler Thibaut Matian"
-            ].map((critere, index) => (
+            {t('home.criteriaList', { returnObjects: true }).map((critere, index) => (
               <div key={index} className="flex items-baseline text-white text-sm md:text-base w-full">
                 {/* Numéro - whitespace-nowrap pour éviter qu'il ne saute de ligne */}
                 <span className="font-bold whitespace-nowrap">{index + 1}.</span>
@@ -75,16 +89,11 @@ export default function Home() {
       <div className="py-12 md:py-16 bg-black overflow-hidden">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 text-white uppercase tracking-widest">
-            Récompenses
+            {t('home.rewards')}
           </h2>
 
           <div className="max-w-2xl mx-auto flex flex-col gap-4 md:gap-6">
-            {[
-              "Un voyage tout compris à Maubeuge",
-              "Une collection de blagues de Philippe Etchebest",
-              "Le droit de porter des lunettes de soleil en intérieur",
-              "Une photo dédicacée de Thibaut"
-            ].map((recompense, index) => (
+            {t('home.rewardsList', { returnObjects: true }).map((recompense, index) => (
               <div key={index} className="flex items-baseline text-white text-sm md:text-base w-full">
                 {/* Numéro */}
                 <span className="font-bold whitespace-nowrap">{index + 1}.</span>
@@ -105,9 +114,9 @@ export default function Home() {
       {/*Jury Section */}
       <div className="py-12 md:py-16 bg-black">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 text-white">NOTRE JURY</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 text-white">{t('home.jury')}</h2>
           <p className="text-center max-w-2xl mx-auto text-sm md:text-base text-white">
-            Découvrez les experts qui évaluent nos projets et garantissent la qualité de notre plateforme.
+            {t('home.juryDesc')}
           </p>
         </div>
       </div>

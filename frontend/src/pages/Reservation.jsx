@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 const API_URL = "http://localhost:3000/api";
 
 export default function Reservation() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [ticketTypes, setTicketTypes] = useState([]);
   const [loadingTypes, setLoadingTypes] = useState(true);
@@ -113,15 +115,15 @@ export default function Reservation() {
 
           {/* Header */}
           <div className="text-center">
-            <h2 className="card-title justify-center text-3xl font-light tracking-widest">RÉSERVATION</h2>
-            <p className="text-gray-400 text-sm mt-1">Choisissez votre pass et réservez votre place</p>
+            <h2 className="card-title justify-center text-3xl font-light tracking-widest">{t('reservation.title').toUpperCase()}</h2>
+            <p className="text-gray-400 text-sm mt-1">{t('reservation.selectType')}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
 
             {/* Choix du billet */}
             <fieldset className="fieldset">
-              <legend className="fieldset-legend text-xs uppercase tracking-widest text-gray-400">Choisissez votre pass</legend>
+              <legend className="fieldset-legend text-xs uppercase tracking-widest text-gray-400">{t('reservation.selectType')}</legend>
               {loadingTypes ? (
                 <div className="flex justify-center py-4">
                   <span className="loading loading-spinner loading-md text-white"></span>
@@ -163,7 +165,7 @@ export default function Reservation() {
             {/* Prénom + Nom */}
             <div className="grid grid-cols-2 gap-3">
               <fieldset className="fieldset">
-                <legend className="fieldset-legend text-xs uppercase tracking-widest text-gray-400">Prénom</legend>
+                <legend className="fieldset-legend text-xs uppercase tracking-widest text-gray-400">{t('reservation.firstName')}</legend>
                 <input
                   type="text"
                   name="firstname"
@@ -175,7 +177,7 @@ export default function Reservation() {
                 />
               </fieldset>
               <fieldset className="fieldset">
-                <legend className="fieldset-legend text-xs uppercase tracking-widest text-gray-400">Nom</legend>
+                <legend className="fieldset-legend text-xs uppercase tracking-widest text-gray-400">{t('reservation.lastName')}</legend>
                 <input
                   type="text"
                   name="lastname"
@@ -190,7 +192,7 @@ export default function Reservation() {
 
             {/* Email */}
             <fieldset className="fieldset">
-              <legend className="fieldset-legend text-xs uppercase tracking-widest text-gray-400">Email</legend>
+              <legend className="fieldset-legend text-xs uppercase tracking-widest text-gray-400">{t('reservation.email')}</legend>
               <input
                 type="email"
                 name="email"
@@ -216,8 +218,8 @@ export default function Reservation() {
               className="btn btn-neutral w-full"
             >
               {isSubmitting
-                ? <><span className="loading loading-spinner loading-sm"></span> Réservation en cours...</>
-                : "CONFIRMER MA RÉSERVATION"
+                ? <><span className="loading loading-spinner loading-sm"></span> {t('common.loading')}</>
+                : t('reservation.submit').toUpperCase()
               }
             </button>
 

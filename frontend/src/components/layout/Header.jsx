@@ -1,10 +1,13 @@
 import React, { useState, useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../LanguageSwitcher";
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const [showLogo, setShowLogo] = useState(false);
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
 
     // Empêcher le scroll du body quand le menu est ouvert
     useEffect(() => {
@@ -51,18 +54,19 @@ export default function Header() {
                     </div>
 
                 {/* Menu Desktop (Caché sur mobile) */}
-                <div className="flex-none hidden md:flex">
+                <div className="flex-none hidden md:flex gap-4 items-center">
                     <ul className="menu menu-horizontal px-1 text-white">
-                        <li><Link to="/planning">Planning</Link></li>
-                        <li><Link to="/FAQ">FAQ</Link></li>
+                        <li><Link to="/planning">{t('nav.planning')}</Link></li>
+                        <li><Link to="/FAQ">{t('nav.faq')}</Link></li>
                         <li className="ml-4">
                             <button 
                             onClick={() => navigate('/submit-movie')}
                             className="bg-white text-black hover:bg-gray-200 px-4 py-2 rounded-md font-medium transition-colors">
-                                Soumettre un film
+                                {t('nav.submit')}
                             </button>
                         </li>
                     </ul>
+                    <LanguageSwitcher />
                 </div>
 
                 {/* Bouton Burger (Visible uniquement sur mobile) */}
@@ -103,13 +107,13 @@ export default function Header() {
                             to="/" 
                             onClick={() => setIsOpen(false)}
                             className="text-2xl font-light hover:text-gray-400 transition-colors"
-                        >Accueil
+                        >{t('nav.home')}
                         </Link>
                         <Link 
                             to="/planning" 
                             onClick={() => setIsOpen(false)}
                             className="text-2xl font-light hover:text-gray-400 transition-colors"
-                        >Planning
+                        >{t('nav.planning')}
                         </Link>
                         
                         <Link 
@@ -117,19 +121,43 @@ export default function Header() {
                             onClick={() => setIsOpen(false)}
                             className="text-2xl font-light hover:text-gray-400 transition-colors"
                         >
-                            FAQ
+                            {t('nav.faq')}
                         </Link>
                         
                     </nav>
 
                     {/* Bouton d'action principal */}
-                    <div className="pt-4">
+                    <div className="pt-4 flex flex-col items-center gap-6">
                         <button 
                             onClick={() => navigate('/submit-movie')}
                             className="bg-white text-black px-8 py-3 rounded-md font-medium text-lg hover:scale-105 transition-transform"
                         >
-                            Soumettre un film
+                            {t('nav.submit')}
                         </button>
+                        
+                        {/* Sélecteur de langue - 2 boutons */}
+                        <div className="flex gap-6">
+                            <button
+                                onClick={() => i18n.changeLanguage('fr')}
+                                className={`font-medium transition-colors text-lg ${
+                                    i18n.language === 'fr'
+                                        ? 'text-white'
+                                        : 'text-gray-400 hover:text-white'
+                                }`}
+                            >
+                                Français
+                            </button>
+                            <button
+                                onClick={() => i18n.changeLanguage('en')}
+                                className={`font-medium transition-colors text-lg ${
+                                    i18n.language === 'en'
+                                        ? 'text-white'
+                                        : 'text-gray-400 hover:text-white'
+                                }`}
+                            >
+                                English
+                            </button>
+                        </div>
                     </div>
                 </div>
 

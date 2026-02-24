@@ -1,35 +1,30 @@
 import { Input } from "./FormUI";
 
-const civilites = ['M', 'Mme', 'Iel'];
-
 export default function StepIdentity({ formData, handleChange, setCustomValue, errors }) {
-  const activeIndex = civilites.indexOf(formData.civilite);
-  
+  const civiliteLabels = {
+    'm.': 'Mr',
+    'mrs.': 'Mme',
+    'other': 'Autre'
+  };
+  const civilites = ['m.', 'mrs.', 'other'];
+
   return (
     <div className="space-y-6 md:space-y-8 animate-fade-in">
-      <h2 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-white/90">Identité du Réalisateur</h2>
+      <h2 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-white">Identité du Réalisateur</h2>
       
-      {/* Civilité - Sliding Toggle */}
+      {/* Civilité - Toggle */}
       <div>
-        <label className="block text-sm text-blue-200/80 mb-3 ml-1">Civilité</label>
-        <div className="relative flex bg-black/20 border border-white/10 p-1.5 rounded-2xl backdrop-blur-sm">
-          {/* Slider Background */}
-          <div 
-            className="absolute top-1.5 bottom-1.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-lg transition-all duration-300 ease-out"
-            style={{ 
-              width: `calc((100% - 12px) / 3)`,
-              left: `calc(6px + ${activeIndex} * (100% - 12px) / 3)`
-            }}
-          />
-          {/* Buttons */}
+        <label className="block text-sm text-gray-300 mb-3 ml-1">Civilité</label>
+        <div className="flex bg-gray-900 border border-gray-700 p-1.5 rounded-2xl">
           {civilites.map((civ) => (
             <button 
               key={civ} 
               type="button" 
               onClick={() => setCustomValue('civilite', civ)} 
-              className={`relative z-10 flex-1 py-2.5 text-sm font-semibold rounded-xl transition-colors duration-300 ${formData.civilite === civ ? 'text-white' : 'text-white/60 hover:text-white'}`}
+              className={`flex-1 py-2.5 text-sm font-semibold rounded-xl transition-colors duration-200 
+                ${formData.civilite === civ ? 'bg-gray-700 text-white' : 'bg-transparent text-gray-300 hover:bg-gray-800 hover:text-white'}`}
             >
-              {civ}
+              {civiliteLabels[civ]}
             </button>
           ))}
         </div>
