@@ -6,6 +6,9 @@ const { authenticate, authorize } = require("../middlewares");
 
 //J'ai commenté authenticate et authorize pour pouvoir tester les routes sans être bloquée par l'auth.
 
+// Route de validation du token d'invitation (publique) - EN PREMIER !
+router.post("/validate-invitation", UserController.validateInvitationToken);
+
 // Routes Users (protégées)
 router.get(
   "/users",

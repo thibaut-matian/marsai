@@ -163,7 +163,7 @@ const sendTicketConfirmationPDF = async (ticket) => {
  * Envoie l'email d'invitation jury avec un lien vers le dashboard
  */
 const sendJuryInvitation = async (jury) => {
-  const dashboardUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/jury/DashboardJury`;
+  const dashboardUrl = `http://localhost:5173/jury/DashboardJury?token=${jury.token}`;
   
   return transporter.sendMail({
     from: `"MarsAI Festival" <${process.env.EMAIL_USER}>`,
@@ -209,7 +209,6 @@ const sendJuryInvitation = async (jury) => {
 //
 module.exports = {
   sendMailToDirector,
-  sendMailToJury,
   sendJuryInvitation,
   sendTicketConfirmation,
   sendTicketConfirmationPDF,
