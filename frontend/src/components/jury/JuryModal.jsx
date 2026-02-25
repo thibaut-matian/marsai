@@ -9,7 +9,7 @@ export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
     mail: '',
     mobile: '',
     role: 'jury',
-    isActive: true,
+    is_active: true, // Utiliser is_active au lieu de isActive
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -34,8 +34,8 @@ export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
         lastname: jury.lastname || '',
         mail: jury.mail || '',
         mobile: jury.mobile || '',
-        role: jury.role || 'jury',
-        isActive: jury.isActive ?? true,
+        role: jury.role?.name || 'jury', // Prendre le nom du rôle
+        is_active: jury.is_active ?? true, // Utiliser is_active au lieu de isActive
       });
     }
   }, [jury, isEditMode]);
@@ -118,8 +118,8 @@ export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
           </div>
 
           <div className="flex items-center gap-4">
-            <input type="checkbox" id="isActive" name="isActive" checked={formData.isActive} onChange={handleInputChange} className="w-5 h-5" />
-            <label htmlFor="isActive" className="text-sm text-white/70">Membre actif</label>
+            <input type="checkbox" id="is_active" name="is_active" checked={formData.is_active} onChange={handleInputChange} className="w-5 h-5" />
+            <label htmlFor="is_active" className="text-sm text-white/70">Membre actif</label>
           </div>
 
           <footer className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-white/10">
@@ -128,7 +128,11 @@ export default function JuryModal({ jury, onClose, onUpdate, onDelete }) {
                 <Trash2 size={18} /> Supprimer
               </button>
             )}
-            <button type="submit" disabled={isSubmitting} className="flex-1 px-4 py-3 bg-blue-600 text-white font-bold rounded-lg flex items-center justify-center gap-2 disabled:opacity-50">{isSubmitting ? 'En cours d\'envoi d\'invitation...' : 'Envoyer l\'invitation'}
+            <button type="submit" disabled={isSubmitting} className="flex-1 px-4 py-3 bg-blue-600 text-white font-bold rounded-lg flex items-center justify-center gap-2 disabled:opacity-50">
+              {isSubmitting 
+                ? (isEditMode ? 'Mise à jour...' : 'En cours d\'envoi d\'invitation...') 
+                : (isEditMode ? 'Mettre à jour' : 'Envoyer l\'invitation')
+              }
             </button>
           </footer>
         </form>

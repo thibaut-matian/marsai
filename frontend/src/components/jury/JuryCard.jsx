@@ -1,8 +1,15 @@
 import { Mail, Shield, Power } from 'lucide-react';
 
-export default function JuryCard({ jury, onClick }) {
-  const isJuryActive = jury.isActive;
+export default function JuryCard({ jury, onClick, onToggleActive }) {
+  const isJuryActive = jury.is_active; // Utiliser is_active au lieu de isActive
   const juryInitials = `${jury.firstname?.[0] || ''}${jury.lastname?.[0] || ''}`;
+
+  const handleToggleActive = (e) => {
+    e.stopPropagation(); // Empêcher l'ouverture de la modal
+    if (onToggleActive) {
+      onToggleActive(jury.id, !isJuryActive);
+    }
+  };
 
   return (
     <article
@@ -13,17 +20,18 @@ export default function JuryCard({ jury, onClick }) {
       aria-label={`Voir les détails de ${jury.firstname} ${jury.lastname}`}
     >
       <div className="absolute top-4 right-4">
-        <span 
-          className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold ${
+        <button
+          onClick={handleToggleActive}
+          className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold transition-all hover:scale-105 ${
             isJuryActive 
-              ? 'bg-green-500/20 text-green-300 border border-green-500/50' 
-              : 'bg-red-500/20 text-red-300 border border-red-500/50'
+              ? 'bg-green-500/20 text-green-300 border border-green-500/50 hover:bg-green-500/30' 
+              : 'bg-red-500/20 text-red-300 border border-red-500/50 hover:bg-red-500/30'
           }`}
-          aria-label={`Statut: ${isJuryActive ? 'Actif' : 'Inactif'}`}
+          aria-label={`${isJuryActive ? 'Désactiver' : 'Activer'} ${jury.firstname} ${jury.lastname}`}
         >
           <Power size={12} aria-hidden="true" />
           <span>{isJuryActive ? 'Actif' : 'Inactif'}</span>
-        </span>
+        </button>
       </div>
 
       <div 
@@ -39,7 +47,7 @@ export default function JuryCard({ jury, onClick }) {
         </h3>
         <address className="flex items-center gap-2 text-white/60 text-sm not-italic">
           <Mail size={14} aria-hidden="true" />
-          <span className="truncate">{jury.email}</span>
+          <span className="truncate">{jury.mail}</span> {/* Utiliser mail au lieu de email */}
         </address>
       </header>
     </article>

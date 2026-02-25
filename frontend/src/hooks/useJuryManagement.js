@@ -13,7 +13,7 @@ export const useJuryManagement = () => {
     try {
       setIsLoadingData(true);
       setError(null);
-      const response = await getAPI.getAllJuries({ role: 'jury' });
+      const response = await getAPI.getAllJuries(); // Plus de paramètre ici
       console.log('Réponse API getAll:', response); // Debug
       
       // Vérifier si la réponse a une propriété 'data'

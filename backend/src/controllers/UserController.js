@@ -251,10 +251,22 @@ class UserController {
 
       await user.update(updates);
 
+      // Recharger avec les relations pour la réponse
+      const updatedUser = await User.findByPk(id, {
+        include: [
+          {
+            model: Role,
+            as: "role",
+            attributes: ["id", "name"],
+          },
+        ],
+        attributes: { exclude: ["password", "token"] },
+      });
+
       res.status(200).json({
         success: true,
         message: "Utilisateur mis à jour avec succès",
-        data: user,
+        data: updatedUser,
       });
     } catch (error) {
       res.status(500).json({

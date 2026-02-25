@@ -69,12 +69,12 @@ const getAPI = {
     moderateMovie: (id, status) => api.patch(`admin/movie/${id}`, { status }),
     
     // ===== GESTION DES JURYS (useJuryManagement) =====
-    getAllJuries: (params) => api.get('users', { params }),
+    getAllJuries: () => api.get('users?role=jury'),
     inviteJury: (juryData) => api.post('users', juryData),
     updateJury: (id, juryData) => api.put(`users/${id}`, juryData),
     deleteJury: (id) => api.delete(`users/${id}`),
-    deactivateJury: (id) => api.patch(`users/${id}/deactivate`),
-    reactivateJury: (id) => api.patch(`users/${id}/reactivate`),
+    deactivateJury: (id) => api.patch(`users/${id}`, { is_active: false }),
+    reactivateJury: (id) => api.patch(`users/${id}`, { is_active: true }),
     
     // ===== EMAIL =====
     sendEmail: (payload) => api.post('admin/send-email', payload),
