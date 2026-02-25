@@ -54,7 +54,7 @@ export default function Header() {
                     </div>
 
                 {/* Menu Desktop (Caché sur mobile) */}
-                <div className="flex-none hidden md:flex gap-4 items-center">
+                <div className="flex-none hidden md:flex gap-1 items-center">
                     <ul className="menu menu-horizontal px-1 text-white">
                         <li><Link to="/planning">{t('nav.planning')}</Link></li>
                         <li><Link to="/FAQ">{t('nav.faq')}</Link></li>
@@ -171,4 +171,3 @@ export default function Header() {
         </>
     );
 }
-
