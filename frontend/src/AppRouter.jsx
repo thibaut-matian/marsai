@@ -1,19 +1,18 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home.jsx";
-import FAQ from "./pages/FAQ.jsx";
-import Planning from "./pages/Planning.jsx";
-import Reservation from "./pages/Reservation.jsx";
-import Dashboard from "./pages/admin/Dashboard.jsx";
-import JuryManagement from "./pages/admin/JuryManagement.jsx";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import AdminLayout from "./components/admin/layout/AdminLayout.jsx";
 import MainLayout from "./components/layout/MainLayout.jsx";
-import Submission from "./pages/Submission.jsx";
-import LoginJury from "./pages/jury/Login.jsx";
-import JuryVote from "./pages/jury/JuryVote.jsx";
-import DashboardJury from "./pages/jury/DashboardJury.jsx";
+import FAQ from "./pages/FAQ.jsx";
 import Galerie from "./pages/Galerie.jsx";
+import Home from "./pages/Home.jsx";
+import Planning from "./pages/Planning.jsx";
+import Reservation from "./pages/Reservation.jsx";
+import Submission from "./pages/Submission.jsx";
+import Dashboard from "./pages/admin/Dashboard.jsx";
+import JuryManagement from "./pages/admin/JuryManagement.jsx";
 import MovieModeration from "./pages/admin/movieModeration.jsx";
-import ModalDetails from "./components/features/movies/ModalDetails.jsx";
+import DashboardJury from "./pages/jury/DashboardJury.jsx";
+import JuryVote from "./pages/jury/JuryVote.jsx";
+import LoginJury from "./pages/jury/Login.jsx";
 import RankingJury from "./pages/jury/RankingJury.jsx";
 
 function AppRouter() {
@@ -30,7 +29,6 @@ function AppRouter() {
           <Route path="/submit-movie" element={<Submission />} />
           {/* Galerie s'affiche à la phase 2 */}
           <Route path="/galerie" element={<Galerie />} />
-          <Route path="/modal" element={<ModalDetails />} />
         </Route>
 
         {/* 2. Routes Admin (avec la Sidebar Admin) */}

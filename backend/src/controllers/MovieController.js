@@ -273,16 +273,39 @@ L'équipe MarsAI Festival
   // Récupérer tous les films
   async getAll(req, res) {
     try {
-      const { is_selected, page = 1, limit = 10 } = req.query;
+      const { is_selected, page = 1, limit = 100 } = req.query;
       const offset = (page - 1) * limit;
 
       const where = is_selected !== undefined ? { is_selected: parseInt(is_selected) } : {};
+
+      const MovieScreenshot = require("../models/MovieScreenshotModel");
+      const SocialLink = require("../models/SocialLinkModel");
+      const SocialMedia = require("../models/SocialMediaModel");
 
       const movies = await Movie.findAndCountAll({
         where,
         limit: parseInt(limit),
         offset: parseInt(offset),
         order: [["id", "DESC"]],
+        include: [
+          {
+            model: MovieScreenshot,
+            as: "screenshots",
+            attributes: ["id", "url"],
+          },
+          {
+            model: SocialLink,
+            as: "socials",
+            attributes: ["id", "social_url"],
+            include: [
+              {
+                model: SocialMedia,
+                as: "platform",
+                attributes: ["id", "name"],
+              },
+            ],
+          },
+        ],
       });
 
       res.status(200).json({
@@ -306,7 +329,31 @@ L'équipe MarsAI Festival
     try {
       const { id } = req.params;
 
-      const movie = await Movie.findByPk(id);
+      const MovieScreenshot = require("../models/MovieScreenshotModel");
+      const SocialLink = require("../models/SocialLinkModel");
+      const SocialMedia = require("../models/SocialMediaModel");
+
+      const movie = await Movie.findByPk(id, {
+        include: [
+          {
+            model: MovieScreenshot,
+            as: "screenshots",
+            attributes: ["id", "url"],
+          },
+          {
+            model: SocialLink,
+            as: "socials",
+            attributes: ["id", "social_url"],
+            include: [
+              {
+                model: SocialMedia,
+                as: "platform",
+                attributes: ["id", "name"],
+              },
+            ],
+          },
+        ],
+      });
 
       if (!movie) {
         return res.status(404).json({ message: "Film non trouvé" });
@@ -328,7 +375,32 @@ L'équipe MarsAI Festival
     try {
       const { url } = req.params;
 
-      const movie = await Movie.findOne({ where: { url } });
+      const MovieScreenshot = require("../models/MovieScreenshotModel");
+      const SocialLink = require("../models/SocialLinkModel");
+      const SocialMedia = require("../models/SocialMediaModel");
+
+      const movie = await Movie.findOne({ 
+        where: { url },
+        include: [
+          {
+            model: MovieScreenshot,
+            as: "screenshots",
+            attributes: ["id", "url"],
+          },
+          {
+            model: SocialLink,
+            as: "socials",
+            attributes: ["id", "social_url"],
+            include: [
+              {
+                model: SocialMedia,
+                as: "platform",
+                attributes: ["id", "name"],
+              },
+            ],
+          },
+        ],
+      });
 
       if (!movie) {
         return res.status(404).json({ message: "Film non trouvé" });
