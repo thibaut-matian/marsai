@@ -200,6 +200,69 @@ export default function Home() {
           <ChevronRight size={20} />
         </button>
       </div>
+<hr />
+      {/* Contact Section */}
+      <div className="relative bg-black text-white overflow-hidden">
+
+        {/* Titre centré avec séparateurs */}
+        <div className="py-12 md:py-16 text-center px-4">
+          <div className="flex items-center justify-center gap-4 mb-2">
+
+          </div>
+          <h2 className="text-2xl md:text-3xl font-bold text-center text-white">
+            {t('home.contact')}
+          </h2>
+        </div>
+
+        <div className="container mx-auto px-4 pb-16 md:pb-24">
+          <div className="flex flex-col lg:flex-row gap-0 border border-white/10">
+
+            {/* Coordonnées */}
+            <div className="lg:w-2/5 flex flex-col justify-between p-8 md:p-12 border-b lg:border-b-0 lg:border-r border-white/10">
+              <div className="space-y-7">
+                {/* Phone */}
+                <div className="group">
+                  <p className="text-white/30 text-xs tracking-[0.3em] uppercase mb-1">{t('home.phone')}</p>
+                  <p className="text-base font-light tracking-wide group-hover:text-white/70 transition-colors duration-300">
+                    +06 36 65 65 65
+                  </p>
+                </div>
+                {/* Email */}
+                <div className="group">
+                  <p className="text-white/30 text-xs tracking-[0.3em] uppercase mb-1">{t('home.email')}</p>
+                  <p className="text-base font-light tracking-wide break-all group-hover:text-white/70 transition-colors duration-300">
+                    laissenoustrkl@degage.com
+                  </p>
+                </div>
+                {/* Address */}
+                <div className="group">
+                  <p className="text-white/30 text-xs tracking-[0.3em] uppercase mb-1">{t('home.address')}</p>
+                  <p className="text-base font-light tracking-wide leading-relaxed group-hover:text-white/70 transition-colors duration-300">
+                    155 rue Peyssonnel<br />Marseille 13002
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Carte — carrée */}
+            <div className="lg:w-3/5">
+              <div className="w-full aspect-square lg:aspect-auto lg:h-full min-h-72 grayscale hover:grayscale-0 transition-all duration-700">
+                <iframe
+                  src="https://www.google.com/maps?q=155%20rue%20peysonnel%20marseille&output=embed"
+                  className="w-full h-full border-0"
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade">
+                </iframe>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Ligne décorative en bas */}
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+      </div>
     </div>
   );
 }

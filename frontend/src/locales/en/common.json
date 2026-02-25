@@ -31,7 +31,11 @@
       "registrations": "REGISTRATIONS",
       "deliberation": "DELIBERATION",
       "festival": "FESTIVAL"
-    }
+    },
+    "contact": "CONTACT",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address"
   },
   "pages": {
     "planning": "Events",
@@ -152,7 +156,7 @@
     "title": "Movie Title *",
     "synopsis": "Synopsis *",
     "synopsisPlaceholder": "Movie summary in a few lines...",
-    "duration": "Duration (secondes) *",
+    "duration": "Duration (seconds) *",
     "team": "Movie Team",
     "addMember": "Add member",
     "removeMember": "Remove",

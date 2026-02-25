@@ -104,7 +104,7 @@
       "Porter des lunettes",
       "Aimer les blagues nulles",
       "Savoir imiter Dylan",
-      "S’appeler Thibaut Matian"
+      "S'appeler Thibaut Matian"
     ],
     "rewards": "Récompenses",
     "rewardsList": [
@@ -117,7 +117,11 @@
       "registrations": "INSCRIPTIONS",
       "deliberation": "DÉLIBÉRATION",
       "festival": "FESTIVAL"
-    }
+    },
+    "contact": "CONTACT",
+    "phone": "Téléphone",
+    "email": "Email",
+    "address": "Adresse"
   },
   "planning": {
     "title": "ÉVÉNEMENTS",
@@ -168,7 +172,7 @@
     "a7": "Un jury d'experts visionne et sélectionne les films finalistes.",
     "q8": "Les films doivent-ils être inédits ?",
     "a8": "Oui, les films ne doivent pas avoir été diffusés publiquement avant le festival.",
-    "q9": "Y a-t-il des frais d’inscription ?",
+    "q9": "Y a-t-il des frais d'inscription ?",
     "a9": "La participation au festival est gratuite.",
     "q10": "Comment assister aux projections ?",
     "a10": "Il suffit de réserver votre place via la page de réservation du site."
