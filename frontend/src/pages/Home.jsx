@@ -5,9 +5,12 @@ import { useTranslation } from 'react-i18next';
 import MovieTimeline from '../components/features/home/timeline';
 import teaserVideo from '../assets/videos/Teaser.mp4';
 import juryImage1 from '../assets/img/test-etchebest.jpg';
-import juryImage2 from '../assets/img/test-lui.jpg';
-import juryImage3 from '../assets/img/test-chat.png';
-import juryImage4 from '../assets/img/test-winx.png';
+import juryImage2 from '../assets/img/adele.jpg';
+import juryImage3 from '../assets/img/malik.jpg';
+import juryImage4 from '../assets/img/jenna.jpg';
+import juryImage5 from '../assets/img/reeve.jpg';
+import juryImage6 from '../assets/img/rihanna.jpg';
+import juryImage7 from '../assets/img/depp.jpg';
 export default function Home() {
   const navigate = useNavigate();
   const scrollRef = useRef(null);
@@ -125,8 +128,8 @@ export default function Home() {
           {/* Jury 1 */}
           <div className="card bg-base-200 h-80 md:h-96 min-w-60 md:min-w-72 snap-center">
             <div className="card-body h-full" style={{ backgroundImage: `url(${juryImage1})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
-              <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Etchebest</h2>
-              <p className="text-sm md:text-base text-white relative z-10">C'est qui le patron</p>
+              <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Philippe Etchebest</h2>
+              <p className="text-sm md:text-base text-white relative z-10">Chef Cuisinier</p>
               <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
               <div className="card-actions justify-end">
               </div>
@@ -135,8 +138,8 @@ export default function Home() {
           {/* Jury 2 */}
           <div className="card bg-base-200 h-80 md:h-96 min-w-60 md:min-w-72 snap-center">
             <div className="card-body h-full" style={{ backgroundImage: `url(${juryImage2})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
-              <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Le patron</h2>
-              <p className="text-sm md:text-base text-white relative z-10">C'est moi</p>
+              <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Adèle Exarchopoulos</h2>
+              <p className="text-sm md:text-base text-white relative z-10">Actrice</p>
               <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
               <div className="card-actions justify-end">
               </div>
@@ -145,8 +148,8 @@ export default function Home() {
           {/* Jury 3 */}
           <div className="card bg-base-200 h-80 md:h-96 min-w-60 md:min-w-72 snap-center">
             <div className="card-body h-full" style={{ backgroundImage: `url(${juryImage3})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
-              <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Un chat</h2>
-              <p className="text-sm md:text-base text-white relative z-10">Miaou</p>
+              <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Malik Bentalha</h2>
+              <p className="text-sm md:text-base text-white relative z-10">Humoriste</p>
               <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
               <div className="card-actions justify-end">
               </div>
@@ -155,8 +158,8 @@ export default function Home() {
           {/* Jury 4 */}
           <div className="card bg-base-200 h-80 md:h-96 min-w-60 md:min-w-72 snap-center">
             <div className="card-body h-full" style={{ backgroundImage: `url(${juryImage4})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
-              <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Les Winx</h2>
-              <p className="text-sm md:text-base text-white relative z-10">La magiiiiiie</p>
+              <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Jenna Ortega</h2>
+              <p className="text-sm md:text-base text-white relative z-10">Actrice</p>
               <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
               <div className="card-actions justify-end">
               </div>
@@ -164,9 +167,9 @@ export default function Home() {
           </div>
           {/* Jury 5 */}
           <div className="card bg-base-200 h-80 md:h-96 min-w-60 md:min-w-72 snap-center">
-            <div className="card-body h-full" style={{ backgroundImage: `url(${juryImage1})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
-              <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Etchebest</h2>
-              <p className="text-sm md:text-base text-white relative z-10">C'est qui le patron</p>
+            <div className="card-body h-full" style={{ backgroundImage: `url(${juryImage5})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+              <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Keanu Reeves</h2>
+              <p className="text-sm md:text-base text-white relative z-10">Acteur</p>
               <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
               <div className="card-actions justify-end">
               </div>
@@ -174,9 +177,9 @@ export default function Home() {
           </div>
           {/* Jury 6 */}
           <div className="card bg-base-200 h-80 md:h-96 min-w-60 md:min-w-72 snap-center">
-            <div className="card-body h-full" style={{ backgroundImage: `url(${juryImage2})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
-              <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Le patron</h2>
-              <p className="text-sm md:text-base text-white relative z-10">C'est moi</p>
+            <div className="card-body h-full" style={{ backgroundImage: `url(${juryImage6})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+              <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Rihanna</h2>
+              <p className="text-sm md:text-base text-white relative z-10">Chanteuse</p>
               <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
               <div className="card-actions justify-end">
               </div>
@@ -184,9 +187,9 @@ export default function Home() {
           </div>
           {/* Jury 7 */}
           <div className="card bg-base-200 h-80 md:h-96 min-w-60 md:min-w-72 snap-center">
-            <div className="card-body h-full" style={{ backgroundImage: `url(${juryImage3})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
-              <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Un chat</h2>
-              <p className="text-sm md:text-base text-white relative z-10">Miaou</p>
+            <div className="card-body h-full" style={{ backgroundImage: `url(${juryImage7})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+              <h2 className="card-title pt-40 md:pt-60 text-base md:text-lg text-white relative z-10">Johnny Depp</h2>
+              <p className="text-sm md:text-base text-white relative z-10">Acteur</p>
               <div className="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
               <div className="card-actions justify-end">
               </div>
