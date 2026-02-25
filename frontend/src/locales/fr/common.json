@@ -97,19 +97,22 @@
   "home": {
     "start": "Commencer",
     "about": "À PROPOS",
-    "welcome": "Bienvenue sur notre plateforme dédiée aux créateurs de contenu...",
-    "mission": "Notre mission est d'offrir une plateforme inclusive...",
+    "welcome": "Bienvenue sur notre plateforme dédiée aux créateurs de contenu utilisant l'IA ! Que vous soyez un réalisateur chevronné ou un passionné de technologie, notre festival est l'occasion idéale de présenter vos œuvres innovantes. Nous sommes impatients de découvrir vos créations et de célébrer ensemble l'avenir du cinéma à l'ère de l'intelligence artificielle.",
+    "mission": "Notre mission est d'offrir une plateforme inclusive et inspirante pour les créateurs de contenu utilisant l'IA, en célébrant l'innovation, la créativité et la diversité dans le cinéma. Nous nous engageons à promouvoir les œuvres qui repoussent les limites de la narration grâce à l'intelligence artificielle, tout en favorisant un dialogue ouvert sur les implications éthiques et artistiques de cette technologie révolutionnaire.",
     "criteria": "Critères de soumission",
     "criteriaList": [
       "Porter des lunettes",
       "Aimer les blagues nulles",
       "Savoir imiter Dylan",
-      "S’appeler Thibaut Matian"
+      "S'appeler Thibaut Matian"
     ],
     "rewards": "Récompenses",
     "rewardsList": [
       "Voyage tout compris à Maubeuge",
-      "Un recueil des blagues de Philippe Etchebest"
+      "Un recueil des blagues de Philippe Etchebest",
+      "Un poster dédicacé de Thibaut Matian",
+      "Une place à la formation CDPI de La Plateforme_"
+
     ],
     "jury": "NOTRE JURY",
     "juryDesc": "Découvrez les experts qui évaluent nos projets.",
@@ -117,7 +120,11 @@
       "registrations": "INSCRIPTIONS",
       "deliberation": "DÉLIBÉRATION",
       "festival": "FESTIVAL"
-    }
+    },
+    "contact": "CONTACT",
+    "phone": "Téléphone",
+    "email": "Email",
+    "address": "Adresse"
   },
   "planning": {
     "title": "ÉVÉNEMENTS",
@@ -168,7 +175,7 @@
     "a7": "Un jury d'experts visionne et sélectionne les films finalistes.",
     "q8": "Les films doivent-ils être inédits ?",
     "a8": "Oui, les films ne doivent pas avoir été diffusés publiquement avant le festival.",
-    "q9": "Y a-t-il des frais d’inscription ?",
+    "q9": "Y a-t-il des frais d'inscription ?",
     "a9": "La participation au festival est gratuite.",
     "q10": "Comment assister aux projections ?",
     "a10": "Il suffit de réserver votre place via la page de réservation du site."

@@ -19,19 +19,23 @@
   "home": {
     "start": "Get Started",
     "about": "ABOUT US",
-    "welcome": "Welcome to our platform dedicated to content creators...",
-    "mission": "Our mission is to provide an inclusive platform...",
+    "welcome": "Welcome to our platform dedicated to content creators using AI! Whether you're an experienced filmmaker or a technology enthusiast, our festival is the perfect opportunity to showcase your innovative works. We look forward to discovering your creations and celebrating together the future of cinema in the age of artificial intelligence.",
+    "mission": "Our mission is to provide an inclusive platform for content creators using AI, celebrating innovation, creativity, and diversity in cinema. We are committed to promoting works that push the boundaries of storytelling through artificial intelligence while fostering an open dialogue on the ethical and artistic implications of this revolutionary technology.",
     "criteria": "Submission Criteria",
     "criteriaList": ["Wear glasses", "Enjoy terrible jokes", "Able to imitate Dylan", "Be named Thibaut Matian"],
     "rewards": "Rewards",
-    "rewardsList": ["All-inclusive trip to Maubeuge", "A collection of Philippe Etchebest's jokes"],
+    "rewardsList": ["All-inclusive trip to Maubeuge", "A collection of Philippe Etchebest's jokes", "A signed poster of Thibaut Matian", "A spot in La Plateforme_'s CDPI training"],
     "jury": "OUR JURY",
     "juryDesc": "Discover the experts who evaluate our projects.",
     "timeline": {
       "registrations": "REGISTRATIONS",
       "deliberation": "DELIBERATION",
       "festival": "FESTIVAL"
-    }
+    },
+    "contact": "CONTACT",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address"
   },
   "pages": {
     "planning": "Events",
@@ -152,7 +156,7 @@
     "title": "Movie Title *",
     "synopsis": "Synopsis *",
     "synopsisPlaceholder": "Movie summary in a few lines...",
-    "duration": "Duration (secondes) *",
+    "duration": "Duration (seconds) *",
     "team": "Movie Team",
     "addMember": "Add member",
     "removeMember": "Remove",
