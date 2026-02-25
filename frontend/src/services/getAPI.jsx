@@ -40,7 +40,8 @@ const getAPI = {
 
     // ===== FILMS & SOUMISSIONS (useListFilm, useSubmission) =====
     getAllMovies: (params) => api.get('movies', { params }),
-    getMovieDetails: (id) => api.get(`movies/${id}`),
+    getMovieDetails: (id) => api.get(`movies/id/${id}`),
+    getMovieByUrl: (url) => api.get(`movies/url/${url}`),
     submitMovie: (formData) => api.post('movies', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
     }),

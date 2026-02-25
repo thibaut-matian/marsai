@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'; // Ajout de useState pour la modal détails
+import { Clapperboard, Eye, Mail, Trash2, User } from "lucide-react";
+import { useEffect } from 'react'; // Ajout de useState pour la modal détails
+import ContactModal from "../../components/features/contactModal";
+import PaginationControls from "../../components/pagination";
+import { useEmailSend } from "../../hooks/useEmailSend";
 import useListFilm from "../../hooks/useListFilm";
 import usePagination from "../../hooks/usePagination";
-import PaginationControls from "../../components/pagination"; 
-import { Eye, Mail, Trash2, Clapperboard, User } from "lucide-react";
-import ContactModal from "../../components/features/contactModal";
-import { useEmailSend } from "../../hooks/useEmailSend";
-import Filtre from "./filtre";
 import ModalDetails from "../features/movies/ModalDetails";
+import Filtre from "./filtre";
 
 const ListMovies = () => {
   const { 
@@ -149,9 +149,10 @@ const ListMovies = () => {
           loading={emailLoading}               
         />
 
-        {isDetailOpen && (
+        {isDetailOpen && detailMovie && (
           <ModalDetails 
-            movie={detailMovie} 
+            movieId={detailMovie.id}
+            isOpen={isDetailOpen}
             onClose={handleCloseDetail} 
           />
         )}
