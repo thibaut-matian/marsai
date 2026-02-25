@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const JuryVoteController = require('../controllers/JruyVoteController');
-const { authenticate } = require('../middlewares'); // JWT helper
+const JuryVoteController = require('../controllers/JuryVoteController');
 
-// toutes les routes jury nécessitent un token valide (JWT)
-router.get('/next-movie', authenticate, JuryVoteController.SelectOneMovie);
+router.get('/next-movie', JuryVoteController.getNextMovie);
+router.post('/submit-vote', JuryVoteController.submitVote);
+
 
 module.exports = router;

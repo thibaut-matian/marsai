@@ -1,61 +1,80 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import axios from "axios";
 
 export function useJuryVote() {
-  // 1. GESTION DE L'ÉTAT (Le vote)
-  const [decision, setDecision] = useState(null);
+  const [film, setFilm] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // 2. DONNÉES SIMULÉES (MOCK DATA)
-  // C'est ici que tu mettras tes appels API (fetch) plus tard.
-  const film = {
-    title: "Chroniques du Silicium",
-    duration: 60,
-    aiClassification: "HYBRID",
+  // 1. RÉCUPÉRER LE PROCHAIN FILM (GET)
+  const fetchNextMovie = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get("http://localhost:3000/api/jury/next-movie", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
-    // Identité Réalisateur
-    director: {
-      firstname: "Léa",
-      lastname: "Dubois",
-      profession: "Motion Designer",
-      city: "Lyon",
-      country: "France",
-      socials: {
-        instagram: "@lea_dbs_art",
-        website: "www.lea-dubois.com",
-      },
-    },
+      if (response.data.success && response.data.data) {
+        const d = response.data.data;
+        setFilm({
+          id: d.id,
+          title: d.vo_title,        // Table movies
+          youtubeId: d.youtube_id,  // Table movies
+          synopsis: d.vo_desc,      // Table movies
+          duration: d.duration,     // Table movies
+          aiStack: d.ia_used,       // Table movies
+          director: { 
+            firstname: d.firstname, 
+            lastname: d.lastname 
+          }
+        });
+      } else {
+        setFilm(null); // Plus de films à noter
+      }
+    } catch (err) {
+      console.error("Erreur chargement:", err);
+      setError("Impossible de charger le film.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-    // Tech & IA
-    aiStack: "Midjourney v6, Runway Gen-2, ElevenLabs, After Effects",
-    aiMethodology:
-      "Génération des arrière-plans sur MJ, incrustation d'acteurs réels filmés sur fond vert, puis style transfer via Runway pour l'ambiance onirique.",
+  // 2. ENVOYER LE VOTE (POST)
+  const submitVote = async (decision, feedback) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post("http://localhost:3000/api/jury/vote", 
+        { 
+          movieId: film.id, 
+          decision: decision, // "j'aime", "je n'aime pas", ou "à discuter"
+          feedback: feedback  // Texte libre (max 500 car.)
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-    // Textes
-    synopsis:
-      "Dans un futur où la mémoire est stockée sur quartz, une archiviste découvre une faille dans l'histoire officielle de l'humanité. Elle doit choisir entre révéler la vérité au monde ou préserver la paix sociale factice qui règne depuis un siècle.",
-    directorNote:
-      "Je voulais explorer la texture du souvenir numérique. L'aspect hybride sert le propos : le réel (les acteurs) se perd peu à peu dans l'artificiel (les décors générés par IA).",
-
-    // Équipe (Liste dynamique)
-    team: [
-      { role: "Sound Designer", firstname: "Marc", lastname: "Veral" },
-      { role: "Voix Off", firstname: "Sarah", lastname: "Connor" },
-      { role: "Prompt Engineer", firstname: "Alex", lastname: "Turing" },
-    ],
+      if (response.data.success) {
+        // Une fois voté, on charge automatiquement le film suivant
+        await fetchNextMovie();
+        return true;
+      }
+    } catch (err) {
+      console.error("Erreur lors du vote:", err);
+      alert(err.response?.data?.message || "Erreur lors de l'envoi du vote");
+      return false;
+    }
   };
 
-  // 3. FONCTION UTILITAIRE (Formatage du temps 145 -> 02:25)
-  const formatDuration = (seconds) => {
-    if (!seconds) return "00:00";
-    const min = Math.floor(seconds / 60);
-    const sec = seconds % 60;
-    return `${min < 10 ? "0" : ""}${min}:${sec < 10 ? "0" : ""}${sec}`;
-  };
+  useEffect(() => {
+    fetchNextMovie();
+  }, [fetchNextMovie]);
 
-  // 4. EXPORT (On rend tout disponible pour la page)
-  return {
-    decision,
-    setDecision,
-    film,
-    formatDuration,
+  return { 
+    film, 
+    loading, 
+    error, 
+    fetchNextMovie, 
+    submitVote 
   };
 }
