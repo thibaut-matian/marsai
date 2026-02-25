@@ -55,6 +55,26 @@ export default function StepAssets({ formData, handleChange, handleFileChange, h
         />
       </div>
 
+      {/* SECTION SOUS-TITRES */}
+      <div className={`p-4 rounded-2xl border transition-all ${errors.subtitleFile ? 'border-red-500' : formData.subtitleFile ? 'border-green-500 bg-green-900/10' : 'border-white/10 bg-black/20 hover:border-blue-400/50 hover:bg-black/40'}`}
+        onClick={() => document.getElementById('subtitleFileInput')?.click()}
+        style={{ cursor: 'pointer' }}
+      >
+        <label className="block text-sm text-blue-300 mb-2 font-bold relative select-none pointer-events-none">
+          Sous-titres (.srt)
+          {formData.subtitleFile && (
+            <span className="absolute top-0 right-0 text-green-400 text-xl" title="Sous-titres uploadés">✔️</span>
+          )}
+        </label>
+        <input id="subtitleFileInput" type="file" name="subtitleFile" accept=".srt" onChange={handleFileChange} className="w-full text-sm text-gray-400 cursor-pointer hidden" />
+        {formData.subtitleFile && (
+          <div className="mt-2 text-xs text-green-400">{formData.subtitleFile.name}</div>
+        )}
+        {errors.subtitleFile && (
+          <div className="mt-2 text-red-400 text-sm font-semibold text-center">{errors.subtitleFile}</div>
+        )}
+      </div>
+
       <Input 
         label={t('form.youtubeUrl')} 
         name="filmUrl" 

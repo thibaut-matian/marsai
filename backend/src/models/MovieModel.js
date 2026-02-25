@@ -134,8 +134,7 @@ const Movie = sequelize.define(
     },
     subtitle_url: {
       type: DataTypes.STRING(255),
-      allowNull: true, // Obligatoire si présence de voix [cite: 43]
-      allowNull: false, // Obligatoire si présence de voix [cite: 43]
+      allowNull: true, // Obligatoire si présence de voix [cite: 43],
     },
     is_selected: {
       type: DataTypes.INTEGER,
