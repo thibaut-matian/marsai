@@ -1,4 +1,4 @@
-import { Home, Clapperboard, Users, Settings, LogOut, LayoutDashboard, Film } from 'lucide-react';
+import { Home, Clapperboard, Users, Settings, LogOut } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
@@ -10,6 +10,14 @@ const Sidebar = () => {
   
   // Style Inactif : Texte Gris, léger éclaircissement au survol
   const inactiveStyle = `${baseLinkStyle} text-gray-400 hover:bg-white/5 hover:text-white`;
+
+  // Navigation links data
+  const navigationLinks = [
+    { path: '/admin/dashboard', label: 'Vue d\'ensemble', icon: Home },
+    { path: '/admin/movies', label: 'Films reçus', icon: Clapperboard },
+    { path: '/admin/jury-management', label: 'Gestion Jury', icon: Users },
+    { path: '/admin/settings', label: 'Paramètres', icon: Settings }
+  ];
 
   return (
     // hidden = Caché sur Mobile
@@ -26,15 +34,19 @@ const Sidebar = () => {
 
       {/* 2. Liste des Liens de Navigation */}
       <nav className="flex-1 px-4 space-y-2">
-        {['/admin/dashboard', '/admin/movies', '/admin/jury-management', '/admin/settings'].map((path) => (
-          <NavLink key={path} to={path} className={({ isActive }) => isActive ? activeStyle : inactiveStyle}>
-            {path === '/admin/dashboard' && <Home size={20} />}
-            {path === '/admin/movies' && <Clapperboard size={20} />}
-            {path === '/admin/jury-management' && <Users size={20} />}
-            {path === '/admin/settings' && <Settings size={20} />}
-            <span>{path === '/admin/dashboard' ? 'Vue d\'ensemble' : path === '/admin/movies' ? 'Films reçus' : path === '/admin/jury-management' ? 'Gestion Jury' : 'Paramètres'}</span>
-          </NavLink>
-        ))}
+        {navigationLinks.map((link) => {
+          const Icon = link.icon;
+          return (
+            <NavLink 
+              key={link.path} 
+              to={link.path} 
+              className={({ isActive }) => isActive ? activeStyle : inactiveStyle}
+            >
+              <Icon size={20} />
+              <span>{link.label}</span>
+            </NavLink>
+          );
+        })}
       </nav>
 
       {/* 3. Footer du Menu (Déconnexion) */}
