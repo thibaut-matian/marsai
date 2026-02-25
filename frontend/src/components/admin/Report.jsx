@@ -50,23 +50,23 @@ const ReportTable = () => {
                   </div>
                 </td>
                   <td className="text-center min-w-[180px]"> {/* On force une largeur mini ici */}
-  <span className="badge badge-outline border-error/50 text-error bg-error/5 py-4 px-4 text-[10px] sm:text-xs font-semibold uppercase tracking-tight whitespace-nowrap h-auto inline-flex items-center justify-center">
-    {report.raison}
-  </span>
+                  <span className="badge badge-outline border-error/50 text-error bg-error/5 py-4 px-4 text-[10px] sm:text-xs font-semibold uppercase tracking-tight whitespace-nowrap h-auto inline-flex items-center justify-center">
+                    {report.raison}
+                  </span>
                 </td>
                 <td>
                   <div className="flex justify-center gap-2">
-                    <button className="btn btn-square btn-sm bg-blue-600 hover:bg-blue-500 border-none text-white" title="Voir">
+                    <button className="btn btn-square shadow-none btn-sm bg-blue-600 hover:bg-blue-500 border-none text-white" title="Voir">
                       <Eye size={18} />
                     </button>
                     <button 
-                      className="btn btn-square btn-sm bg-amber-500/20 border border-amber-500 text-amber-500"
+                      className="btn btn-square shadow-none btn-sm bg-amber-500/20 border border-amber-500 text-amber-500"
                       onClick={() => setSelectedReport(report)} 
                     >
                       <Mail size={18} />
                     </button>
                     <button 
-                      className="btn btn-square btn-sm bg-red-600/20 hover:bg-red-600 border border-red-600 text-red-500 hover:text-white transition-all"
+                      className="btn btn-square shadow-none btn-sm bg-red-600/20 hover:bg-red-600 border border-red-600 text-red-500 hover:text-white transition-all"
                       onClick={() => handleDelete(report.id, report.titre)}
                       title="Supprimer"
                     >
