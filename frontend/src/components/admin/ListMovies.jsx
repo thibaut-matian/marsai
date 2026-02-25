@@ -114,18 +114,18 @@ const ListMovies = () => {
 
                   <td className="align-middle">
                     <div className="flex justify-center items-center gap-2">
-                      <button className="btn btn-square btn-sm bg-blue-600 hover:bg-blue-500 border-none text-white" key={film.id} onClick={() => 
+                      <button className="btn btn-square shadow-none btn-sm bg-blue-600 hover:bg-blue-500 border-none text-white" key={film.id} onClick={() => 
                         handleOpenDetail(film)}>
                         <Eye size={18} />
                       </button>
                       <button 
-                        className="btn btn-square btn-sm bg-amber-500/20 hover:bg-amber-500 border border-amber-500 text-amber-500 hover:text-black transition-all"
+                        className="btn btn-square shadow-none btn-sm bg-amber-500/20 hover:bg-amber-500 border border-amber-500 text-amber-500 hover:text-black transition-all"
                         onClick={() => setSelectedMovie(film)}
                       >
                         <Mail size={18} />
                       </button>
                       <button 
-                        className="btn btn-square btn-sm bg-red-600/20 hover:bg-red-600 border border-red-600 text-red-500 hover:text-white transition-all"
+                        className="btn btn-square shadow-none btn-sm bg-red-600/20 hover:bg-red-600 border border-red-600 text-red-500 hover:text-white transition-all"
                         onClick={() => handleDelete(film.id)}
                       > 
                         <Trash2 size={18} />
