@@ -139,21 +139,31 @@ export function useSubmission(t) {
       if (!formData.zipcode.trim()) newErrors.zipcode = "Code Postal requis.";
       if (!formData.city.trim()) newErrors.city = "Ville requise.";
       if (!formData.country.trim()) newErrors.country = "Pays requis.";
-      if (!formData.marketingSource) newErrors.marketingSource = "Source requise.";
-      if (formData.zipcode && !onlyDigits(formData.zipcode)) newErrors.zipcode = "Code Postal : chiffres uniquement.";
-      if (formData.mobile && !onlyDigits(formData.mobile)) newErrors.mobile = "Mobile : chiffres uniquement.";
+      if (!formData.marketingSource)
+        newErrors.marketingSource = "Source requise.";
+      if (formData.zipcode && !onlyDigits(formData.zipcode))
+        newErrors.zipcode = "Code Postal : chiffres uniquement.";
+      if (formData.mobile && !onlyDigits(formData.mobile))
+        newErrors.mobile = "Mobile : chiffres uniquement.";
     }
     if (currentStep === 3) {
       if (!formData.videoFile) newErrors.videoFile = t("form.errors.videoFile");
-      if (formData.needsSubtitles && !formData.subtitleFile) newErrors.subtitleFile = t("form.errors.subtitleFile");
-      if (!formData.thumbnailFile) newErrors.thumbnailFile = t("form.errors.thumbnailFile");
-      if (!formData.filmTitleOriginal.trim()) newErrors.filmTitleOriginal = t("form.errors.filmTitleOriginal");
-      if (!formData.filmDuration) newErrors.filmDuration = t("form.errors.filmDuration");
-      if (!formData.aiClassification) newErrors.aiClassification = t("form.errors.aiClassification");
+      if (formData.needsSubtitles && !formData.subtitleFile)
+        newErrors.subtitleFile = t("form.errors.subtitleFile");
+      if (!formData.thumbnailFile)
+        newErrors.thumbnailFile = t("form.errors.thumbnailFile");
+      if (!formData.filmTitleOriginal.trim())
+        newErrors.filmTitleOriginal = t("form.errors.filmTitleOriginal");
+      if (!formData.filmDuration)
+        newErrors.filmDuration = t("form.errors.filmDuration");
+      if (!formData.aiClassification)
+        newErrors.aiClassification = t("form.errors.aiClassification");
     }
     if (currentStep === 4) {
-      if (!formData.synopsisFR.trim()) newErrors.synopsisFR = "Synopsis FR requis.";
-      if (!formData.synopsisEN.trim()) newErrors.synopsisEN = "Synopsis EN requis.";
+      if (!formData.synopsisFR.trim())
+        newErrors.synopsisFR = "Synopsis FR requis.";
+      if (!formData.synopsisEN.trim())
+        newErrors.synopsisEN = "Synopsis EN requis.";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -166,6 +176,46 @@ export function useSubmission(t) {
   // --- 5. NAVIGATION ---
 
   const handleNext = async () => {
+    // Validation stricte à l'étape 4 avant submitForm
+    if (step === 4) {
+      // Validation globale de tous les champs requis
+      let globalErrors = {};
+      if (!formData.lastname.trim()) globalErrors.lastname = "Nom requis.";
+      if (!formData.firstname.trim()) globalErrors.firstname = "Prénom requis.";
+      if (!formData.profession.trim())
+        globalErrors.profession = "Métier requis.";
+      if (!formData.birthdate) globalErrors.birthdate = "Date requise.";
+      if (!formData.email.trim()) globalErrors.email = "Email requis.";
+      if (!formData.mobile.trim()) globalErrors.mobile = "Mobile requis.";
+      if (!formData.address.trim()) globalErrors.address = "Adresse requise.";
+      if (!formData.zipcode.trim())
+        globalErrors.zipcode = "Code Postal requis.";
+      if (!formData.city.trim()) globalErrors.city = "Ville requise.";
+      if (!formData.country.trim()) globalErrors.country = "Pays requis.";
+      if (!formData.marketingSource)
+        globalErrors.marketingSource = "Source requise.";
+      if (!formData.videoFile)
+        globalErrors.videoFile = t("form.errors.videoFile");
+      if (formData.needsSubtitles && !formData.subtitleFile)
+        globalErrors.subtitleFile = t("form.errors.subtitleFile");
+      if (!formData.thumbnailFile)
+        globalErrors.thumbnailFile = t("form.errors.thumbnailFile");
+      if (!formData.filmTitleOriginal.trim())
+        globalErrors.filmTitleOriginal = t("form.errors.filmTitleOriginal");
+      if (!formData.filmDuration)
+        globalErrors.filmDuration = t("form.errors.filmDuration");
+      if (!formData.aiClassification)
+        globalErrors.aiClassification = t("form.errors.aiClassification");
+      if (!formData.synopsisFR.trim())
+        globalErrors.synopsisFR = "Synopsis FR requis.";
+      if (!formData.synopsisEN.trim())
+        globalErrors.synopsisEN = "Synopsis EN requis.";
+      if (Object.keys(globalErrors).length > 0) {
+        setErrors(globalErrors);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+    }
     if (validateStep(step)) {
       if (step === 4) {
         setIsLoading(true);
@@ -222,7 +272,10 @@ export function useSubmission(t) {
     form.append("prod_type", "1");
     form.append("language", formData.filmLanguage || "FR");
     form.append("vo_title", formData.filmTitleOriginal || "");
-    form.append("en_title", formData.filmTitleEN || formData.filmTitleOriginal || "");
+    form.append(
+      "en_title",
+      formData.filmTitleEN || formData.filmTitleOriginal || "",
+    );
     form.append("vo_desc", formData.synopsisFR || "");
     form.append("en_desc", formData.synopsisEN || formData.synopsisFR || "");
     form.append("ia_used", formData.aiClassification || "N/A");
@@ -239,9 +292,20 @@ export function useSubmission(t) {
   };
 
   return {
-    step, errors, isSubmitted, isLoading, formData,
-    handleChange, handleFileChange, handleStillsChange,
-    setCustomValue, addTeamMember, removeTeamMember,
-    updateTeamMember, handleNext, handlePrev, submitForm,
+    step,
+    errors,
+    isSubmitted,
+    isLoading,
+    formData,
+    handleChange,
+    handleFileChange,
+    handleStillsChange,
+    setCustomValue,
+    addTeamMember,
+    removeTeamMember,
+    updateTeamMember,
+    handleNext,
+    handlePrev,
+    submitForm,
   };
 }
