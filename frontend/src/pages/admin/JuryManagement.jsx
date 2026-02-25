@@ -5,6 +5,7 @@ import JuryModal from '../../components/jury/JuryModal';
 import { useJuryManagement } from '../../hooks/useJuryManagement';
 import { useJuryStats } from '../../hooks/useJuryStats';
 import { useJuryFilters } from '../../hooks/useJuryFilters';
+import getAPI from '../../services/getAPI';
 
 export default function JuryManagement() {
   // Hook principal
@@ -21,7 +22,19 @@ export default function JuryManagement() {
     deleteJury,
     deactivateJury,
     reactivateJury,
+    refreshJuries,
   } = useJuryManagement();
+
+  // Fonction pour toggle le statut actif/inactif
+  const handleToggleActive = async (juryId, newStatus) => {
+    try {
+      await getAPI.updateJury(juryId, { is_active: newStatus });
+      await refreshJuries(); // Recharger la liste
+    } catch (error) {
+      console.error('Erreur lors du changement de statut:', error);
+      alert('Erreur lors du changement de statut');
+    }
+  };
 
   // Hook statistiques
   const { stats } = useJuryStats(juryList);
@@ -99,6 +112,7 @@ export default function JuryManagement() {
                 key={juryMember.id}
                 jury={juryMember}
                 onClick={() => openJuryModal(juryMember)}
+                onToggleActive={handleToggleActive}
               />
             ))}
           </div>

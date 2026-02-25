@@ -34,10 +34,13 @@ import getAPI from "../../services/getAPI";
 
     const validateToken = async (token) => {
       try {
+        console.log('🔍 Début validation token:', token);
+        console.log('🔗 URL de validation:', `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/'}users/validate-invitation`);
+        
         const response = await getAPI.validateInvitation(token);
         const data = response.data;
         
-        console.log('Response data:', data);
+        console.log('✅ Response data:', data);
         
         if (data.success) {
           // Stocker les tokens dans localStorage
@@ -46,15 +49,17 @@ import getAPI from "../../services/getAPI";
           
           // Mettre à jour les infos utilisateur
           setUserInfo(data.data.user);
-          console.log('User info updated:', data.data.user);
+          console.log('👤 User info updated:', data.data.user);
           
           // Rediriger sans le token dans l'URL
           window.history.replaceState({}, '', '/jury/DashboardJury');
         } else {
-          console.error('Erreur serveur:', data.message);
+          console.error('❌ Erreur serveur:', data.message);
         }
       } catch (error) {
-        console.error('Erreur validation:', error);
+        console.error('💥 Erreur validation complète:', error);
+        console.error('💥 Response status:', error.response?.status);
+        console.error('💥 Response data:', error.response?.data);
       }
     };
 
@@ -64,16 +69,25 @@ import getAPI from "../../services/getAPI";
         const urlParams = new URLSearchParams(window.location.search);
         const invitationToken = urlParams.get('token');
     
+        console.log('🚀 Page DashboardJury chargée');
+        console.log('🔗 URL actuelle:', window.location.href);
+        console.log('📋 Paramètres URL:', urlParams.toString());
+        console.log('🎫 Token d\'invitation trouvé:', invitationToken);
+    
         if (invitationToken) {
           // Nouveau jury avec token d'invitation
+          console.log('✨ Validation du token d\'invitation...');
           await validateToken(invitationToken);
         } else {
           // Jury qui revient → récupérer infos depuis le token existant
+          console.log('🔄 Récupération des infos depuis le token existant...');
           const existingUser = getUserFromToken();
           if (existingUser) {
             setUserInfo(existingUser);
+            console.log('✅ Infos utilisateur récupérées:', existingUser);
+          } else {
+            console.log('❌ Aucune info utilisateur trouvée dans le localStorage');
           }
-          console.log('Aucun token d\'invitation trouvé, user info from existing token:', existingUser);
         }
       };
 
