@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const JuryVoteController = require('../controllers/JuryVoteController');
+const RandomMovieController = require('../controllers/RandomMovieController');
 
-router.get('/next-movie', JuryVoteController.getNextMovie);
-router.post('/submit-vote', JuryVoteController.submitVote);
+router.get('/next-movie', RandomMovieController.getNextMovie);
 
 
 module.exports = router;
