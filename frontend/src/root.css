@@ -114,6 +114,7 @@ button {
 .btn-custom-glass:hover {
   background-color: white;
   color: black;
+  cursor: pointer;
 }
 
 @media (min-width: 640px) {

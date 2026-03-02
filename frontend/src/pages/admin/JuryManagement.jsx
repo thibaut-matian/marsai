@@ -55,7 +55,7 @@ export default function JuryManagement() {
         </div>
         <button
           onClick={openInviteModal}
-          className="w-full sm:w-auto px-4 sm:px-6 py-3 bg-linear-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl hover:opacity-90 hover:scale-105 flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 transition-all duration-300"
+          className="btn-custom-glass flex items-center gap-2"
           aria-label="Inviter un nouveau membre du jury"
         >
           <UserPlus size={20} aria-hidden="true" />

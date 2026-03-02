@@ -1,4 +1,3 @@
-import React from 'react';
 
 const Filtre = ({ statusFilter, setStatusFilter, filteredMovies, movies }) => {
   return (
@@ -8,14 +7,14 @@ const Filtre = ({ statusFilter, setStatusFilter, filteredMovies, movies }) => {
           Filtrer par :
         </span>
         
-        {/* Groupe de boutons DaisyUI */}
-        <div className="join border border-white/10 bg-[#1E1E24]/50 p-1 rounded-xl shadow-inner">
+        {/* Groupe de boutons DaisyUI avec glassmorphisme personnalisé */}
+        <div className="join gap-2">
           <button 
             onClick={() => setStatusFilter('all')}
-            className={`btn btn-xs md:btn-sm join-item border-none transition-all ${
+            className={`join-item text-sm px-3 py-1.5 border backdrop-blur-md rounded-lg transition-all duration-300 ${
               statusFilter === 'all' 
-              ? 'btn-primary text-white shadow-lg' 
-              : 'btn-ghost text-gray-400 hover:bg-white/5'
+              ? 'bg-white text-black border-white' 
+              : 'bg-white/10 border-white/80 hover:bg-white hover:text-black'
             }`}
           >
             Tous
@@ -23,10 +22,10 @@ const Filtre = ({ statusFilter, setStatusFilter, filteredMovies, movies }) => {
 
           <button 
             onClick={() => setStatusFilter('0')}
-            className={`btn btn-xs md:btn-sm join-item border-none transition-all ${
+            className={`join-item text-sm px-3 py-1.5 border backdrop-blur-md rounded-lg transition-all duration-300 ${
               statusFilter === '0' 
-              ? 'bg-blue-600 text-white shadow-lg' 
-              : 'btn-ghost text-gray-400 hover:bg-white/5'
+              ? 'bg-blue-600 text-white border-blue-600' 
+              : 'bg-white/10 border-white/80 hover:bg-blue-600 hover:text-white hover:border-blue-600'
             }`}
           >
             En attente
@@ -34,10 +33,10 @@ const Filtre = ({ statusFilter, setStatusFilter, filteredMovies, movies }) => {
 
           <button 
             onClick={() => setStatusFilter('1')}
-            className={`btn btn-xs md:btn-sm join-item border-none transition-all ${
+            className={`join-item text-sm px-3 py-1.5 border backdrop-blur-md rounded-lg transition-all duration-300 ${
               statusFilter === '1' 
-              ? 'bg-success text-white shadow-lg' 
-              : 'btn-ghost text-gray-400 hover:bg-white/5'
+              ? 'bg-green-600 text-white border-green-600' 
+              : 'bg-white/10 border-white/80 hover:bg-green-600 hover:text-white hover:border-green-600'
             }`}
           >
             Validés
@@ -45,10 +44,10 @@ const Filtre = ({ statusFilter, setStatusFilter, filteredMovies, movies }) => {
 
           <button 
             onClick={() => setStatusFilter('2')}
-            className={`btn btn-xs md:btn-sm join-item border-none transition-all ${
+            className={`join-item text-sm px-3 py-1.5 border backdrop-blur-md rounded-lg transition-all duration-300 ${
               statusFilter === '2' 
-              ? 'bg-error text-white shadow-lg' 
-              : 'btn-ghost text-gray-400 hover:bg-white/5'
+              ? 'bg-red-600 text-white border-red-600' 
+              : 'bg-white/10 border-white/80 hover:bg-red-600 hover:text-white hover:border-red-600'
             }`}
           >
             Refusés
