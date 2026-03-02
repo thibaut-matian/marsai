@@ -12,7 +12,8 @@ const api = axios.create({
 
 // Interceptor pour injecter le token d'authentification (utile pour useAuth)
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token');
+    // Le dashboard jury stocke le token sous 'accessToken'
+    const token = localStorage.getItem('accessToken') || localStorage.getItem('token');
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -22,11 +23,39 @@ api.interceptors.request.use((config) => {
 // Interceptors pour gérer les erreurs globalement
 api.interceptors.response.use(
     (response) => response,
-    (error) => {
-        if (error.response?.status === 401) {
-            // Optionnel : redirection vers login si non autorisé
-            // window.location.href = '/jury/login';
+    async (error) => {
+        const originalRequest = error.config;
+        const errorCode = error.response?.data?.code;
+
+        // Uniquement si c'est un TOKEN_EXPIRED (401) et qu'on n'a pas déjà tenté un refresh
+        if (error.response?.status === 401 && errorCode === 'TOKEN_EXPIRED' && !originalRequest._retry) {
+            originalRequest._retry = true;
+
+            const refreshToken = localStorage.getItem('refreshToken');
+            if (!refreshToken) {
+                console.error('Session expirée, aucun refreshToken disponible');
+                return Promise.reject(error);
+            }
+
+            try {
+                // Appel direct axios pour éviter les boucles d'intercepteurs
+                const { data } = await axios.post(
+                    `${API_BASE_URL}users/refresh-token`,
+                    { refreshToken }
+                );
+
+                const newAccessToken = data.data.accessToken;
+                localStorage.setItem('accessToken', newAccessToken); // ← mis à jour dans localStorage
+
+                // Rejouer la requête originale avec le nouveau token
+                originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                return api(originalRequest);
+            } catch (refreshError) {
+                console.error('Refresh token invalide, session terminée');
+                return Promise.reject(refreshError);
+            }
         }
+
         console.error('API Error:', error.response?.data || error.message);
         return Promise.reject(error);
     }
@@ -48,9 +77,13 @@ const getAPI = {
     
     // ===== JURY & VOTES (useJuryVote, useRankingJury) =====
     getJuryMovies: () => api.get('jury/movies'),
+    getNextMovie: () => api.get('jury/next-movie'),
     submitVote: (voteData) => api.post('jury/vote', voteData),
+    getMyVotes: () => api.get('jury/my-votes'),
+    reportMovie: (reportData) => api.post('jury/report', reportData),
     getRankings: () => api.get('jury/rankings'),
     getJuryStats: () => api.get('jury/stats'),
+    getJuryProgress: () => api.get('jury/progress'),
 
     // ===== BILLETTERIE & PLANNING (useTicketReservation, useEventPlanning) =====
     getTicketTypes: () => api.get('tickets/types'),

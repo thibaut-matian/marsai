@@ -3,7 +3,7 @@ import { useState } from "react";
 export default function AccordionList({ title, films, color, defaultOpen = false }) {
     const [isOpen, setIsOpen] = useState(defaultOpen);
 
-    // Styles dynamiques (Vert ou Jaune)
+    // Styles dynamiques (Vert, Jaune ou Rouge)
     const styles = {
         green: {
             header: "border-green-500/30 text-green-400 bg-green-900/10 hover:bg-green-900/20",
@@ -12,7 +12,11 @@ export default function AccordionList({ title, films, color, defaultOpen = false
         yellow: {
             header: "border-yellow-500/30 text-yellow-400 bg-yellow-900/10 hover:bg-yellow-900/20",
             badge: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
-        }
+        },
+        red: {
+            header: "border-red-500/30 text-red-400 bg-red-900/10 hover:bg-red-900/20",
+            badge: "bg-red-500/20 text-red-300 border-red-500/30",
+        },
     };
     const currentStyle = styles[color];
 

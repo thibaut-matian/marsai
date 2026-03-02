@@ -1,8 +1,13 @@
-import { useEffect, useState } from 'react';
-import getAPI from '../services/getAPI';
+import { useEffect, useState } from "react";
+import getAPI from "../services/getAPI";
 
 const useProjectProgress = () => {
-  const [projectProgress, setProjectProgress] = useState([]); // ✅ Tableau vide par défaut
+  const [progress, setProgress] = useState({
+    totalFilms: 0,
+    watchedFilms: 0,
+    percentage: 0,
+    movies: [],
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -10,13 +15,13 @@ const useProjectProgress = () => {
     const fetchProgress = async () => {
       try {
         setLoading(true);
-        const response = await getAPI.getDashboardProgress();
-        setProjectProgress(response.data || []); // ✅ Fallback tableau vide
+        const response = await getAPI.getJuryProgress();
+        // La route renvoie { success: true, data: { totalFilms, watchedFilms, percentage, movies } }
+        setProgress(response.data.data);
         setError(null);
       } catch (err) {
-        console.error('Erreur lors du chargement de la progression:', err);
+        console.error("Erreur lors du chargement de la progression jury:", err);
         setError(err.message);
-        setProjectProgress([]); // ✅ Tableau vide en cas d'erreur
       } finally {
         setLoading(false);
       }
@@ -25,7 +30,7 @@ const useProjectProgress = () => {
     fetchProgress();
   }, []);
 
-  return { projectProgress, loading, error };
+  return { progress, loading, error };
 };
 
 export default useProjectProgress;
