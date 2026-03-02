@@ -1,12 +1,13 @@
-import React, { useState, useEffect} from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import LanguageSwitcher from "../LanguageSwitcher";
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const [showLogo, setShowLogo] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
     const { t, i18n } = useTranslation();
 
     // Empêcher le scroll du body quand le menu est ouvert
@@ -21,6 +22,12 @@ export default function Header() {
 
     useEffect(() => {
         const handleScroll = () => {
+            // Vérifier si on est sur la page d'accueil
+            if (location.pathname !== '/') {
+                setShowLogo(true);
+                return;
+            }
+
             const isPageScrollable = document.documentElement.scrollHeight > window.innerHeight;
 
             if (window.scrollY > 400 || !isPageScrollable ) {
@@ -30,11 +37,12 @@ export default function Header() {
             }
         };
         
+        handleScroll(); // Exécuter une fois au chargement
         window.addEventListener('scroll', handleScroll);
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
-    }, []);
+    }, [location.pathname]);
 
     
 
@@ -43,7 +51,7 @@ export default function Header() {
             {/* Barre de navigation Principale (Visible tout le temps) */}
             <header className="navbar bg-transparent backdrop-blur-md border-b border-white/10 fixed top-0 z-40">
                 <div className="flex-1"><Link to="/" 
-                        className={`btn btn-ghost text-xl text-white transform transition-all duration-500 ease-in-out ${
+                        className={`btn btn-ghost text-xl text-white transform transition-all hover:text-black duration-500 ease-in-out ${
                             showLogo 
                                 ? 'opacity-100 translate-y-0' // Visible et à sa place
                                 : 'opacity-0 -translate-y-4 pointer-events-none' // Invisible et décalé vers le haut
