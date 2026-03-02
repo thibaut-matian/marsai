@@ -12,7 +12,7 @@ const ReportTable = () => {
   const pagination = usePagination(reports, 10);
 
   return (
-    <div className="p-6 bg-[#14141b] relative">
+    <div className="p-6 relative">
       <div className="flex items-center gap-3 mb-6">
         <AlertOctagon className="text-error" size={32} />
         <h2 className="text-2xl font-bold text-white">Signalements en attente</h2>

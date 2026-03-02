@@ -55,7 +55,7 @@ export default function JuryManagement() {
         </div>
         <button
           onClick={openInviteModal}
-          className="w-full sm:w-auto px-4 sm:px-6 py-3 bg-linear-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl hover:opacity-90 hover:scale-105 flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 transition-all duration-300"
+          className="btn-custom-glass flex items-center gap-2"
           aria-label="Inviter un nouveau membre du jury"
         >
           <UserPlus size={20} aria-hidden="true" />
@@ -70,21 +70,21 @@ export default function JuryManagement() {
       >
         <article className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6">
           <p className="text-blue-300 text-sm font-medium mb-1">Total Jurys</p>
-          <p className="text-3xl sm:text-4xl font-bold text-white">
+          <h3 className="text-3xl sm:text-4xl font-bold text-white">
             {stats.total}
-          </p>
+          </h3>
         </article>
         <article className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6">
           <p className="text-green-300 text-sm font-medium mb-1">Actifs</p>
-          <p className="text-3xl sm:text-4xl font-bold text-white">
+          <h3 className="text-3xl sm:text-4xl font-bold text-white">
             {stats.active}
-          </p>
+          </h3>
         </article>
         <article className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6">
           <p className="text-red-300 text-sm font-medium mb-1">Inactifs</p>
-          <p className="text-3xl sm:text-4xl font-bold text-white">
+          <h3 className="text-3xl sm:text-4xl font-bold text-white">
             {stats.inactive}
-          </p>
+          </h3>
         </article>
       </section>
 

@@ -172,7 +172,7 @@ export default function Planning() {
                 <div className="flex justify-center pb-12">
                     <button
                         onClick={() => navigate("/reservation")}
-                        className="btn bg-white text-black border-none font-semibold hover:bg-white/80 transition">
+                        className="btn-custom-glass">
                         {t('planning.reserve')}
                     </button>
                 </div>

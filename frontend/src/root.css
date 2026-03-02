@@ -18,7 +18,11 @@
     --barlow-bold: 'Barlow-Bold';
     --barlow-extrabold: 'Barlow-ExtraBold';
 
-    --bg-main: #0E3530;
+    --bg-main-admin: #100b18;
+    --bg-navbar-admin: #100b18;
+    --bg-card-admin: rgba(255, 255, 255, 0.05);
+    --border-card-admin: rgba(255, 255, 255, 0.10);
+    --border-card-admin-hover: rgba(255, 255, 255, 0.20);
 }
 
 /* Alkalami */
@@ -39,11 +43,35 @@
 
 .btn-white { background-color: white; color: black;}
 .badge-white { background-color: white; color: black;}
+
 body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
   min-height: 100vh;
+  font-family: var(--barlow-reg);
+}
+
+header {
+  a {
+    letter-spacing: 0.05rem;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--andada-semibold);
+  letter-spacing: 0.02rem;
+}
+
+
+button {
+  font-family: var(--andada-bold);
+  letter-spacing: 0.02rem;
 }
 
 /* Cache la scrollbar sur le carrousel */
@@ -54,4 +82,45 @@ body {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.bg-main-admin {
+  background-color :var(--bg-main-admin)
+}
+.bg-navbar-admin {
+  background-color :var(--bg-navbar-admin)
+}
+
+.card-admin {
+  background-color: var(--bg-card-admin);
+  border-color: var(--border-card-admin);
+}
+
+.card-admin:hover {
+  border-color: var(--border-card-admin-hover);
+}
+
+.btn-custom-glass {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-custom-glass:hover {
+  background-color: white;
+  color: black;
+  cursor: pointer;
+}
+
+@media (min-width: 640px) {
+  .btn-custom-glass {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    padding: 0.75rem 1.5rem;
+  }
 }
