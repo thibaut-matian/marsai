@@ -52,6 +52,12 @@ body {
   font-family: var(--barlow-reg);
 }
 
+header {
+  a {
+    letter-spacing: 0.05rem;
+  }
+}
+
 h1,
 h2,
 h3,
@@ -62,18 +68,11 @@ h6 {
   letter-spacing: 0.02rem;
 }
 
-header {
-  a {
-    letter-spacing: 0.05rem;
-  }
-}
 
 button {
   font-family: var(--andada-bold);
   letter-spacing: 0.02rem;
 }
-
-
 
 /* Cache la scrollbar sur le carrousel */
 .scrollbar-hide::-webkit-scrollbar {
@@ -99,4 +98,28 @@ button {
 
 .card-admin:hover {
   border-color: var(--border-card-admin-hover);
+}
+
+.btn-custom-glass {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-custom-glass:hover {
+  background-color: white;
+  color: black;
+}
+
+@media (min-width: 640px) {
+  .btn-custom-glass {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    padding: 0.75rem 1.5rem;
+  }
 }

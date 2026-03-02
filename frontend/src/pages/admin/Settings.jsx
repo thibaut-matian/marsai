@@ -1,5 +1,5 @@
+import { Calendar, Info, Mail, MapPin, Phone, Plus, Save, Trash2, Upload } from 'lucide-react';
 import { useState } from 'react';
-import { Save, Plus, Trash2, Upload, Info, Calendar, Mail, Phone, MapPin } from 'lucide-react';
 import { useSettings } from '../../hooks/useSettings';
 
 export default function Settings() {
@@ -41,12 +41,12 @@ export default function Settings() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold">Paramètres du site</h1>
-          <p className="text-base-content/60 mt-1">Gérez le contenu de la page d'accueil</p>
+          <p className="text-white mt-1">Gérez le contenu de la page d'accueil</p>
         </div>
         <button
           onClick={saveSettings}
           disabled={isSaving}
-          className="btn btn-primary gap-2"
+          className="btn-custom-glass flex gap-2 justify-center items-center"
         >
           {isSaving ? (
             <>
@@ -70,12 +70,12 @@ export default function Settings() {
       )}
 
       {/* Tabs */}
-      <div className="tabs tabs-boxed bg-base-200 mb-6">
+      <div className="tabs tabs-boxed rounded-lg card-admin border mb-6">
         {tabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`tab gap-2 ${activeTab === tab.id ? 'tab-active' : ''}`}
+            className={`tab gap-2 ${activeTab === tab.id ? 'tab-active text-white' : 'text-white/50'}`}
           >
             <tab.icon size={16} />
             {tab.label}
@@ -84,7 +84,7 @@ export default function Settings() {
       </div>
 
       {/* Content */}
-      <div className="bg-base-100 rounded-lg border border-base-300 p-6">
+      <div className="card-admin rounded-lg border p-6">
         
         {/* HERO SECTION */}
         {activeTab === 'hero' && (
@@ -100,7 +100,7 @@ export default function Settings() {
                 value={settings.heroTitle}
                 onChange={(e) => handleChange('heroTitle', e.target.value)}
                 placeholder="Ex: Bienvenue au MARS AI Film Festival"
-                className="input input-bordered w-full"
+                className="input input-bordered bg-black/40 w-full"
               />
             </div>
 
@@ -112,7 +112,7 @@ export default function Settings() {
                 value={settings.heroSubtitle}
                 onChange={(e) => handleChange('heroSubtitle', e.target.value)}
                 placeholder="Ex: Le premier festival dédié aux films créés avec l'IA"
-                className="textarea textarea-bordered w-full h-24"
+                className="textarea textarea-bordered bg-black/40 w-full h-24"
               />
             </div>
 
@@ -125,7 +125,7 @@ export default function Settings() {
                 value={settings.heroCTA}
                 onChange={(e) => handleChange('heroCTA', e.target.value)}
                 placeholder="Ex: Soumettre un film"
-                className="input input-bordered w-full"
+                className="input input-bordered bg-black/40 w-full"
               />
             </div>
 
@@ -137,7 +137,7 @@ export default function Settings() {
                 type="file"
                 accept="video/*"
                 onChange={(e) => handleFileChange('heroVideo', e.target.files[0])}
-                className="file-input file-input-bordered w-full"
+                className="file-input file-input-bordered file-input-neutral bg-black/40 w-full"
               />
               <label className="label">
                 <span className="label-text-alt">Format MP4 recommandé, max 50MB</span>
@@ -160,7 +160,7 @@ export default function Settings() {
                 value={settings.aboutTitle}
                 onChange={(e) => handleChange('aboutTitle', e.target.value)}
                 placeholder="Ex: À propos du festival"
-                className="input input-bordered w-full"
+                className="input input-bordered bg-black/40 w-full"
               />
             </div>
 
@@ -172,7 +172,7 @@ export default function Settings() {
                 <textarea
                   value={settings.aboutText1}
                   onChange={(e) => handleChange('aboutText1', e.target.value)}
-                  className="textarea textarea-bordered w-full h-32"
+                  className="textarea textarea-bordered bg-black/40 w-full h-32"
                 />
               </div>
 
@@ -183,7 +183,7 @@ export default function Settings() {
                 <textarea
                   value={settings.aboutText2}
                   onChange={(e) => handleChange('aboutText2', e.target.value)}
-                  className="textarea textarea-bordered w-full h-32"
+                  className="textarea textarea-bordered bg-black/40 w-full h-32"
                 />
               </div>
             </div>
@@ -213,7 +213,7 @@ export default function Settings() {
                 value={settings.criteriaTitle}
                 onChange={(e) => handleChange('criteriaTitle', e.target.value)}
                 placeholder="Ex: Critères de sélection"
-                className="input input-bordered w-full"
+                className="input input-bordered bg-black/40 w-full"
               />
             </div>
 
@@ -225,7 +225,7 @@ export default function Settings() {
                     value={criteria}
                     onChange={(e) => handleArrayChange('criteriaList', index, e.target.value)}
                     placeholder={`Critère ${index + 1}`}
-                    className="input input-bordered flex-1"
+                    className="input input-bordered bg-black/40 flex-1"
                   />
                   <button
                     onClick={() => removeArrayItem('criteriaList', index)}
@@ -262,7 +262,7 @@ export default function Settings() {
                 value={settings.rewardsTitle}
                 onChange={(e) => handleChange('rewardsTitle', e.target.value)}
                 placeholder="Ex: Les récompenses"
-                className="input input-bordered w-full"
+                className="input input-bordered bg-black/40 w-full"
               />
             </div>
 
@@ -274,7 +274,7 @@ export default function Settings() {
                     value={reward}
                     onChange={(e) => handleArrayChange('rewardsList', index, e.target.value)}
                     placeholder={`Récompense ${index + 1}`}
-                    className="input input-bordered flex-1"
+                    className="input input-bordered bg-black/40 flex-1"
                   />
                   <button
                     onClick={() => removeArrayItem('rewardsList', index)}
@@ -306,7 +306,7 @@ export default function Settings() {
                   value={settings.contactPhone}
                   onChange={(e) => handleChange('contactPhone', e.target.value)}
                   placeholder="+33 6 12 34 56 78"
-                  className="input input-bordered w-full"
+                  className="input input-bordered bg-black/40 w-full"
                 />
               </div>
 
@@ -322,7 +322,7 @@ export default function Settings() {
                   value={settings.contactEmail}
                   onChange={(e) => handleChange('contactEmail', e.target.value)}
                   placeholder="contact@marsai.com"
-                  className="input input-bordered w-full"
+                  className="input input-bordered bg-black/40 w-full"
                 />
               </div>
 
@@ -338,7 +338,7 @@ export default function Settings() {
                   value={settings.contactAddress}
                   onChange={(e) => handleChange('contactAddress', e.target.value)}
                   placeholder="155 rue Peyssonnel"
-                  className="input input-bordered w-full"
+                  className="input input-bordered bg-black/40 w-full"
                 />
               </div>
 
@@ -351,7 +351,7 @@ export default function Settings() {
                   value={settings.contactCity}
                   onChange={(e) => handleChange('contactCity', e.target.value)}
                   placeholder="Marseille"
-                  className="input input-bordered w-full"
+                  className="input input-bordered bg-black/40 w-full"
                 />
               </div>
 
@@ -364,7 +364,7 @@ export default function Settings() {
                   value={settings.contactZipcode}
                   onChange={(e) => handleChange('contactZipcode', e.target.value)}
                   placeholder="13002"
-                  className="input input-bordered w-full"
+                  className="input input-bordered bg-black/40 w-full"
                 />
               </div>
 
@@ -377,7 +377,7 @@ export default function Settings() {
                   value={settings.contactMapUrl}
                   onChange={(e) => handleChange('contactMapUrl', e.target.value)}
                   placeholder="https://www.google.com/maps?q=..."
-                  className="input input-bordered w-full"
+                  className="input input-bordered bg-black/40 w-full"
                 />
               </div>
             </div>
@@ -398,7 +398,7 @@ export default function Settings() {
                   type="text"
                   value={settings.festivalName}
                   onChange={(e) => handleChange('festivalName', e.target.value)}
-                  className="input input-bordered w-full"
+                  className="input input-bordered bg-black/40 w-full"
                 />
               </div>
 
@@ -410,7 +410,7 @@ export default function Settings() {
                   type="number"
                   value={settings.festivalYear}
                   onChange={(e) => handleChange('festivalYear', e.target.value)}
-                  className="input input-bordered w-full"
+                  className="input input-bordered bg-black/40 w-full"
                 />
               </div>
 
@@ -422,7 +422,7 @@ export default function Settings() {
                   type="date"
                   value={settings.festivalDateStart}
                   onChange={(e) => handleChange('festivalDateStart', e.target.value)}
-                  className="input input-bordered w-full"
+                  className="input input-bordered bg-black/40 w-full"
                 />
               </div>
 
@@ -434,7 +434,7 @@ export default function Settings() {
                   type="date"
                   value={settings.festivalDateEnd}
                   onChange={(e) => handleChange('festivalDateEnd', e.target.value)}
-                  className="input input-bordered w-full"
+                  className="input input-bordered bg-black/40 w-full"
                 />
               </div>
             </div>

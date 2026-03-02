@@ -35,8 +35,8 @@ export default function Home() {
         <div className="absolute inset-0 z-10 h-full flex flex-col items-center justify-end px-4 sm:px-6 md:px-8 pb-16">
           <button
             onClick={() => navigate('/submit-movie')}
-            className="text-base sm:text-lg border border-white/80 bg-white/10 backdrop-blur-md rounded-lg px-4 sm:px-6 py-2 sm:py-3 hover:bg-white hover:text-black transition-colors duration-300">
-            {t('home.start')}
+            className="btn-custom-glass">
+            {t('home.submit')}
           </button>
         </div>
       </div>
