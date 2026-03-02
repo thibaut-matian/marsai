@@ -1,47 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import getAPI from "../services/getAPI";
 
 export function useJuryVote() {
   // 1. GESTION DE L'ÉTAT (Le vote)
   const [decision, setDecision] = useState(null);
+  const [film, setFilm] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [allWatched, setAllWatched] = useState(false);
+  const [error, setError] = useState(null);
 
-  // 2. DONNÉES SIMULÉES (MOCK DATA)
-  // C'est ici que tu mettras tes appels API (fetch) plus tard.
-  const film = {
-    title: "Chroniques du Silicium",
-    duration: 60,
-    aiClassification: "HYBRID",
+  // Fonction réutilisable : charge le prochain film non vu
+  const loadNextMovie = useCallback(async () => {
+    setLoading(true);
+    setFilm(null);
+    setDecision(null); // reset le vote pour le nouveau film
+    setError(null);
+    try {
+      const response = await getAPI.getNextMovie();
+      const data = response.data;
+      if (data.data === null) {
+        setAllWatched(true);
+      } else {
+        setFilm(data.data);
+        setAllWatched(false);
+      }
+    } catch (err) {
+      console.error("Erreur chargement film suivant:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-    // Identité Réalisateur
-    director: {
-      firstname: "Léa",
-      lastname: "Dubois",
-      profession: "Motion Designer",
-      city: "Lyon",
-      country: "France",
-      socials: {
-        instagram: "@lea_dbs_art",
-        website: "www.lea-dubois.com",
-      },
-    },
-
-    // Tech & IA
-    aiStack: "Midjourney v6, Runway Gen-2, ElevenLabs, After Effects",
-    aiMethodology:
-      "Génération des arrière-plans sur MJ, incrustation d'acteurs réels filmés sur fond vert, puis style transfer via Runway pour l'ambiance onirique.",
-
-    // Textes
-    synopsis:
-      "Dans un futur où la mémoire est stockée sur quartz, une archiviste découvre une faille dans l'histoire officielle de l'humanité. Elle doit choisir entre révéler la vérité au monde ou préserver la paix sociale factice qui règne depuis un siècle.",
-    directorNote:
-      "Je voulais explorer la texture du souvenir numérique. L'aspect hybride sert le propos : le réel (les acteurs) se perd peu à peu dans l'artificiel (les décors générés par IA).",
-
-    // Équipe (Liste dynamique)
-    team: [
-      { role: "Sound Designer", firstname: "Marc", lastname: "Veral" },
-      { role: "Voix Off", firstname: "Sarah", lastname: "Connor" },
-      { role: "Prompt Engineer", firstname: "Alex", lastname: "Turing" },
-    ],
-  };
+  // Chargement initial
+  useEffect(() => {
+    loadNextMovie();
+  }, [loadNextMovie]);
 
   // 3. FONCTION UTILITAIRE (Formatage du temps 145 -> 02:25)
   const formatDuration = (seconds) => {
@@ -56,6 +50,10 @@ export function useJuryVote() {
     decision,
     setDecision,
     film,
+    loading,
+    allWatched,
+    error,
+    loadNextMovie, // ← exposé pour l'appeler après un vote
     formatDuration,
   };
 }

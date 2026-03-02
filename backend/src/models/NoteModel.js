@@ -29,6 +29,12 @@ const Note = sequelize.define(
   {
     tableName: "notes",
     timestamps: false,
+    indexes: [
+      {
+        unique: true,
+        fields: ["user_id", "movie_id"], // Un jury ne peut voter qu'une fois par film
+      },
+    ],
   },
 );
 

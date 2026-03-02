@@ -116,15 +116,16 @@ class UserController {
     try {
       // Debug : afficher req.body
       console.log("DEBUG req.body:", req.body);
-      console.log("DEBUG req.headers:", req.headers['content-type']);
-      
+      console.log("DEBUG req.headers:", req.headers["content-type"]);
+
       const { mail, password, firstname, lastname, mobile, role } = req.body;
-      
+
       // 1. Vérifier que tous les champs obligatoires sont présents
       if (!mail || !firstname || !lastname || !mobile) {
         return res.status(400).json({
           success: false,
-          message: "Les champs email, firstname, lastname et mobile sont obligatoires",
+          message:
+            "Les champs email, firstname, lastname et mobile sont obligatoires",
         });
       }
 
@@ -142,19 +143,19 @@ class UserController {
       if (role) {
         // Chercher le rôle par son nom
         const roleRecord = await Role.findOne({
-          where: { name: { [Op.like]: role } }
+          where: { name: { [Op.like]: role } },
         });
-        
+
         if (!roleRecord) {
           return res.status(400).json({
             success: false,
             message: `Rôle "${role}" non trouvé`,
           });
         }
-        
+
         roleId = roleRecord.id;
       }
-      
+
       // 4. Vérifier que le rôle existe
       const roleExists = await Role.findByPk(roleId);
       if (!roleExists) {
@@ -166,10 +167,9 @@ class UserController {
 
       // 5.  Hasher le mot de passe
       let hashedPassword;
-      if(password){
+      if (password) {
         hashedPassword = await bcrypt.hash(password, 10);
       }
-      
 
       // 6. Générer un token unique
       const token = crypto.randomBytes(32).toString("hex");
@@ -184,33 +184,35 @@ class UserController {
         role_id: roleId,
         is_active: 1,
       };
-      
+
       // Ajouter le password seulement s'il existe
       if (hashedPassword) {
         userData.password = hashedPassword;
       }
-      
+
       const user = await User.create(userData);
 
       // 8. Envoyer l'email d'invitation si c'est un jury
-      console.log(`Rôle créé: "${roleExists.name}" - Contient jury? ${roleExists.name.toLowerCase().includes('jury')}`);
-      
+      console.log(
+        `Rôle créé: "${roleExists.name}" - Contient jury? ${roleExists.name.toLowerCase().includes("jury")}`,
+      );
+
       try {
-        if (roleExists.name.toLowerCase().includes('jury')) {
-          console.log('Tentative d\'envoi d\'email d\'invitation...');
+        if (roleExists.name.toLowerCase().includes("jury")) {
+          console.log("Tentative d'envoi d'email d'invitation...");
           await sendJuryInvitation({
             mail: user.mail,
             firstname: user.firstname,
             lastname: user.lastname,
             role: roleExists.name,
-            token: user.token
+            token: user.token,
           });
           console.log(`✅ Email d'invitation envoyé à ${user.mail}`);
         } else {
-          console.log('❌ Pas d\'email envoyé - ce n\'est pas un rôle jury');
+          console.log("❌ Pas d'email envoyé - ce n'est pas un rôle jury");
         }
       } catch (emailError) {
-        console.error('Erreur envoi email:', emailError.message);
+        console.error("Erreur envoi email:", emailError.message);
         // Ne pas faire échouer la création de l'utilisateur pour un problème d'email
       }
 
@@ -306,6 +308,71 @@ class UserController {
   }
 
   /**
+   * Renouvelle l'accessToken à partir du refreshToken
+   * POST /api/users/refresh-token
+   */
+  static async refreshToken(req, res) {
+    try {
+      const { refreshToken } = req.body;
+
+      if (!refreshToken) {
+        return res
+          .status(400)
+          .json({ success: false, message: "refreshToken requis" });
+      }
+
+      // Vérifier le refreshToken
+      let decoded;
+      try {
+        decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+      } catch (err) {
+        return res
+          .status(403)
+          .json({
+            success: false,
+            message: "refreshToken invalide ou expiré, reconnexion requise",
+          });
+      }
+
+      // Récupérer l'utilisateur en BDD
+      const user = await User.findByPk(decoded.id, {
+        include: [{ model: Role, as: "role", attributes: ["id", "name"] }],
+      });
+
+      if (!user || !user.is_active) {
+        return res
+          .status(403)
+          .json({ success: false, message: "Compte introuvable ou désactivé" });
+      }
+
+      // Générer un nouvel accessToken
+      const payload = {
+        id: user.id,
+        firstName: user.firstname,
+        lastName: user.lastname,
+        mail: user.mail,
+        role: user.role.name,
+        iat: Math.floor(Date.now() / 1000),
+      };
+
+      const newAccessToken = jwt.sign(payload, process.env.JWT_SECRET);
+
+      return res.status(200).json({
+        success: true,
+        data: { accessToken: newAccessToken },
+      });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({
+          success: false,
+          message: "Erreur serveur",
+          error: error.message,
+        });
+    }
+  }
+
+  /**
    * Valide le token d'invitation et génère les tokens d'accès
    */
   static async validateInvitationToken(req, res) {
@@ -324,11 +391,13 @@ class UserController {
       // 1. Vérifier que le token d'invitation existe et est valide
       const user = await User.findOne({
         where: { token: invitationToken },
-        include: [{
-          model: Role,
-          as: "role",
-          attributes: ["id", "name"],
-        }],
+        include: [
+          {
+            model: Role,
+            as: "role",
+            attributes: ["id", "name"],
+          },
+        ],
       });
 
       if (!user) {
@@ -355,16 +424,11 @@ class UserController {
         iat: Math.floor(Date.now() / 1000),
       };
 
-      const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { 
-        expiresIn: '30m' // 30 minutes
-      });
+      const accessToken = jwt.sign(payload, process.env.JWT_SECRET);
 
-      const refreshToken = jwt.sign(
-        { id: user.id }, 
-        process.env.JWT_SECRET, { 
-          expiresIn: '7d' // 7 jours
-        }
-      );
+      const refreshToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+        expiresIn: "7d", // 7 jours
+      });
 
       // 3. Optionnel : Marquer le token d'invitation comme utilisé
       // await user.update({ token: null }); // Désactive le token après première utilisation
