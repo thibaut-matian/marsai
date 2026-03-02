@@ -70,21 +70,21 @@ export default function JuryManagement() {
       >
         <article className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6">
           <p className="text-blue-300 text-sm font-medium mb-1">Total Jurys</p>
-          <p className="text-3xl sm:text-4xl font-bold text-white">
+          <h3 className="text-3xl sm:text-4xl font-bold text-white">
             {stats.total}
-          </p>
+          </h3>
         </article>
         <article className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6">
           <p className="text-green-300 text-sm font-medium mb-1">Actifs</p>
-          <p className="text-3xl sm:text-4xl font-bold text-white">
+          <h3 className="text-3xl sm:text-4xl font-bold text-white">
             {stats.active}
-          </p>
+          </h3>
         </article>
         <article className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6">
           <p className="text-red-300 text-sm font-medium mb-1">Inactifs</p>
-          <p className="text-3xl sm:text-4xl font-bold text-white">
+          <h3 className="text-3xl sm:text-4xl font-bold text-white">
             {stats.inactive}
-          </p>
+          </h3>
         </article>
       </section>
 

@@ -41,7 +41,7 @@ export default function Header() {
     return (
         <>
             {/* Barre de navigation Principale (Visible tout le temps) */}
-            <div className="navbar bg-transparent backdrop-blur-md border-b border-white/10 fixed top-0 z-40">
+            <header className="navbar bg-transparent backdrop-blur-md border-b border-white/10 fixed top-0 z-40">
                 <div className="flex-1"><Link to="/" 
                         className={`btn btn-ghost text-xl text-white transform transition-all duration-500 ease-in-out ${
                             showLogo 
@@ -80,10 +80,10 @@ export default function Header() {
                         </svg>
                     </button>
                 </div>
-            </div>
+            </header>
 
             {/* OVERLAY MENU MOBILE (Style de la capture d'écran) */}
-            <div 
+            <header 
                 className={`fixed inset-0 z-50 bg-[#1a1a1d] transform transition-all duration-300 ease-in-out ${
                     isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
                 }`}
@@ -167,7 +167,7 @@ export default function Header() {
                         MarsAI 2026 <span className="text-xs align-top opacity-50">INFO</span>
                     </p>
                 </div>
-            </div>
+            </header>
         </>
     );
 }

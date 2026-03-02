@@ -22,7 +22,7 @@ const Sidebar = () => {
   return (
     // hidden = Caché sur Mobile
     // md:flex = Visible sur Desktop
-    <aside className="hidden md:flex flex-col w-72 h-screen fixed left-0 top-0 bg-[#1E1E24] border-r border-white/5">
+    <aside className="hidden md:flex flex-col w-72 h-screen fixed left-0 top-0 bg-navbar-admin border-r">
       
       {/* 1. Header du Menu (Logo) */}
       <div className="p-8">

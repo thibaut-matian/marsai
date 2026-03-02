@@ -27,7 +27,7 @@ const Dashboard = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="p-6 bg-[#1E1E24] rounded-xl border border-white/5 hover:border-white/10 transition-all"
+      className="p-6 card-admin rounded-xl border transition-all"
     >
       <div className="flex items-start justify-between">
         <div>
@@ -159,7 +159,7 @@ const Dashboard = () => {
 
       {/* Progression du projet et activité récente */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 p-6 bg-[#1E1E24] rounded-xl border border-white/5">
+        <div className="lg:col-span-2 p-6 card-admin border rounded-xl">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold">Progression du Projet</h2>
             <span className="text-sm text-gray-400">4 étapes</span>
@@ -186,7 +186,7 @@ const Dashboard = () => {
           )}
         </div>
 
-        <div className="p-6 bg-[#1E1E24] rounded-xl border border-white/5">
+        <div className="p-6 card-admin rounded-xl border">
           <h2 className="text-xl font-bold mb-4">Activité Récente</h2>
           {activityLoading ? (
             <div className="flex items-center justify-center py-8">
@@ -217,7 +217,7 @@ const Dashboard = () => {
       </div>
 
       {/* Vue d'ensemble des jurés */}
-      <div className="p-6 bg-[#1E1E24] rounded-xl border border-white/5">
+      <div className="p-6 card-admin rounded-xl border border-white/5">
         <h2 className="text-xl font-bold mb-4">Vue d'ensemble des Jurés</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 bg-white/5 rounded-lg">
@@ -225,9 +225,9 @@ const Dashboard = () => {
               <span className="text-sm text-gray-400">Jurés inscrits</span>
               <Users className="w-4 h-4 text-blue-500" />
             </div>
-            <p className="text-2xl font-bold">
+            <h3 className="text-2xl font-bold">
               {statsLoading ? <Loader className="w-6 h-6 animate-spin" /> : stats.totalJuries}
-            </p>
+            </h3>
           </div>
           
           <div className="p-4 bg-white/5 rounded-lg">
@@ -235,9 +235,9 @@ const Dashboard = () => {
               <span className="text-sm text-gray-400">Évaluations en cours</span>
               <Clock className="w-4 h-4 text-orange-500" />
             </div>
-            <p className="text-2xl font-bold">
+            <h3 className="text-2xl font-bold">
               {statsLoading ? <Loader className="w-6 h-6 animate-spin" /> : stats.activeJuries}
-            </p>
+            </h3>
           </div>
           
           <div className="p-4 bg-white/5 rounded-lg">
@@ -245,9 +245,9 @@ const Dashboard = () => {
               <span className="text-sm text-gray-400">Évaluations terminées</span>
               <CheckCircle className="w-4 h-4 text-green-500" />
             </div>
-            <p className="text-2xl font-bold">
+            <h3 className="text-2xl font-bold">
               {statsLoading ? <Loader className="w-6 h-6 animate-spin" /> : stats.completedJuries}
-            </p>
+            </h3>
           </div>
         </div>
       </div>

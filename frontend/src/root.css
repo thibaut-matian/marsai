@@ -19,6 +19,11 @@
     --barlow-extrabold: 'Barlow-ExtraBold';
 
     --bg-main: #0E3530;
+    --bg-main-admin: #100b18;
+    --bg-navbar-admin: #100b18;
+    --bg-card-admin: rgba(255, 255, 255, 0.05);
+    --border-card-admin: rgba(255, 255, 255, 0.10);
+    --border-card-admin-hover: rgba(255, 255, 255, 0.20);
 }
 
 /* Alkalami */
@@ -39,12 +44,37 @@
 
 .btn-white { background-color: white; color: black;}
 .badge-white { background-color: white; color: black;}
+
 body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
   min-height: 100vh;
+  font-family: var(--barlow-reg);
 }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--andada-semibold);
+  letter-spacing: 0.02rem;
+}
+
+header {
+  a {
+    letter-spacing: 0.05rem;
+  }
+}
+
+button {
+  font-family: var(--andada-bold);
+  letter-spacing: 0.02rem;
+}
+
+
 
 /* Cache la scrollbar sur le carrousel */
 .scrollbar-hide::-webkit-scrollbar {
@@ -54,4 +84,20 @@ body {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.bg-main-admin {
+  background-color :var(--bg-main-admin)
+}
+.bg-navbar-admin {
+  background-color :var(--bg-navbar-admin)
+}
+
+.card-admin {
+  background-color: var(--bg-card-admin);
+  border-color: var(--border-card-admin);
+}
+
+.card-admin:hover {
+  border-color: var(--border-card-admin-hover);
 }
