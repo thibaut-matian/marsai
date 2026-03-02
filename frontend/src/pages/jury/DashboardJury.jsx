@@ -105,7 +105,7 @@ import getAPI from "../../services/getAPI";
             {/* HEADER : SALUTATION */}
             <header className="mb-16">
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                    Bonjour, <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">{userInfo.firstName}</span> 👋
+                    Bonjour, <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">{userInfo.firstName}</span>
                 </h1>
                 <p className="text-xl text-gray-400">Prêt(e) à découvrir les pépites de demain ?</p>
             </header>

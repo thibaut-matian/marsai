@@ -151,7 +151,7 @@
                         <div className="card bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl">
                             <div className="card-body">
                                 <label className="label">
-                                    <span className="label-text text-lg font-bold text-white uppercase tracking-widest">💬 Commentaire</span>
+                                    <span className="label-text text-lg font-bold text-white uppercase tracking-widest"> Commentaire</span>
                                 </label>
                                 <textarea
                                     value={comment}
