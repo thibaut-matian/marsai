@@ -1,5 +1,6 @@
 const Movie = require("../models/MovieModel");
 const MovieAward = require("../models/MovieAwardModel");
+const Squad = require("../models/SquadModel"); // ✅ Import Squad model
 const { uploadToScaleway, deleteFromScaleway } = require("../config/scaleway");
 const { youtube } = require("../config/Youtube");
 const { sendMailToDirector } = require("../services/emailService");
@@ -14,6 +15,7 @@ class MovieController {
       console.log("🎬 MovieController.create appelé");
       console.log("📦 Body:", req.body);
       console.log("📁 Files:", req.files);
+      console.log("👥 Team members brut:", req.body.team_members); // ✅ DEBUG team_members
 
       const files = req.files;
       const {
@@ -39,6 +41,7 @@ class MovieController {
         en_desc,
         ia_used,
         creative_method,
+        team_members, // ✅ AJOUTER : Récupérer team_members
       } = req.body;
 
       // 1️⃣ Vérification fichiers...
@@ -137,6 +140,19 @@ class MovieController {
       const url = `${firstname.toLowerCase()}-${lastname.toLowerCase()}-${Date.now()}`;
       console.log("6️⃣ URL générée:", url);
 
+      // ✅ TRAITER L'ÉQUIPE
+      let parsedTeamMembers = null;
+      if (team_members) {
+        try {
+          parsedTeamMembers = typeof team_members === 'string' 
+            ? JSON.parse(team_members) 
+            : team_members;
+          console.log("👥 Équipe reçue:", parsedTeamMembers);
+        } catch (parseError) {
+          console.warn("⚠️ Erreur parsing équipe, ignoré:", parseError.message);
+        }
+      }
+
       // Préparer les données pour la DB
       const movieData = {
         url,
@@ -175,6 +191,40 @@ class MovieController {
       console.log("8️⃣ Création en base de données...");
       const movie = await Movie.create(movieData);
       console.log("✅ Film créé avec ID:", movie.id);
+
+      // ✅ NOUVEAU : Gérer l'équipe dans la table Squad
+      if (parsedTeamMembers && Array.isArray(parsedTeamMembers) && parsedTeamMembers.length > 0) {
+        console.log("👥 Création des collaborateurs...");
+        
+        for (const member of parsedTeamMembers) {
+          // Conversion de civilité frontend vers backend
+          let memberGender = "other";
+          if (member.civilite === "M") memberGender = "m";
+          else if (member.civilite === "Mme") memberGender = "mrs";
+          
+          const squadData = {
+            gender: memberGender,
+            firstname: member.firstname || "",
+            lastname: member.lastname || "",
+            birthdate: member.birthdate || birthdate, // Utiliser la date du réalisateur si pas spécifiée
+            mail: member.email || "",
+            role: member.role || "Collaborateur",
+            movie_id: movie.id,
+          };
+          
+          try {
+            await Squad.create(squadData);
+            console.log(`   ✅ Membre créé: ${member.firstname} ${member.lastname} (${member.role})`);
+          } catch (squadError) {
+            console.error(`   ❌ Erreur création membre ${member.firstname}:`, squadError.message);
+            // Continue avec les autres membres
+          }
+        }
+        
+        console.log(`✅ ${parsedTeamMembers.length} collaborateur(s) traité(s)`);
+      } else {
+        console.log("👥 Aucun collaborateur à créer");
+      }
 
       // Association award par défaut
       console.log("9️⃣ Association award par défaut...");
@@ -273,7 +323,15 @@ L'équipe MarsAI Festival
         process.env.JWT_SECRET || "marsai_secret_key_2026",
       );
 
-      const movie = await Movie.findByPk(decoded.movieId);
+      const movie = await Movie.findByPk(decoded.movieId, {
+        include: [
+          {
+            model: Squad,
+            as: "team",
+            attributes: ["id", "gender", "firstname", "lastname", "mail", "role", "birthdate"],
+          },
+        ],
+      });
 
       if (!movie) {
         return res.status(404).json({ message: "Film non trouvé" });
@@ -335,6 +393,11 @@ L'équipe MarsAI Festival
               },
             ],
           },
+          {
+            model: Squad,
+            as: "team",
+            attributes: ["id", "gender", "firstname", "lastname", "mail", "role", "birthdate"],
+          },
         ],
       });
 
@@ -380,6 +443,11 @@ L'équipe MarsAI Festival
                 attributes: ["id", "name"],
               },
             ],
+          },
+          {
+            model: Squad,
+            as: "team",
+            attributes: ["id", "gender", "firstname", "lastname", "mail", "role", "birthdate"],
           },
         ],
       });
