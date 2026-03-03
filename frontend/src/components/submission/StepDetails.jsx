@@ -70,7 +70,8 @@ export default function StepDetails({ formData, handleChange, addTeamMember, rem
                   </div>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <div className="flex-1">
+                  <div className="flex flex-col flex-1 gap-1">
+                    <label className={`text-xs ml-1 ${errors[`team_${index}_email`] ? 'text-red-400' : 'text-gray-400'}`}>Email</label>
                     <input type="email" placeholder="Email" value={member.email} onChange={(e) => updateTeamMember(index, 'email', e.target.value)} className={`w-full bg-transparent border-b py-2 text-sm text-white focus:border-blue-400 outline-none ${errors[`team_${index}_email`] ? 'border-red-500' : 'border-gray-700'}`} />
                     {errors[`team_${index}_email`] && <p className="text-red-400 text-xs mt-1">{errors[`team_${index}_email`]}</p>}
                   </div>

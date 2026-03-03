@@ -329,11 +329,6 @@ export function useSubmission(t) {
 
     // Membres de l'équipe (civilite déjà au format DB : "m", "mrs", "other")
     if (formData.teamMembers && formData.teamMembers.length > 0) {
-      form.append("team", JSON.stringify(formData.teamMembers));
-    }
-
-    // ✅ AJOUTER : Équipe en format JSON
-    if (formData.teamMembers && formData.teamMembers.length > 0) {
       form.append("team_members", JSON.stringify(formData.teamMembers));
       console.log("📋 Équipe envoyée:", formData.teamMembers);
     }
