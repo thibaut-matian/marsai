@@ -286,35 +286,9 @@ class MovieController {
 
       // ✅ NOUVEAU : Envoyer l'email de confirmation
       console.log("1️⃣ Envoi email de confirmation...");
-      const accessUrl = `${process.env.FRONTEND_URL || "http://localhost:5173"}/movie/${movie.url}?token=${token}`;
-
-      const emailSubject = `🎬 Confirmation de soumission - ${vo_title}`;
-      const emailMessage = `
-Bonjour ${firstname} ${lastname},
-
-Votre candidature au Festival MarsAI a bien été enregistrée ! 🎉
-
-📽️ Titre du film : ${vo_title}
-🆔 Numéro de candidature : ${movie.id}
-🔗 Lien d'accès sécurisé : ${accessUrl}
-
-Vous pouvez consulter votre candidature à tout moment via ce lien.
-
-Ce lien est valable pendant 30 jours et vous permet de :
-- Visualiser votre film
-- Télécharger vos fichiers
-- Suivre le statut de votre candidature
-
-Nous vous contacterons prochainement pour vous informer de la suite.
-
-Bonne chance ! 🚀
-
----
-L'équipe MarsAI Festival
-      `.trim();
 
       try {
-        await sendMailToDirector(mail, emailSubject, emailMessage);
+        await sendMailToDirector(vo_title, firstname, lastname, mail);
         console.log("✅ Email envoyé à:", mail);
       } catch (emailError) {
         console.error("⚠️ Erreur envoi email:", emailError.message);
@@ -332,7 +306,6 @@ L'équipe MarsAI Festival
           youtube_id: movie.youtube_id,
         },
         token,
-        accessUrl,
       });
     } catch (error) {
       console.error("❌❌❌ ERREUR CRÉATION CANDIDATURE ❌❌❌");
