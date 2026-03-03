@@ -281,6 +281,12 @@ export function useSubmission(t) {
     form.append("ia_used", formData.aiClassification || "N/A");
     form.append("creative_method", formData.aiMethodology || "N/A");
 
+    // ✅ AJOUTER : Équipe en format JSON
+    if (formData.teamMembers && formData.teamMembers.length > 0) {
+      form.append("team_members", JSON.stringify(formData.teamMembers));
+      console.log("📋 Équipe envoyée:", formData.teamMembers);
+    }
+
     try {
       // Utilisation du service centralisé getAPI
       const response = await getAPI.submitMovie(form);
