@@ -18,10 +18,15 @@ const ReportModal = ({ movieId }) => {
     setReportLoading(true);
     setReportError(null);
     try {
+    console.log("DONNÉES ENVOYÉES :", { 
+    movie_id: movieId, 
+    cause: reportReason, 
+    comment: reportDetails 
+  });
       await getAPI.reportMovie({
         movie_id: movieId,
-        reason: reportReason,
-        details: reportDetails || null,
+        cause: reportReason,
+        comment: reportDetails || null,
       });
       setReportSubmitted(true);
       setTimeout(() => {

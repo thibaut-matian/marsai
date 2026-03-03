@@ -6,7 +6,7 @@ import PaginationControls from "../pagination";
 import ContactModal from "../features/contactModal";
 
 const ReportTable = () => {
-  const { reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport } = useReport();
+  const {reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport } = useReport();
 
   // On récupère tout l'objet pagination
   const pagination = usePagination(reports, 10);

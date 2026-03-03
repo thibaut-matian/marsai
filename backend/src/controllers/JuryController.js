@@ -267,10 +267,11 @@ class JuryController {
   static async reportMovie(req, res) {
     try {
       const juryId = req.user.id;
-      const { movie_id, decision, details } = req.body; // 'decision' ici est la raison du signalement (ex: 'technical')
+      const { movie_id, cause, comment } = req.body; // 'decision' ici est la raison du signalement (ex: 'technical')
+      console.log(movie_id, cause, comment);
 
       // 1. Validation
-      if (!movie_id || !decision || !details) {
+      if (!movie_id || !cause) {
         return res.status(400).json({
           success: false,
           message: "Tous les champs sont obligatoires (film, raison, détails)",
@@ -280,13 +281,13 @@ class JuryController {
       // 2. INSERTION DANS MovieReport (La table de log des erreurs)
       await MovieReport.create({
         movie_id: movie_id,
-        decision: decision, // La raison (ex: 'technical')
-        details: details
+        cause: cause, // La raison (ex: 'technical')
+        comment: comment
       });
 
       // 3. ENREGISTREMENT DANS LA TABLE Note
       // On laisse 'decision' à NULL car 'signalé' n'est pas dans ton ENUM
-      const feedbackTexte = `[SIGNALEMENT] Raison: ${decision} | Détails: ${details}`;
+      const feedbackTexte = `[SIGNALEMENT] Type: ${cause} | Détails: ${comment}`;
 
       const existingNote = await Note.findOne({
         where: { user_id: juryId, movie_id },
