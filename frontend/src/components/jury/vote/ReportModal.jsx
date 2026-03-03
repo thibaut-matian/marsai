@@ -34,6 +34,7 @@ const ReportModal = ({ movieId }) => {
         setReportSubmitted(false);
         setReportReason("");
         setReportDetails("");
+        window.location.reload();
       }, 2000);
     } catch (err) {
       console.error("Erreur signalement:", err);
