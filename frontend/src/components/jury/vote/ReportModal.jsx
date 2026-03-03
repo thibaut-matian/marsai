@@ -62,6 +62,7 @@ const ReportModal = ({ movieId }) => {
                 <option value="loading">La vidéo ne charge pas</option>
                 <option value="content">Contenu inapproprié</option>
                 <option value="quality">Problème de qualité</option>
+                <option value="author">Droit d'auteur</option>
                 <option value="other">Autre</option>
               </select>
             </div>

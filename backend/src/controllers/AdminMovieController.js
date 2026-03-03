@@ -57,6 +57,33 @@ class AdminMovieController {
       res.status(500).json({ success: false, error: error.message });
     }
   }
+
+  static async hardDeleteMovie(req, res) {
+    try {
+      const { movieId, reportId } = req.params;
+
+      // 1. Supprimer les notes liées à ce film
+      await Note.destroy({ where: { movie_id: movieId } });
+
+      // 2. Supprimer les signalements liés à ce film
+      await MovieReport.destroy({ where: { movie_id: movieId } });
+
+      // 3. Supprimer le film
+      const deletedMovie = await Movie.destroy({ where: { id: movieId } });
+
+      if (!deletedMovie) {
+        return res.status(404).json({ success: false, message: "Film déjà inexistant" });
+      }
+
+      return res.status(200).json({ 
+        success: true, 
+        message: "Film et toutes ses données associées supprimés définitivement." 
+      });
+    } catch (error) {
+      console.error("Erreur hardDelete:", error);
+      return res.status(500).json({ success: false, message: "Erreur lors de la suppression totale" });
+    }
+  }
 }
 
 module.exports = AdminMovieController;

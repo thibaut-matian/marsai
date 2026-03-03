@@ -29,29 +29,29 @@ const ReportTable = () => {
             </tr>
           </thead>
           
-          <tbody className="text-white">
-            {/* On utilise pagination.currentItems pour n'afficher que les 20 du moment */}
+         <tbody className="text-white">
             {pagination.currentItems.map((report) => (
-              <tr key={report.id} className="border-b border-white/5 hover:bg-white/5 transition-all">
+              <tr key={report.id} className="...">
                 <td>
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-red-500/10 rounded-lg text-red-500">
-                      <Video size={20} />
-                    </div>
+                    <Video size={20} className="text-red-500" />
                     <div>
-                      <div className="font-bold text-md">{report.titre}</div>
-                      <div className="text-xs text-gray-500">{report.timestamp}</div>
+                      {/* On utilise les noms renvoyés par le controller */}
+                      <div className="font-bold text-md">{report.movieTitle}</div>
+                      <div className="text-xs text-gray-500">
+                        {new Date(report.createdAt).toLocaleDateString()}
+                      </div>
                     </div>
                   </div>
                 </td>
                 <td>
                   <div className="flex items-center gap-2 text-gray-300 italic">
-                    <User size={14} className="text-gray-500" /> {report.auteur}
+                    <User size={14} /> {report.director}
                   </div>
                 </td>
-                  <td className="text-center min-w-[180px]"> {/* On force une largeur mini ici */}
-                  <span className="badge badge-outline border-error/50 text-error bg-error/5 py-4 px-4 text-[10px] sm:text-xs font-semibold uppercase tracking-tight whitespace-nowrap h-auto inline-flex items-center justify-center">
-                    {report.raison}
+                <td className="text-center">
+                  <span className="badge badge-outline border-error/50 text-error uppercase text-[10px]">
+                    {report.reason}
                   </span>
                 </td>
                 <td>

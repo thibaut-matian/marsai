@@ -259,43 +259,63 @@ class JuryController {
    * Signale un problème sur un film (technique, contenu, etc.)
    * Body attendu : { movie_id, reason, details }
    */
+
+  /**
+   * POST /api/jury/report
+   * Signale un problème ET enregistre une note vide (NULL) pour exclure le film.
+   */
   static async reportMovie(req, res) {
     try {
       const juryId = req.user.id;
-      const { movie_id, reason, details } = req.body;
+      const { movie_id, decision, details } = req.body; // 'decision' ici est la raison du signalement (ex: 'technical')
 
-      if (!movie_id || !reason) {
+      // 1. Validation
+      if (!movie_id || !decision || !details) {
         return res.status(400).json({
           success: false,
-          message: "Les champs movie_id et reason sont obligatoires",
+          message: "Tous les champs sont obligatoires (film, raison, détails)",
         });
       }
 
-      // Vérifier que le film existe
-      const movie = await Movie.findByPk(movie_id);
-      if (!movie) {
-        return res.status(404).json({
-          success: false,
-          message: "Film introuvable",
+      // 2. INSERTION DANS MovieReport (La table de log des erreurs)
+      await MovieReport.create({
+        movie_id: movie_id,
+        decision: decision, // La raison (ex: 'technical')
+        details: details
+      });
+
+      // 3. ENREGISTREMENT DANS LA TABLE Note
+      // On laisse 'decision' à NULL car 'signalé' n'est pas dans ton ENUM
+      const feedbackTexte = `[SIGNALEMENT] Raison: ${decision} | Détails: ${details}`;
+
+      const existingNote = await Note.findOne({
+        where: { user_id: juryId, movie_id },
+      });
+
+      if (existingNote) {
+        await existingNote.update({ 
+          decision: null, 
+          feedback: feedbackTexte 
+        });
+      } else {
+        await Note.create({
+          user_id: juryId,
+          movie_id: movie_id,
+          decision: null,
+          feedback: feedbackTexte
         });
       }
 
-      // Enregistrer le signalement (decision = code raison, on stocke les détails en log pour l'instant)
-      console.log(
-        `🚨 Signalement par jury #${juryId} sur film #${movie_id} — raison: ${reason} — détails: ${details || "aucun"}`,
-      );
+      console.log(`🚨 Signalement effectué. Film #${movie_id} marqué comme vu (Note NULL) pour le jury #${juryId}`);
 
       return res.status(200).json({
         success: true,
-        message: "Signalement enregistré. Merci pour votre contribution.",
+        message: "Signalement enregistré. Le film ne vous sera plus proposé.",
       });
+
     } catch (error) {
-      console.error("Erreur JuryController.reportMovie:", error);
-      return res.status(500).json({
-        success: false,
-        message: "Erreur lors de l'enregistrement du signalement",
-        error: error.message,
-      });
+      console.error("Erreur reportMovie:", error);
+      return res.status(500).json({ success: false, message: "Erreur serveur" });
     }
   }
 }
