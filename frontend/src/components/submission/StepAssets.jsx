@@ -61,7 +61,7 @@ export default function StepAssets({ formData, handleChange, handleFileChange, h
         style={{ cursor: 'pointer' }}
       >
         <label className="block text-sm text-blue-300 mb-2 font-bold relative select-none pointer-events-none">
-          Sous-titres (.srt)
+          Sous-titres (.srt) *
           {formData.subtitleFile && (
             <span className="absolute top-0 right-0 text-green-400 text-xl" title="Sous-titres uploadés">✔️</span>
           )}
