@@ -156,7 +156,8 @@
     "title": "Movie Title *",
     "synopsis": "Synopsis *",
     "synopsisPlaceholder": "Movie summary in a few lines...",
-    "duration": "Duration (seconds) *",
+    "duration": "Duration (60 sec. max) *",
+    "durationHint": "Maximum 60 seconds, credits included.",
     "team": "Movie Team",
     "addMember": "Add member",
     "removeMember": "Remove",
@@ -175,6 +176,7 @@
       "thumbnailFile": "Thumbnail required.",
       "filmTitleOriginal": "Title required.",
       "filmDuration": "Duration required.",
+      "filmDurationMax": "Maximum duration: 60 seconds.",
       "aiClassification": "AI classification required.",
       "filmDurationDigits": "Duration: digits only."
     }

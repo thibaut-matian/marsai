@@ -73,7 +73,8 @@
     "title": "Titre du film *",
     "synopsis": "Synopsis *",
     "synopsisPlaceholder": "Résumé du film en quelques lignes...",
-    "duration": "Durée (secondes) *",
+    "duration": "Durée (60 sec. max) *",
+    "durationHint": "Maximum 60 secondes, génériques inclus.",
     "team": "Équipe du film",
     "addMember": "Ajouter un membre",
     "role": "Rôle",
@@ -90,6 +91,7 @@
       "thumbnailFile": "Vignette requise.",
       "filmTitleOriginal": "Titre requis.",
       "filmDuration": "Durée requise.",
+      "filmDurationMax": "Durée maximale : 60 secondes.",
       "aiClassification": "Classification IA requise.",
       "filmDurationDigits": "Durée : chiffres uniquement."
     }

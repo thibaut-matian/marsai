@@ -11,7 +11,7 @@ export default function StepDetails({ formData, handleChange, addTeamMember, rem
       <h2 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-white">{t('form.detailsTitle')}</h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         <div className="space-y-3 md:space-y-4">
-          <label className="block text-sm text-blue-400">{t('form.synopsis')} (FR)</label>
+          <label className={`block text-sm ${errors.synopsisFR ? 'text-red-400' : 'text-blue-400'}`}>{t('form.synopsis')} (FR)</label>
           <textarea
             name="synopsisFR"
             rows="3"
@@ -19,12 +19,13 @@ export default function StepDetails({ formData, handleChange, addTeamMember, rem
             onChange={handleChange}
             onFocus={() => setFocus(f => ({ ...f, fr: true }))}
             onBlur={() => setFocus(f => ({ ...f, fr: false }))}
-            className={`w-full rounded-lg p-3 bg-gray-900 border text-white focus:outline-none transition-all cursor-text ${focus.fr || formData.synopsisFR ? 'border-blue-400' : 'border-gray-700'}`}
+            className={`w-full rounded-lg p-3 bg-gray-900 border text-white focus:outline-none transition-all cursor-text ${errors.synopsisFR ? 'border-red-500' : focus.fr || formData.synopsisFR ? 'border-blue-400' : 'border-gray-700'}`}
             placeholder={t('form.synopsisPlaceholder')}
           ></textarea>
+          {errors.synopsisFR && <p className="text-red-400 text-xs mt-1 ml-1 font-medium animate-pulse">{errors.synopsisFR}</p>}
         </div>
         <div className="space-y-3 md:space-y-4">
-          <label className="block text-sm text-pink-400">{t('form.synopsis')} (EN)</label>
+          <label className={`block text-sm ${errors.synopsisEN ? 'text-red-400' : 'text-pink-400'}`}>{t('form.synopsis')} (EN)</label>
           <textarea
             name="synopsisEN"
             rows="3"
@@ -32,9 +33,10 @@ export default function StepDetails({ formData, handleChange, addTeamMember, rem
             onChange={handleChange}
             onFocus={() => setFocus(f => ({ ...f, en: true }))}
             onBlur={() => setFocus(f => ({ ...f, en: false }))}
-            className={`w-full rounded-lg p-3 bg-gray-900 border text-white focus:outline-none transition-all cursor-text ${focus.en || formData.synopsisEN ? 'border-pink-400' : 'border-gray-700'}`}
+            className={`w-full rounded-lg p-3 bg-gray-900 border text-white focus:outline-none transition-all cursor-text ${errors.synopsisEN ? 'border-red-500' : focus.en || formData.synopsisEN ? 'border-pink-400' : 'border-gray-700'}`}
             placeholder={t('form.synopsisPlaceholder')}
           ></textarea>
+          {errors.synopsisEN && <p className="text-red-400 text-xs mt-1 ml-1 font-medium animate-pulse">{errors.synopsisEN}</p>}
         </div>
       </div>
       {/* Équipe */}
@@ -53,11 +55,31 @@ export default function StepDetails({ formData, handleChange, addTeamMember, rem
               <div className="grid grid-cols-1 gap-3 md:gap-4 pr-8">
                 <input type="text" placeholder={t('form.role')} value={member.role} onChange={(e) => updateTeamMember(index, 'role', e.target.value)} className="w-full bg-transparent border-b border-gray-700 py-2 text-sm text-white focus:border-blue-400 outline-none" />
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <select value={member.civilite} onChange={(e) => updateTeamMember(index, 'civilite', e.target.value)} className="bg-gray-900 border border-gray-700 rounded text-sm text-white px-2 py-2 w-full sm:w-20"><option value="M">M</option><option value="Mme">Mme</option></select>
-                  <input type="text" placeholder={t('form.firstname')} value={member.firstname} onChange={(e) => updateTeamMember(index, 'firstname', e.target.value)} className="flex-1 bg-transparent border-b border-gray-700 py-2 text-sm text-white focus:border-blue-400 outline-none" />
-                  <input type="text" placeholder={t('form.lastname')} value={member.lastname} onChange={(e) => updateTeamMember(index, 'lastname', e.target.value)} className="flex-1 bg-transparent border-b border-gray-700 py-2 text-sm text-white focus:border-blue-400 outline-none" />
+                  <select value={member.civilite} onChange={(e) => updateTeamMember(index, 'civilite', e.target.value)} className="bg-gray-900 border border-gray-700 rounded text-sm text-white px-2 py-2 w-full sm:w-24">
+                    <option value="m">M.</option>
+                    <option value="mrs">Mme</option>
+                    <option value="other">Iel</option>
+                  </select>
+                  <div className="flex-1">
+                    <input type="text" placeholder={t('form.firstname')} value={member.firstname} onChange={(e) => updateTeamMember(index, 'firstname', e.target.value)} className={`w-full bg-transparent border-b py-2 text-sm text-white focus:border-blue-400 outline-none ${errors[`team_${index}_firstname`] ? 'border-red-500' : 'border-gray-700'}`} />
+                    {errors[`team_${index}_firstname`] && <p className="text-red-400 text-xs mt-1">{errors[`team_${index}_firstname`]}</p>}
+                  </div>
+                  <div className="flex-1">
+                    <input type="text" placeholder={t('form.lastname')} value={member.lastname} onChange={(e) => updateTeamMember(index, 'lastname', e.target.value)} className={`w-full bg-transparent border-b py-2 text-sm text-white focus:border-blue-400 outline-none ${errors[`team_${index}_lastname`] ? 'border-red-500' : 'border-gray-700'}`} />
+                    {errors[`team_${index}_lastname`] && <p className="text-red-400 text-xs mt-1">{errors[`team_${index}_lastname`]}</p>}
+                  </div>
                 </div>
-                <input type="email" placeholder="Email" value={member.email} onChange={(e) => updateTeamMember(index, 'email', e.target.value)} className="w-full bg-transparent border-b border-gray-700 py-2 text-sm text-white focus:border-blue-400 outline-none" />
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex-1">
+                    <input type="email" placeholder="Email" value={member.email} onChange={(e) => updateTeamMember(index, 'email', e.target.value)} className={`w-full bg-transparent border-b py-2 text-sm text-white focus:border-blue-400 outline-none ${errors[`team_${index}_email`] ? 'border-red-500' : 'border-gray-700'}`} />
+                    {errors[`team_${index}_email`] && <p className="text-red-400 text-xs mt-1">{errors[`team_${index}_email`]}</p>}
+                  </div>
+                  <div className="flex flex-col flex-1 gap-1">
+                    <label className={`text-xs ml-1 ${errors[`team_${index}_birthdate`] ? 'text-red-400' : 'text-gray-400'}`}>{t('form.birthdate')}</label>
+                    <input type="date" value={member.birthdate} onChange={(e) => updateTeamMember(index, 'birthdate', e.target.value)} className={`w-full bg-transparent border-b py-2 text-sm text-white focus:border-blue-400 outline-none ${errors[`team_${index}_birthdate`] ? 'border-red-500' : 'border-gray-700'}`} />
+                    {errors[`team_${index}_birthdate`] && <p className="text-red-400 text-xs mt-1">{errors[`team_${index}_birthdate`]}</p>}
+                  </div>
+                </div>
               </div>
             </div>
           ))}

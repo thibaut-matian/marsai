@@ -1,5 +1,7 @@
 const Movie = require("../models/MovieModel");
 const MovieAward = require("../models/MovieAwardModel");
+const Newsletter = require("../models/NewsletterModel");
+const Squad = require("../models/SquadModel");
 const { uploadToScaleway, deleteFromScaleway } = require("../config/scaleway");
 const { youtube } = require("../config/Youtube");
 const { sendMailToDirector } = require("../services/emailService");
@@ -63,11 +65,18 @@ class MovieController {
       );
       if (missing.length > 0) {
         const missingLabels = missing.map((f) => f.label).join(", ");
-        return res
-          .status(400)
-          .json({
-            message: `Champs obligatoires manquants : ${missingLabels}`,
-          });
+        return res.status(400).json({
+          message: `Champs obligatoires manquants : ${missingLabels}`,
+        });
+      }
+
+      // Validation durée max 60 secondes
+      const durationInt = parseInt(req.body.duration);
+      if (isNaN(durationInt) || durationInt < 1 || durationInt > 60) {
+        return res.status(400).json({
+          message:
+            "La durée du film doit être comprise entre 1 et 60 secondes.",
+        });
       }
 
       let cloud_url_video = null;
@@ -176,6 +185,27 @@ class MovieController {
       const movie = await Movie.create(movieData);
       console.log("✅ Film créé avec ID:", movie.id);
 
+      // Newsletter
+      const newsletterWanted =
+        req.body.newsletter === "1" || req.body.newsletter === true;
+      if (newsletterWanted && mail) {
+        console.log("📧 Inscription newsletter pour:", mail);
+        try {
+          const existing = await Newsletter.findOne({ where: { email: mail } });
+          if (!existing) {
+            await Newsletter.create({ email: mail, is_active: true });
+            console.log("✅ Inscription newsletter créée");
+          } else {
+            console.log("ℹ️ Email déjà inscrit à la newsletter");
+          }
+        } catch (newsletterError) {
+          console.error(
+            "⚠️ Erreur inscription newsletter:",
+            newsletterError.message,
+          );
+        }
+      }
+
       // Association award par défaut
       console.log("9️⃣ Association award par défaut...");
       await MovieAward.create({
@@ -183,6 +213,45 @@ class MovieController {
         award_id: 1,
       });
       console.log('✅ Award "none" associé');
+
+      // Membres de l'équipe (squad)
+      if (req.body.team) {
+        try {
+          const teamMembers = JSON.parse(req.body.team);
+          if (Array.isArray(teamMembers) && teamMembers.length > 0) {
+            console.log(
+              `👥 Insertion de ${teamMembers.length} membre(s) d'équipe...`,
+            );
+            for (const member of teamMembers) {
+              if (
+                !member.firstname ||
+                !member.lastname ||
+                !member.email ||
+                !member.birthdate
+              ) {
+                return res.status(400).json({
+                  message: `Membre d'équipe incomplet : prénom, nom, email et date de naissance sont obligatoires.`,
+                });
+              }
+              let memberGender = "other";
+              if (member.civilite === "m") memberGender = "m";
+              else if (member.civilite === "mrs") memberGender = "mrs";
+              await Squad.create({
+                movie_id: movie.id,
+                gender: memberGender,
+                firstname: member.firstname,
+                lastname: member.lastname,
+                birthdate: member.birthdate,
+                mail: member.email,
+                role: member.role || "N/A",
+              });
+            }
+            console.log("✅ Membres d'équipe insérés");
+          }
+        } catch (teamError) {
+          console.error("⚠️ Erreur insertion équipe:", teamError.message);
+        }
+      }
 
       // Générer token JWT
       console.log("🔟️⃣ Génération du token JWT...");
@@ -407,7 +476,7 @@ L'équipe MarsAI Festival
       const SocialLink = require("../models/SocialLinkModel");
       const SocialMedia = require("../models/SocialMediaModel");
 
-      const movie = await Movie.findOne({ 
+      const movie = await Movie.findOne({
         where: { url },
         include: [
           {
