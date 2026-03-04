@@ -18,13 +18,10 @@ const SocialLink = sequelize.define(
         key: "id",
       },
     },
-    // URL du profil
+    // URL ou pseudo du profil
     social_url: {
       type: DataTypes.STRING(500),
       allowNull: false,
-      validate: {
-        isUrl: true,
-      },
     },
   },
   {

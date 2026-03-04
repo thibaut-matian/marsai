@@ -54,9 +54,10 @@ MovieScreenshot.belongsTo(Movie, {
 });
 
 // Movie - Note
-Movie.hasOne(Note, {
+Movie.hasMany(Note, {
   foreignKey: "movie_id",
   onDelete: "CASCADE",
+  as: "notes",
 });
 Note.belongsTo(Movie, {
   foreignKey: "movie_id",

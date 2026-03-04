@@ -106,6 +106,7 @@ export default function JuryVote() {
                 voteSubmitted={voteSubmitted}
                 voteLoading={voteLoading}
                 voteError={voteError}
+                onOpenReport={() => document.getElementById("report_modal").showModal()}
               />
             </div>
 
@@ -113,7 +114,6 @@ export default function JuryVote() {
             <CommentBox
               comment={comment}
               setComment={setComment}
-              onOpenReport={() => document.getElementById("report_modal").showModal()}
             />
           </div>
 
@@ -123,7 +123,7 @@ export default function JuryVote() {
       )}
 
       {/* Modale de signalement */}
-      <ReportModal movieId={film?.id} />
+      <ReportModal movieId={film?.id} onReported={loadNextMovie} />
     </div>
   );
 }

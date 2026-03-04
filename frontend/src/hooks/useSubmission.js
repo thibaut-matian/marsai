@@ -327,6 +327,32 @@ export function useSubmission(t) {
     form.append("creative_method", formData.aiMethodology || "N/A");
     form.append("newsletter", formData.newsletter ? "1" : "0");
 
+    // Réseaux sociaux
+    const socials = [];
+    if (formData.socialYoutube?.trim())
+      socials.push({ platform: "youtube", url: formData.socialYoutube.trim() });
+    if (formData.socialInstagram?.trim())
+      socials.push({
+        platform: "instagram",
+        url: formData.socialInstagram.trim(),
+      });
+    if (formData.socialLinkedin?.trim())
+      socials.push({
+        platform: "linkedin",
+        url: formData.socialLinkedin.trim(),
+      });
+    if (formData.socialFacebook?.trim())
+      socials.push({
+        platform: "facebook",
+        url: formData.socialFacebook.trim(),
+      });
+    if (formData.socialX?.trim())
+      socials.push({ platform: "x", url: formData.socialX.trim() });
+    if (socials.length > 0) {
+      form.append("socials", JSON.stringify(socials));
+      console.log("🌐 Réseaux sociaux envoyés:", socials);
+    }
+
     // Membres de l'équipe (civilite déjà au format DB : "m", "mrs", "other")
     if (formData.teamMembers && formData.teamMembers.length > 0) {
       form.append("team_members", JSON.stringify(formData.teamMembers));
