@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Upload, Info, List, Award, Users, Mail, Calendar, Save } from 'lucide-react';
+import { Upload, Info, List, Award, Users, Mail, Calendar, Save, Menu, LayoutGrid } from 'lucide-react';
 import { useHomeContent } from '../../hooks/useHomeContent';
 import VideoUpload from '../../components/admin/VideoUpload';
 import ImageUpload from '../../components/admin/ImageUpload';
@@ -13,6 +13,8 @@ const tabs = [
   { id: 'jury', label: 'Jury', icon: Users },
   { id: 'contact', label: 'Contact', icon: Mail },
   { id: 'timeline', label: 'Timeline', icon: Calendar },
+  { id: 'navigation', label: 'Navigation', icon: Menu }, // 🆕
+  { id: 'footer', label: 'Footer', icon: LayoutGrid }, // 🆕
 ];
 
 export default function Settings() {
@@ -635,6 +637,270 @@ export default function Settings() {
                   💡 <strong>Conseil :</strong> Utilisez la preview ci-dessus pour tester visuellement la timeline. 
                   L'étape active sera celle affichée sur la page Home après sauvegarde.
                 </p>
+              </div>
+            </div>
+          )}
+
+          {/* Onglet Navigation */}
+          {activeTab === 'navigation' && (
+            <div className="space-y-6">
+              <div className="bg-blue-600/20 border border-blue-600 rounded-lg p-4 mb-6">
+                <p className="text-sm text-blue-400">
+                  💡 <strong>Info :</strong> Ces paramètres contrôlent le Header (barre de navigation en haut).
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Texte du logo</label>
+                <input
+                  type="text"
+                  value={content.navigation?.[activeLang]?.logoText || ''}
+                  onChange={(e) => updateField('navigation', activeLang, 'logoText', e.target.value)}
+                  placeholder="MarsAI"
+                  className="w-full px-4 py-2 bg-gray-700 text-white rounded"
+                />
+              </div>
+
+              {/* Liens de navigation */}
+              <div className="border-t border-gray-700 pt-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold">Liens de navigation</h3>
+                  <button
+                    onClick={() => {
+                      const newLinks = [...(content.navigation?.[activeLang]?.links || []), { label: '', url: '' }];
+                      updateField('navigation', activeLang, 'links', newLinks);
+                    }}
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded text-sm transition-colors"
+                  >
+                    + Ajouter un lien
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {(content.navigation?.[activeLang]?.links || []).map((link, index) => (
+                    <div key={index} className="bg-gray-700 rounded-lg p-4 space-y-3">
+                      <div className="flex justify-between items-center">
+                        <h4 className="font-semibold">Lien #{index + 1}</h4>
+                        <button
+                          onClick={() => {
+                            const newLinks = (content.navigation?.[activeLang]?.links || []).filter((_, i) => i !== index);
+                            updateField('navigation', activeLang, 'links', newLinks);
+                          }}
+                          className="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm transition-colors"
+                        >
+                          Supprimer
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Label</label>
+                          <input
+                            type="text"
+                            value={link.label || ''}
+                            onChange={(e) => {
+                              const newLinks = [...(content.navigation?.[activeLang]?.links || [])];
+                              newLinks[index] = { ...newLinks[index], label: e.target.value };
+                              updateField('navigation', activeLang, 'links', newLinks);
+                            }}
+                            placeholder="Planning"
+                            className="w-full px-4 py-2 bg-gray-600 text-white rounded"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium mb-2">URL</label>
+                          <input
+                            type="text"
+                            value={link.url || ''}
+                            onChange={(e) => {
+                              const newLinks = [...(content.navigation?.[activeLang]?.links || [])];
+                              newLinks[index] = { ...newLinks[index], url: e.target.value };
+                              updateField('navigation', activeLang, 'links', newLinks);
+                            }}
+                            placeholder="/planning"
+                            className="w-full px-4 py-2 bg-gray-600 text-white rounded"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {(!content.navigation?.[activeLang]?.links || content.navigation[activeLang].links.length === 0) && (
+                    <div className="text-center py-8 text-gray-400">
+                      <Menu size={48} className="mx-auto mb-2 opacity-50" />
+                      <p>Aucun lien ajouté</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Bouton CTA */}
+              <div className="border-t border-gray-700 pt-6">
+                <h3 className="text-lg font-semibold mb-4">Bouton d'action (CTA)</h3>
+                
+                <div className="flex items-center gap-3 mb-4">
+                  <input
+                    type="checkbox"
+                    checked={content.navigation?.[activeLang]?.submitButton?.enabled ?? true}
+                    onChange={(e) => {
+                      const newSubmitButton = { 
+                        ...(content.navigation?.[activeLang]?.submitButton || {}), 
+                        enabled: e.target.checked 
+                      };
+                      updateField('navigation', activeLang, 'submitButton', newSubmitButton);
+                    }}
+                    className="w-5 h-5"
+                  />
+                  <label className="text-sm font-medium">Afficher le bouton de soumission</label>
+                </div>
+
+                {content.navigation?.[activeLang]?.submitButton?.enabled && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Texte du bouton</label>
+                      <input
+                        type="text"
+                        value={content.navigation?.[activeLang]?.submitButton?.text || ''}
+                        onChange={(e) => {
+                          const newSubmitButton = { 
+                            ...(content.navigation?.[activeLang]?.submitButton || {}), 
+                            text: e.target.value 
+                          };
+                          updateField('navigation', activeLang, 'submitButton', newSubmitButton);
+                        }}
+                        placeholder="Soumettre votre film"
+                        className="w-full px-4 py-2 bg-gray-700 text-white rounded"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">URL de destination</label>
+                      <input
+                        type="text"
+                        value={content.navigation?.[activeLang]?.submitButton?.url || ''}
+                        onChange={(e) => {
+                          const newSubmitButton = { 
+                            ...(content.navigation?.[activeLang]?.submitButton || {}), 
+                            url: e.target.value 
+                          };
+                          updateField('navigation', activeLang, 'submitButton', newSubmitButton);
+                        }}
+                        placeholder="/submit-movie"
+                        className="w-full px-4 py-2 bg-gray-700 text-white rounded"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Onglet Footer */}
+          {activeTab === 'footer' && (
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium mb-2">Titre</label>
+                <input
+                  type="text"
+                  value={content.footer?.[activeLang]?.title || ''}
+                  onChange={(e) => updateField('footer', activeLang, 'title', e.target.value)}
+                  placeholder="Footer"
+                  className="w-full px-4 py-2 bg-gray-700 text-white rounded"
+                />
+              </div>
+
+              {/* Logos */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-700 pt-6">
+                <div>
+                  <ImageUpload
+                    currentImageUrl={content.footer?.[activeLang]?.logoMobileFilm || ''}
+                    onUploadComplete={(url) => updateField('footer', activeLang, 'logoMobileFilm', url)}
+                    label="Logo MobileFilm"
+                  />
+                </div>
+
+                <div>
+                  <ImageUpload
+                    currentImageUrl={content.footer?.[activeLang]?.logoMarsIA || ''}
+                    onUploadComplete={(url) => updateField('footer', activeLang, 'logoMarsIA', url)}
+                    label="Logo MarsIA"
+                  />
+                </div>
+              </div>
+
+              {/* Liens du footer */}
+              <div className="border-t border-gray-700 pt-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold">Liens du footer</h3>
+                  <button
+                    onClick={() => {
+                      const newLinks = [...(content.footer?.[activeLang]?.links || []), { label: '', url: '' }];
+                      updateField('footer', activeLang, 'links', newLinks);
+                    }}
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded text-sm transition-colors"
+                  >
+                    + Ajouter un lien
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {(content.footer?.[activeLang]?.links || []).map((link, index) => (
+                    <div key={index} className="bg-gray-700 rounded-lg p-4 space-y-3">
+                      <div className="flex justify-between items-center">
+                        <h4 className="font-semibold">Lien #{index + 1}</h4>
+                        <button
+                          onClick={() => {
+                            const newLinks = (content.footer?.[activeLang]?.links || []).filter((_, i) => i !== index);
+                            updateField('footer', activeLang, 'links', newLinks);
+                          }}
+                          className="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm transition-colors"
+                        >
+                          Supprimer
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Label</label>
+                          <input
+                            type="text"
+                            value={link.label || ''}
+                            onChange={(e) => {
+                              const newLinks = [...(content.footer?.[activeLang]?.links || [])];
+                              newLinks[index] = { ...newLinks[index], label: e.target.value };
+                              updateField('footer', activeLang, 'links', newLinks);
+                            }}
+                            placeholder="Mentions légales"
+                            className="w-full px-4 py-2 bg-gray-600 text-white rounded"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium mb-2">URL</label>
+                          <input
+                            type="text"
+                            value={link.url || ''}
+                            onChange={(e) => {
+                              const newLinks = [...(content.footer?.[activeLang]?.links || [])];
+                              newLinks[index] = { ...newLinks[index], url: e.target.value };
+                              updateField('footer', activeLang, 'links', newLinks);
+                            }}
+                            placeholder="/legal"
+                            className="w-full px-4 py-2 bg-gray-600 text-white rounded"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {(!content.footer?.[activeLang]?.links || content.footer[activeLang].links.length === 0) && (
+                    <div className="text-center py-8 text-gray-400">
+                      <LayoutGrid size={48} className="mx-auto mb-2 opacity-50" />
+                      <p>Aucun lien ajouté</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}
