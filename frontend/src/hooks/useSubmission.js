@@ -54,6 +54,16 @@ export function useSubmission(t) {
     const { name, value, type, checked } = e.target;
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: null }));
     const val = type === "checkbox" ? checked : value;
+    // Si on décoche "needsSubtitles", on réinitialise le fichier .srt
+    if (name === "needsSubtitles" && !checked) {
+      setFormData((prev) => ({
+        ...prev,
+        needsSubtitles: false,
+        subtitleFile: null,
+      }));
+      setErrors((prev) => ({ ...prev, subtitleFile: null }));
+      return;
+    }
     setFormData((prev) => ({ ...prev, [name]: val }));
   };
 
@@ -89,7 +99,14 @@ export function useSubmission(t) {
       ...prev,
       teamMembers: [
         ...prev.teamMembers,
-        { role: "", civilite: "M", firstname: "", lastname: "", email: "" },
+        {
+          role: "",
+          civilite: "m",
+          firstname: "",
+          lastname: "",
+          email: "",
+          birthdate: "",
+        },
       ],
     }));
   };
@@ -156,14 +173,29 @@ export function useSubmission(t) {
         newErrors.filmTitleOriginal = t("form.errors.filmTitleOriginal");
       if (!formData.filmDuration)
         newErrors.filmDuration = t("form.errors.filmDuration");
+      else if (parseInt(formData.filmDuration) > 60)
+        newErrors.filmDuration = t("form.errors.filmDurationMax");
       if (!formData.aiClassification)
         newErrors.aiClassification = t("form.errors.aiClassification");
+      if (!formData.aiStack?.trim()) newErrors.aiStack = "Outils IA requis.";
+      if (!formData.aiMethodology?.trim())
+        newErrors.aiMethodology = "Méthodologie créative requise.";
     }
     if (currentStep === 4) {
       if (!formData.synopsisFR.trim())
         newErrors.synopsisFR = "Synopsis FR requis.";
       if (!formData.synopsisEN.trim())
         newErrors.synopsisEN = "Synopsis EN requis.";
+      formData.teamMembers.forEach((member, index) => {
+        if (!member.firstname?.trim())
+          newErrors[`team_${index}_firstname`] = "Prénom requis.";
+        if (!member.lastname?.trim())
+          newErrors[`team_${index}_lastname`] = "Nom requis.";
+        if (!member.email?.trim())
+          newErrors[`team_${index}_email`] = "Email requis.";
+        if (!member.birthdate)
+          newErrors[`team_${index}_birthdate`] = "Date de naissance requise.";
+      });
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -176,9 +208,7 @@ export function useSubmission(t) {
   // --- 5. NAVIGATION ---
 
   const handleNext = async () => {
-    // Validation stricte à l'étape 4 avant submitForm
     if (step === 4) {
-      // Validation globale de tous les champs requis
       let globalErrors = {};
       if (!formData.lastname.trim()) globalErrors.lastname = "Nom requis.";
       if (!formData.firstname.trim()) globalErrors.firstname = "Prénom requis.";
@@ -204,12 +234,28 @@ export function useSubmission(t) {
         globalErrors.filmTitleOriginal = t("form.errors.filmTitleOriginal");
       if (!formData.filmDuration)
         globalErrors.filmDuration = t("form.errors.filmDuration");
+      else if (parseInt(formData.filmDuration) > 60)
+        globalErrors.filmDuration = t("form.errors.filmDurationMax");
       if (!formData.aiClassification)
         globalErrors.aiClassification = t("form.errors.aiClassification");
+      if (!formData.aiStack?.trim()) globalErrors.aiStack = "Outils IA requis.";
+      if (!formData.aiMethodology?.trim())
+        globalErrors.aiMethodology = "Méthodologie créative requise.";
       if (!formData.synopsisFR.trim())
         globalErrors.synopsisFR = "Synopsis FR requis.";
       if (!formData.synopsisEN.trim())
         globalErrors.synopsisEN = "Synopsis EN requis.";
+      formData.teamMembers.forEach((member, index) => {
+        if (!member.firstname?.trim())
+          globalErrors[`team_${index}_firstname`] = "Prénom requis.";
+        if (!member.lastname?.trim())
+          globalErrors[`team_${index}_lastname`] = "Nom requis.";
+        if (!member.email?.trim())
+          globalErrors[`team_${index}_email`] = "Email requis.";
+        if (!member.birthdate)
+          globalErrors[`team_${index}_birthdate`] =
+            "Date de naissance requise.";
+      });
       if (Object.keys(globalErrors).length > 0) {
         setErrors(globalErrors);
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -248,7 +294,7 @@ export function useSubmission(t) {
     if (formData.thumbnailFile) form.append("poster", formData.thumbnailFile);
     if (formData.subtitleFile) form.append("subtitle", formData.subtitleFile);
 
-    // Identité & Genre
+    // Identité & Genre (valeurs directement compatibles DB)
     let genderValue = "other";
     if (formData.civilite === "M") genderValue = "m.";
     else if (formData.civilite === "Mme") genderValue = "mrs.";
@@ -259,7 +305,6 @@ export function useSubmission(t) {
     form.append("lastname", formData.lastname || "");
     form.append("firstname", formData.firstname || "");
     form.append("birthdate", formData.birthdate || "");
-    form.append("bio", formData.directorNoteFR || "N/A");
     form.append("country", formData.country || "");
     form.append("city", formData.city || "");
     form.append("zip_code", formData.zipcode || "");
@@ -280,15 +325,15 @@ export function useSubmission(t) {
     form.append("en_desc", formData.synopsisEN || formData.synopsisFR || "");
     form.append("ia_used", formData.aiClassification || "N/A");
     form.append("creative_method", formData.aiMethodology || "N/A");
+    form.append("newsletter", formData.newsletter ? "1" : "0");
 
-    // ✅ AJOUTER : Équipe en format JSON
+    // Membres de l'équipe (civilite déjà au format DB : "m", "mrs", "other")
     if (formData.teamMembers && formData.teamMembers.length > 0) {
       form.append("team_members", JSON.stringify(formData.teamMembers));
       console.log("📋 Équipe envoyée:", formData.teamMembers);
     }
 
     try {
-      // Utilisation du service centralisé getAPI
       const response = await getAPI.submitMovie(form);
       return response.data;
     } catch (error) {

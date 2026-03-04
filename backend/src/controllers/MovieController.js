@@ -1,6 +1,7 @@
 const Movie = require("../models/MovieModel");
 const MovieAward = require("../models/MovieAwardModel");
-const Squad = require("../models/SquadModel"); // ✅ Import Squad model
+const Newsletter = require("../models/NewsletterModel");
+const Squad = require("../models/SquadModel");
 const { uploadToScaleway, deleteFromScaleway } = require("../config/scaleway");
 const { youtube } = require("../config/Youtube");
 const { sendMailToDirector } = require("../services/emailService");
@@ -66,11 +67,18 @@ class MovieController {
       );
       if (missing.length > 0) {
         const missingLabels = missing.map((f) => f.label).join(", ");
-        return res
-          .status(400)
-          .json({
-            message: `Champs obligatoires manquants : ${missingLabels}`,
-          });
+        return res.status(400).json({
+          message: `Champs obligatoires manquants : ${missingLabels}`,
+        });
+      }
+
+      // Validation durée max 60 secondes
+      const durationInt = parseInt(req.body.duration);
+      if (isNaN(durationInt) || durationInt < 1 || durationInt > 60) {
+        return res.status(400).json({
+          message:
+            "La durée du film doit être comprise entre 1 et 60 secondes.",
+        });
       }
 
       let cloud_url_video = null;
@@ -144,9 +152,10 @@ class MovieController {
       let parsedTeamMembers = null;
       if (team_members) {
         try {
-          parsedTeamMembers = typeof team_members === 'string' 
-            ? JSON.parse(team_members) 
-            : team_members;
+          parsedTeamMembers =
+            typeof team_members === "string"
+              ? JSON.parse(team_members)
+              : team_members;
           console.log("👥 Équipe reçue:", parsedTeamMembers);
         } catch (parseError) {
           console.warn("⚠️ Erreur parsing équipe, ignoré:", parseError.message);
@@ -192,36 +201,62 @@ class MovieController {
       const movie = await Movie.create(movieData);
       console.log("✅ Film créé avec ID:", movie.id);
 
-      // ✅ NOUVEAU : Gérer l'équipe dans la table Squad
-      if (parsedTeamMembers && Array.isArray(parsedTeamMembers) && parsedTeamMembers.length > 0) {
+      // Newsletter
+      const newsletterWanted =
+        req.body.newsletter === "1" || req.body.newsletter === true;
+      if (newsletterWanted && mail) {
+        console.log("📧 Inscription newsletter pour:", mail);
+        try {
+          const existing = await Newsletter.findOne({ where: { email: mail } });
+          if (!existing) {
+            await Newsletter.create({ email: mail, is_active: true });
+            console.log("✅ Inscription newsletter créée");
+          } else {
+            console.log("ℹ️ Email déjà inscrit à la newsletter");
+          }
+        } catch (newsletterError) {
+          console.error(
+            "⚠️ Erreur inscription newsletter:",
+            newsletterError.message,
+          );
+        }
+      }
+
+      // Gérer l'équipe dans la table Squad
+      if (
+        parsedTeamMembers &&
+        Array.isArray(parsedTeamMembers) &&
+        parsedTeamMembers.length > 0
+      ) {
         console.log("👥 Création des collaborateurs...");
-        
         for (const member of parsedTeamMembers) {
-          // Conversion de civilité frontend vers backend
           let memberGender = "other";
-          if (member.civilite === "M") memberGender = "m";
-          else if (member.civilite === "Mme") memberGender = "mrs";
-          
+          if (member.civilite === "m") memberGender = "m";
+          else if (member.civilite === "mrs") memberGender = "mrs";
           const squadData = {
             gender: memberGender,
             firstname: member.firstname || "",
             lastname: member.lastname || "",
-            birthdate: member.birthdate || birthdate, // Utiliser la date du réalisateur si pas spécifiée
+            birthdate: member.birthdate || birthdate,
             mail: member.email || "",
             role: member.role || "Collaborateur",
             movie_id: movie.id,
           };
-          
           try {
             await Squad.create(squadData);
-            console.log(`   ✅ Membre créé: ${member.firstname} ${member.lastname} (${member.role})`);
+            console.log(
+              `   ✅ Membre créé: ${member.firstname} ${member.lastname} (${member.role})`,
+            );
           } catch (squadError) {
-            console.error(`   ❌ Erreur création membre ${member.firstname}:`, squadError.message);
-            // Continue avec les autres membres
+            console.error(
+              `   ❌ Erreur création membre ${member.firstname}:`,
+              squadError.message,
+            );
           }
         }
-        
-        console.log(`✅ ${parsedTeamMembers.length} collaborateur(s) traité(s)`);
+        console.log(
+          `✅ ${parsedTeamMembers.length} collaborateur(s) traité(s)`,
+        );
       } else {
         console.log("👥 Aucun collaborateur à créer");
       }
@@ -301,7 +336,15 @@ class MovieController {
           {
             model: Squad,
             as: "team",
-            attributes: ["id", "gender", "firstname", "lastname", "mail", "role", "birthdate"],
+            attributes: [
+              "id",
+              "gender",
+              "firstname",
+              "lastname",
+              "mail",
+              "role",
+              "birthdate",
+            ],
           },
         ],
       });
@@ -369,7 +412,15 @@ class MovieController {
           {
             model: Squad,
             as: "team",
-            attributes: ["id", "gender", "firstname", "lastname", "mail", "role", "birthdate"],
+            attributes: [
+              "id",
+              "gender",
+              "firstname",
+              "lastname",
+              "mail",
+              "role",
+              "birthdate",
+            ],
           },
         ],
       });
@@ -420,7 +471,15 @@ class MovieController {
           {
             model: Squad,
             as: "team",
-            attributes: ["id", "gender", "firstname", "lastname", "mail", "role", "birthdate"],
+            attributes: [
+              "id",
+              "gender",
+              "firstname",
+              "lastname",
+              "mail",
+              "role",
+              "birthdate",
+            ],
           },
         ],
       });
@@ -448,7 +507,7 @@ class MovieController {
       const SocialLink = require("../models/SocialLinkModel");
       const SocialMedia = require("../models/SocialMediaModel");
 
-      const movie = await Movie.findOne({ 
+      const movie = await Movie.findOne({
         where: { url },
         include: [
           {

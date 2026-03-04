@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 import { useSubmission } from "../hooks/useSubmission";
 import StepIdentity from "../components/submission/StepIdentity";
 import StepContact from "../components/submission/StepContact";
@@ -9,6 +10,7 @@ import StepDetails from "../components/submission/StepDetails";
 export default function Submission() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [showToast, setShowToast] = useState(false);
   
   const { 
     step, formData, errors, isSubmitted, isLoading, handleChange, handleFileChange, handleStillsChange, 
@@ -16,12 +18,14 @@ export default function Submission() {
     handleNext, handlePrev 
   } = useSubmission(t);
 
-  // --- LIGNES DE TEST (DEBUG) ---
-  // Ces lignes vont afficher dans ta console F12 pourquoi le passage à l'étape 4 échoue
-  if (Object.keys(errors).length > 0) {
-    console.warn("⚠️ Validation bloquée à l'étape", step, ". Erreurs :", errors);
-  }
-  // ------------------------------
+  // Affiche le toast dès qu'il y a des erreurs de validation
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      setShowToast(true);
+      const timer = setTimeout(() => setShowToast(false), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [errors]);
 
   const handleCloseModal = () => {
     navigate("/");
@@ -77,7 +81,7 @@ export default function Submission() {
               type="button" 
               onClick={handleNext} 
               disabled={isLoading}
-              className={`flex-1 rounded h-10 md:h-12 border-0 bg-blue-900 text-white font-bold transition-all order-1 sm:order-2 ${step === 1 ? 'w-full' : ''} ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-800'}`}
+              className={`flex-1 rounded h-10 md:h-12 border border-white/20 bg-white text-black font-bold transition-all order-1 sm:order-2 ${step === 1 ? 'w-full' : ''} ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/90'}`}
             >
               {isLoading ? (
                 <span className="loading loading-spinner loading-md"></span>
@@ -106,6 +110,22 @@ export default function Submission() {
           </div>
           <div className="modal-backdrop bg-black/60 backdrop-blur-sm" onClick={handleCloseModal}></div>
         </dialog>
+      )}
+
+      {/* Toast erreurs de validation */}
+      {showToast && (
+        <div className="toast toast-end toast-bottom z-50">
+          <div className="alert alert-error shadow-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+            </svg>
+            <span>
+              {Object.keys(errors).length === 1
+                ? "1 champ obligatoire est manquant."
+                : `${Object.keys(errors).length} champs obligatoires sont manquants.`}
+            </span>
+          </div>
+        </div>
       )}
     </div>
   );
