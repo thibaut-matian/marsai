@@ -8,11 +8,75 @@ export default function useListFilm() {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [finalistFilter, setFinalistFilter] = useState("all"); // 'all' | 'finalist' | 'not-finalist'
+  const [finalistFilter, setFinalistFilter] = useState("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [detailMovie, setDetailMovie] = useState(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+
+  // === SÉLECTION FINALISTE ===
+  const [finalistModal, setFinalistModal] = useState(null);
+  const [selectLoading, setSelectLoading] = useState(false);
+  const [selectError, setSelectError] = useState(null);
+  const [confirmInput, setConfirmInput] = useState("");
+  const [selectedIds, setSelectedIds] = useState([]);
+
+  const FINALIST_LIMIT = 50;
+  const finalistCount = selectedIds.length;
+  const limitReached = finalistCount >= FINALIST_LIMIT;
+
+  // Sync au chargement des films
+  useEffect(() => {
+    setSelectedIds((movies || []).filter((m) => m.isSelected).map((m) => m.id));
+  }, [movies]);
+
+  const openFinalistModal = (film) => {
+    setConfirmInput("");
+    setSelectError(null);
+    setFinalistModal(film);
+  };
+
+  const closeFinalistModal = () => {
+    setFinalistModal(null);
+    setConfirmInput("");
+    setSelectError(null);
+  };
+
+  const handleSelectConfirm = async () => {
+    if (!finalistModal) return;
+    const input = confirmInput.trim().toLowerCase();
+    const frTitle = (finalistModal.title || "").trim().toLowerCase();
+    const enTitle = (finalistModal.enTitle || "").trim().toLowerCase();
+
+    const isValid = input === frTitle || (enTitle && input === enTitle);
+    if (!isValid) {
+      setSelectError(
+        "Le titre saisi ne correspond pas. Retapez le titre exact (français ou anglais).",
+      );
+      return;
+    }
+    setSelectLoading(true);
+    setSelectError(null);
+    try {
+      await getAPI.selectMovie(finalistModal.id);
+      setSelectedIds((prev) => [...prev, finalistModal.id]);
+      closeFinalistModal();
+    } catch (err) {
+      setSelectError(
+        err.response?.data?.message || "Erreur lors de la sélection.",
+      );
+    } finally {
+      setSelectLoading(false);
+    }
+  };
+
+  const isConfirmInputValid = () => {
+    if (!finalistModal) return false;
+    const input = confirmInput.trim().toLowerCase();
+    const fr = (finalistModal.title || "").trim().toLowerCase();
+    const en = (finalistModal.enTitle || "").trim().toLowerCase();
+    return input === fr || (en && input === en);
+  };
 
   const handleOpenModal = (movie) => {
     setSelectedMovie(movie);
@@ -98,11 +162,11 @@ export default function useListFilm() {
     return labels[status] || "Inconnu";
   };
 
-  const [deleteTarget, setDeleteTarget] = useState(null); // film à supprimer
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   const handleDelete = (film) => {
-    setDeleteTarget(film); // ouvre la modal
+    setDeleteTarget(film);
   };
 
   const confirmDelete = async () => {
@@ -147,5 +211,20 @@ export default function useListFilm() {
     handleOpenDetail,
     handleCloseDetail,
     refreshMovies: fetchMovies,
+    // Finaliste
+    finalistModal,
+    openFinalistModal,
+    closeFinalistModal,
+    selectLoading,
+    selectError,
+    setSelectError,
+    confirmInput,
+    setConfirmInput,
+    selectedIds,
+    FINALIST_LIMIT,
+    finalistCount,
+    limitReached,
+    handleSelectConfirm,
+    isConfirmInputValid,
   };
 }

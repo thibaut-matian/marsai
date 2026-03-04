@@ -9,45 +9,25 @@ import ReportModal from "../../components/jury/vote/ReportModal.jsx";
 
 // Import de la Logique
 import { useJuryVote } from "../../hooks/useJuryVote";
-import { useState } from "react";
-import getAPI from "../../services/getAPI.jsx";
 
 export default function JuryVote() {
-  const { decision, setDecision, film, loading, allWatched, error, loadNextMovie, formatDuration } = useJuryVote();
-
-  const [comment, setComment] = useState("");
-  const [voteSubmitted, setVoteSubmitted] = useState(false);
-  const [voteError, setVoteError] = useState(null);
-  const [voteLoading, setVoteLoading] = useState(false);
-
-  const handleVoteSubmit = async () => {
-    const decisionMap = {
-      validate: "j'aime",
-      discuss: "à discuter",
-      refuse: "je n'aime pas",
-    };
-
-    setVoteLoading(true);
-    setVoteError(null);
-    try {
-      await getAPI.submitVote({
-        movie_id: film.id,
-        decision: decisionMap[decision],
-        feedback: comment,
-      });
-      setVoteSubmitted(true);
-      setComment("");
-      setTimeout(() => {
-        setVoteSubmitted(false);
-        loadNextMovie();
-      }, 1500);
-    } catch (err) {
-      console.error("Erreur soumission vote:", err);
-      setVoteError("Une erreur est survenue. Veuillez réessayer.");
-    } finally {
-      setVoteLoading(false);
-    }
-  };
+  const {
+    decision,
+    setDecision,
+    film,
+    loading,
+    allWatched,
+    noAssignment,
+    error,
+    loadNextMovie,
+    formatDuration,
+    comment,
+    setComment,
+    voteSubmitted,
+    voteError,
+    voteLoading,
+    handleVoteSubmit,
+  } = useJuryVote();
 
   return (
     <div className="min-h-screen bg-[#100b18] text-white font-sans overflow-x-hidden">
@@ -74,6 +54,27 @@ export default function JuryVote() {
         </div>
       )}
 
+      {/* AUCUN FILM ASSIGNÉ */}
+      {!loading && noAssignment && (
+        <div className="flex items-center justify-center h-[80vh]">
+          <div className="text-center max-w-md">
+            <div className="text-6xl mb-6">🎬</div>
+            <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+              Pas de films assignés pour le moment.
+            </h2>
+            <p className="text-gray-400 mb-8">
+              L'administrateur n'a pas encore assigné de films à votre compte. Revenez plus tard.
+            </p>
+            <Link
+              to="/jury/dashboard"
+              className="btn bg-white/10 border border-white/20 text-white rounded-2xl px-8 hover:bg-white/20 transition-all"
+            >
+              ← Retour au dashboard
+            </Link>
+          </div>
+        </div>
+      )}
+
       {/* TOUS LES FILMS VUS */}
       {!loading && allWatched && (
         <div className="flex items-center justify-center h-[80vh]">
@@ -82,15 +83,20 @@ export default function JuryVote() {
             <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
               Bravo, tu as tout vu !
             </h2>
-            <p className="text-gray-400 mb-8">Tu as visionné et noté tous les films. Consulte ton classement.</p>
-            <Link to="/jury/RankingJury" className="btn bg-gradient-to-r from-blue-600 to-purple-600 border-0 text-white rounded-2xl px-8">
+            <p className="text-gray-400 mb-8">
+              Tu as visionné et noté tous les films. Consulte ton classement.
+            </p>
+            <Link
+              to="/jury/RankingJury"
+              className="btn bg-gradient-to-r from-blue-600 to-purple-600 border-0 text-white rounded-2xl px-8"
+            >
               Voir mon classement →
             </Link>
           </div>
         </div>
       )}
 
-      {/* CONTENU PRINCIPAL — uniquement si un film est chargé */}
+      {/* CONTENU PRINCIPAL */}
       {!loading && !error && film && (
         <div className="pt-24 px-4 md:px-12 pb-20 container mx-auto max-w-7xl">
 
@@ -110,11 +116,8 @@ export default function JuryVote() {
               />
             </div>
 
-            {/* Commentaire + Signaler */}
-            <CommentBox
-              comment={comment}
-              setComment={setComment}
-            />
+            {/* Commentaire */}
+            <CommentBox comment={comment} setComment={setComment} />
           </div>
 
           {/* Informations du film */}
