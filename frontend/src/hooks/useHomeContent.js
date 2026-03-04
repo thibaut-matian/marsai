@@ -5,13 +5,34 @@ const API_URL = 'http://localhost:3000/api/home-content';
 
 export function useHomeContent() {
   const [content, setContent] = useState({
-    hero: { fr: { videoUrl: '', buttonText: '' }, en: { videoUrl: '', buttonText: '' } },
-    about: { fr: { title: '', paragraph1: '', paragraph2: '' }, en: { title: '', paragraph1: '', paragraph2: '' } },
-    criteria: { fr: { title: '', items: [] }, en: { title: '', items: [] } },
-    rewards: { fr: { title: '', items: [] }, en: { title: '', items: [] } },
-    jury: { fr: { title: '', description: '', members: [] }, en: { title: '', description: '', members: [] } },
-    contact: { fr: { title: '', phone: '', email: '', address: '', mapUrl: '' }, en: { title: '', phone: '', email: '', address: '', mapUrl: '' } },
-    timeline: { fr: { title: '', phases: [] }, en: { title: '', phases: [] } },
+    hero: { 
+      fr: { videoUrl: '', buttonText: '', buttonEnabled: true }, 
+      en: { videoUrl: '', buttonText: '', buttonEnabled: true } 
+    },
+    about: { 
+      fr: { title: '', paragraph1: '', paragraph2: '' }, 
+      en: { title: '', paragraph1: '', paragraph2: '' } 
+    },
+    criteria: { 
+      fr: { title: '', items: [] }, 
+      en: { title: '', items: [] } 
+    },
+    rewards: { 
+      fr: { title: '', items: [] }, 
+      en: { title: '', items: [] } 
+    },
+    jury: { 
+      fr: { title: '', description: '', members: [] }, 
+      en: { title: '', description: '', members: [] } 
+    },
+    contact: { 
+      fr: { title: '', phone: '', email: '', address: '', mapUrl: '' }, 
+      en: { title: '', phone: '', email: '', address: '', mapUrl: '' } 
+    },
+    timeline: { 
+      fr: { title: '', phases: [] }, 
+      en: { title: '', phases: [] } 
+    },
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);

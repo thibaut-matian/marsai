@@ -125,15 +125,49 @@ export default function Settings() {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Texte du bouton</label>
-                <input
-                  type="text"
-                  value={content.hero?.[activeLang]?.buttonText || ''}
-                  onChange={(e) => updateField('hero', activeLang, 'buttonText', e.target.value)}
-                  placeholder="Soumettre votre film"
-                  className="w-full px-4 py-2 bg-gray-700 text-white rounded"
-                />
+              {/* 🆕 Checkbox pour activer/désactiver le bouton */}
+              <div className="border border-gray-700 rounded-lg p-4 bg-gray-750 space-y-4">
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id="buttonEnabled"
+                    checked={content.hero?.[activeLang]?.buttonEnabled ?? true}
+                    onChange={(e) => updateField('hero', activeLang, 'buttonEnabled', e.target.checked)}
+                    className="w-5 h-5 cursor-pointer"
+                  />
+                  <label htmlFor="buttonEnabled" className="text-sm font-medium cursor-pointer">
+                    Afficher le bouton CTA (Call-to-Action)
+                  </label>
+                </div>
+
+                {/* Champs du bouton (visible seulement si activé) */}
+                {content.hero?.[activeLang]?.buttonEnabled && (
+                  <div className="pl-8">
+                    <label className="block text-sm font-medium mb-2">Texte du bouton</label>
+                    <input
+                      type="text"
+                      value={content.hero?.[activeLang]?.buttonText || ''}
+                      onChange={(e) => updateField('hero', activeLang, 'buttonText', e.target.value)}
+                      placeholder="Soumettre votre film"
+                      className="w-full px-4 py-2 bg-gray-700 text-white rounded"
+                    />
+                    <p className="text-xs text-gray-400 mt-2">
+                      💡 Ce bouton redirige vers la page de soumission de films
+                    </p>
+                  </div>
+                )}
+
+                {!content.hero?.[activeLang]?.buttonEnabled && (
+                  <p className="text-xs text-gray-400 pl-8">
+                    ℹ️ Le bouton est masqué. Cochez la case ci-dessus pour l'activer.
+                  </p>
+                )}
+              </div>
+
+              <div className="bg-blue-600/20 border border-blue-600 rounded-lg p-4">
+                <p className="text-sm text-blue-400">
+                  💡 <strong>Conseil :</strong> Désactivez le bouton pendant les périodes où les soumissions sont fermées.
+                </p>
               </div>
             </div>
           )}
