@@ -16,6 +16,7 @@ const Status = require("./StatusModel");
 const Role = require("./RoleModel");
 const Award = require("./AwardModel");
 const MovieAward = require("./MovieAwardModel");
+const HomeContent = require("./HomeContentModel");
 
 // =============================================
 // 1. MOVIE RELATIONS
@@ -157,4 +158,5 @@ module.exports = {
   Role,
   Award,
   MovieAward,
+  HomeContent,
 };

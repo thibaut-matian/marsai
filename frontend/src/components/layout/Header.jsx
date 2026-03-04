@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import LanguageSwitcher from "../LanguageSwitcher";
+import { useHomeData } from "../../hooks/useHomeData";
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
@@ -9,6 +10,13 @@ export default function Header() {
     const navigate = useNavigate();
     const location = useLocation();
     const { t, i18n } = useTranslation();
+    const { content } = useHomeData();
+
+    // ✅ Récupérer les données dynamiques
+    const navData = content?.navigation || {};
+    const logoText = navData.logoText || 'MarsAI';
+    const navLinks = navData.links || [];
+    const submitButton = navData.submitButton || { text: t('nav.submit'), url: '/submit-movie', enabled: true };
 
     // Empêcher le scroll du body quand le menu est ouvert
     useEffect(() => {
@@ -22,7 +30,6 @@ export default function Header() {
 
     useEffect(() => {
         const handleScroll = () => {
-            // Vérifier si on est sur la page d'accueil
             if (location.pathname !== '/') {
                 setShowLogo(true);
                 return;
@@ -37,47 +44,55 @@ export default function Header() {
             }
         };
         
-        handleScroll(); // Exécuter une fois au chargement
+        handleScroll();
         window.addEventListener('scroll', handleScroll);
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, [location.pathname]);
 
-    
-
     return (
         <>
-            {/* Barre de navigation Principale (Visible tout le temps) */}
+            {/* Barre de navigation Principale */}
             <header className="navbar bg-transparent backdrop-blur-md border-b border-white/10 fixed top-0 z-40">
-                <div className="flex-1"><Link to="/" 
+                <div className="flex-1">
+                    <Link to="/" 
                         className={`btn btn-ghost text-xl text-white transform transition-all hover:text-black duration-500 ease-in-out ${
                             showLogo 
-                                ? 'opacity-100 translate-y-0' // Visible et à sa place
-                                : 'opacity-0 -translate-y-4 pointer-events-none' // Invisible et décalé vers le haut
+                                ? 'opacity-100 translate-y-0'
+                                : 'opacity-0 -translate-y-4 pointer-events-none'
                         }`}
                     >
-                        MarsAI
+                        {logoText}
                     </Link>                
-                    </div>
+                </div>
 
-                {/* Menu Desktop (Caché sur mobile) */}
+                {/* Menu Desktop */}
                 <div className="flex-none hidden md:flex gap-1 items-center">
                     <ul className="menu menu-horizontal px-1 text-white">
-                        <li><Link to="/planning">{t('nav.planning')}</Link></li>
-                        <li><Link to="/FAQ">{t('nav.faq')}</Link></li>
-                        <li className="ml-4">
-                            <button 
-                            onClick={() => navigate('/submit-movie')}
-                            className="bg-white text-black hover:bg-gray-200 px-4 py-2 rounded-md font-medium transition-colors">
-                                {t('nav.submit')}
-                            </button>
-                        </li>
+                        {/* ✅ Liens dynamiques */}
+                        {navLinks.map((link, index) => (
+                            <li key={index}>
+                                <Link to={link.url}>{link.label}</Link>
+                            </li>
+                        ))}
+                        
+                        {/* ✅ Bouton CTA conditionnel */}
+                        {submitButton.enabled && (
+                            <li className="ml-4">
+                                <button 
+                                    onClick={() => navigate(submitButton.url)}
+                                    className="bg-white text-black hover:bg-gray-200 px-4 py-2 rounded-md font-medium transition-colors"
+                                >
+                                    {submitButton.text}
+                                </button>
+                            </li>
+                        )}
                     </ul>
                     <LanguageSwitcher />
                 </div>
 
-                {/* Bouton Burger (Visible uniquement sur mobile) */}
+                {/* Bouton Burger (Mobile) */}
                 <div className="flex-none md:hidden">
                     <button
                         className="btn btn-ghost btn-circle text-white"
@@ -90,13 +105,13 @@ export default function Header() {
                 </div>
             </header>
 
-            {/* OVERLAY MENU MOBILE (Style de la capture d'écran) */}
+            {/* OVERLAY MENU MOBILE */}
             <header 
                 className={`fixed inset-0 z-50 bg-[#1a1a1d] transform transition-all duration-300 ease-in-out ${
                     isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
                 }`}
             >
-                {/* Bouton Fermer (Croix en haut à droite) */}
+                {/* Bouton Fermer */}
                 <button 
                     onClick={() => setIsOpen(false)}
                     className="absolute top-6 right-6 text-white p-2 hover:text-gray-300 transition-colors"
@@ -111,39 +126,40 @@ export default function Header() {
                     
                     {/* Liens de navigation */}
                     <nav className="flex flex-col items-center space-y-8 text-white">
-                         <Link 
+                        <Link 
                             to="/" 
                             onClick={() => setIsOpen(false)}
                             className="text-2xl font-light hover:text-gray-400 transition-colors"
-                        >{t('nav.home')}
-                        </Link>
-                        <Link 
-                            to="/planning" 
-                            onClick={() => setIsOpen(false)}
-                            className="text-2xl font-light hover:text-gray-400 transition-colors"
-                        >{t('nav.planning')}
-                        </Link>
-                        
-                        <Link 
-                            to="/FAQ" 
-                            onClick={() => setIsOpen(false)}
-                            className="text-2xl font-light hover:text-gray-400 transition-colors"
                         >
-                            {t('nav.faq')}
+                            {t('nav.home')}
                         </Link>
                         
+                        {/* ✅ Liens dynamiques mobile */}
+                        {navLinks.map((link, index) => (
+                            <Link 
+                                key={index}
+                                to={link.url} 
+                                onClick={() => setIsOpen(false)}
+                                className="text-2xl font-light hover:text-gray-400 transition-colors"
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
                     </nav>
 
                     {/* Bouton d'action principal */}
                     <div className="pt-4 flex flex-col items-center gap-6">
-                        <button 
-                            onClick={() => { setIsOpen(false); navigate('/submit-movie'); }}
-                            className="bg-white text-black px-8 py-3 rounded-md font-medium text-lg hover:scale-105 transition-transform"
-                        >
-                            {t('nav.submit')}
-                        </button>
+                        {/* ✅ Bouton CTA mobile conditionnel */}
+                        {submitButton.enabled && (
+                            <button 
+                                onClick={() => { setIsOpen(false); navigate(submitButton.url); }}
+                                className="bg-white text-black px-8 py-3 rounded-md font-medium text-lg hover:scale-105 transition-transform"
+                            >
+                                {submitButton.text}
+                            </button>
+                        )}
                         
-                        {/* Sélecteur de langue - 2 boutons */}
+                        {/* Sélecteur de langue */}
                         <div className="flex gap-6">
                             <button
                                 onClick={() => { i18n.changeLanguage('fr'); setIsOpen(false); }}
