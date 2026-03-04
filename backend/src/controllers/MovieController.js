@@ -45,41 +45,9 @@ class MovieController {
         team_members, // ✅ AJOUTER : Récupérer team_members
       } = req.body;
 
-      // 1️⃣ Vérification fichiers...
-      if (!files || !files.video || !files.video[0]) {
-        console.error("❌ Vidéo manquante");
-        return res.status(400).json({ message: "La vidéo est obligatoire" });
-      }
-
-      // 1️⃣ BIS : Validation des champs obligatoires AVANT upload
-      const requiredFields = [
-        { key: "mail", label: "Email" },
-        { key: "lastname", label: "Nom" },
-        { key: "firstname", label: "Prénom" },
-        { key: "birthdate", label: "Date de naissance" },
-        { key: "actual_job", label: "Métier" },
-        { key: "duration", label: "Durée" },
-        { key: "vo_title", label: "Titre original" },
-        { key: "vo_desc", label: "Synopsis" },
-      ];
-      const missing = requiredFields.filter(
-        (f) => !req.body[f.key] || req.body[f.key].toString().trim() === "",
-      );
-      if (missing.length > 0) {
-        const missingLabels = missing.map((f) => f.label).join(", ");
-        return res.status(400).json({
-          message: `Champs obligatoires manquants : ${missingLabels}`,
-        });
-      }
-
-      // Validation durée max 60 secondes
-      const durationInt = parseInt(req.body.duration);
-      if (isNaN(durationInt) || durationInt < 1 || durationInt > 60) {
-        return res.status(400).json({
-          message:
-            "La durée du film doit être comprise entre 1 et 60 secondes.",
-        });
-      }
+      // ✅ PLUS BESOIN de valider ici ! 
+      // Si le code arrive ici, c'est que Joi a déjà tout vérifié.
+      // req.body contient déjà les données castées (ex: duration est déjà un Number).
 
       let cloud_url_video = null;
       let youtube_id = null;
