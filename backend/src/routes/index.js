@@ -13,6 +13,7 @@ const YoutubeAuthRoutes = require("./YoutubeAuthRoutes");
 const JuryRoutes = require("./JuryRoutes");
 const HomeContentRoutes = require("./HomeContentRoutes");
 const uploadRoutes = require('./UploadRoutes');
+const dashboardRoutes = require('./DashboardRoutes'); // 🆕
 
 console.log("✅ Toutes les routes importées avec succès");
 
@@ -41,6 +42,8 @@ console.log("   → /api/home-content monté");
 
 router.use('/upload', uploadRoutes);
 console.log("   → /api/upload monté"); // ✅ Ajouter cette ligne
+
+router.use('/admin/dashboard', dashboardRoutes); // 🆕
 
 // Route de test
 router.get("/test", (req, res) => {

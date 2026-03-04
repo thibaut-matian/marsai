@@ -1,35 +1,40 @@
-import { useEffect, useState } from 'react';
-import getAPI from '../services/getAPI';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const useRecentActivity = () => {
-  const [recentActivity, setRecentActivity] = useState([]); // ✅ Tableau vide par défaut
+const API_URL = 'http://localhost:3000/api/admin/dashboard';
+
+export default function useRecentActivity() {
+  const [recentActivity, setRecentActivity] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchActivity = async () => {
-      try {
-        setLoading(true);
-        const response = await getAPI.getDashboardActivity();
-        setRecentActivity(response.data || []); // ✅ Fallback tableau vide
-        setError(null);
-      } catch (err) {
-        console.error('Erreur lors du chargement de l\'activité:', err);
-        setError(err.message);
-        setRecentActivity([]); // ✅ Tableau vide en cas d'erreur
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchActivity();
     
-    // Rafraîchir toutes les 30 secondes
+    // ✅ Rafraîchir toutes les 30 secondes
     const interval = setInterval(fetchActivity, 30000);
     return () => clearInterval(interval);
   }, []);
 
-  return { recentActivity, loading, error };
-};
+  const fetchActivity = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await axios.get(`${API_URL}/activity`);
+      
+      console.log('🔔 Recent activity:', response.data);
+      
+      if (response.data.success) {
+        setRecentActivity(response.data.data);
+      }
+    } catch (err) {
+      console.error('❌ Erreur recent activity:', err);
+      setError(err.response?.data?.message || 'Erreur de chargement');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-export default useRecentActivity;
+  return { recentActivity, loading, error, refetch: fetchActivity };
+}
