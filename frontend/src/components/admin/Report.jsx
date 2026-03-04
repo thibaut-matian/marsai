@@ -37,16 +37,13 @@ const ReportTable = () => {
                     <Video size={20} className="text-red-500" />
                     <div>
                       {/* On utilise les noms renvoyés par le controller */}
-                      <div className="font-bold text-md">{report.movieTitle}</div>
-                      <div className="text-xs text-gray-500">
-                        {new Date(report.createdAt).toLocaleDateString()}
-                      </div>
+                      <div className="font-bold text-md">{report.movie?.title || "Titre inconnu"}</div>
                     </div>
                   </div>
                 </td>
                 <td>
                   <div className="flex items-center gap-2 text-gray-300 italic">
-                    <User size={14} /> {report.director}
+                    <User size={14} /> {report.movie?.director || "Inconnu"}
                   </div>
                 </td>
                 <td className="text-center">
@@ -67,7 +64,7 @@ const ReportTable = () => {
                     </button>
                     <button 
                       className="btn btn-square shadow-none btn-sm bg-red-600/20 hover:bg-red-600 border border-red-600 text-red-500 hover:text-white transition-all"
-                      onClick={() => handleDelete(report.id, report.titre)}
+                      onClick={() => handleDelete(report.id, report.movie?.title || "Titre inconnu")}
                       title="Supprimer"
                     >
                       <Trash2 size={18} />

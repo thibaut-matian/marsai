@@ -8,16 +8,25 @@ export default function useReport() {
 
     // Charger les vrais signalements depuis le backend
     const fetchReports = async () => {
-        try {
-            setLoading(true);
-            const response = await getAPI.getAllReports(); // La fonction qu'on a créée avant
-            setReports(response.data);
-        } catch (err) {
-            console.error("Erreur lors de la récupération des signalements:", err);
-        } finally {
-            setLoading(false);
-        }
-    };
+    try {
+        setLoading(true);
+        
+        // UTILISE TON SERVICE getAPI (C'est lui qui gère le token et l'URL de base)
+        const response = await getAPI.AllMoviesReports();
+        
+        console.log("Données reçues de l'API :", response.data);
+
+        // On s'adapte à la structure renvoyée par ton controller
+        // Si ton controller renvoie { success: true, data: [...] }
+        const data = response.data?.data || response.data || [];
+        
+        setReports(data); 
+    } catch (err) {
+        console.error("Erreur dans fetchReports:", err);
+    } finally {
+        setLoading(false);
+    }
+};
 
     useEffect(() => {
         fetchReports();

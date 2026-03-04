@@ -254,11 +254,6 @@ class JuryController {
     }
   }
 
-  /**
-   * POST /api/jury/report
-   * Signale un problème sur un film (technique, contenu, etc.)
-   * Body attendu : { movie_id, reason, details }
-   */
 
   /**
    * POST /api/jury/report
@@ -319,6 +314,7 @@ class JuryController {
       return res.status(500).json({ success: false, message: "Erreur serveur" });
     }
   }
+
 }
 
 module.exports = JuryController;

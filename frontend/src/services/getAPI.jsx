@@ -100,6 +100,9 @@ const getAPI = {
     getAdminMovies: () => api.get('admin/movie'),
     deleteMovie: (id) => api.delete(`admin/movie/${id}`),
     moderateMovie: (id, status) => api.patch(`admin/movie/${id}`, { status }),
+    AllMoviesReports: () => api.get('admin/movie/reports'),
+
+
     
     // ===== GESTION DES JURYS (useJuryManagement) =====
     getAllJuries: () => api.get('users?role=jury'),

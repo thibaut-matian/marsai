@@ -86,39 +86,42 @@ class AdminMovieController {
   }
 
   static async AllMoviesReports(req, res) {
-    try {
-      const reports = await MovieReport.findAll({
-        include: [
-          {
-            model: Movie,
-            attributes: ['id', 'vo_title', 'firstname', 'lastname']
-          },
-          {
-            model: MovieReport,
-            attributes: ['reason', 'comment', 'createdAt']
-          }
-        ],
-        order: [['createdAt', 'DESC']]
-      });
-
-      const formattedReports = reports.map(report => ({
-        id: report.id,
-        reason: report.reason,
-        comment: report.comment,
-        createdAt: report.createdAt,
-        movie: {
-          id: report.Movie.id,
-          title: report.Movie.vo_title,
-          director: `${report.Movie.firstname} ${report.Movie.lastname}`
+  try {
+    const reports = await MovieReport.findAll({
+      include: [
+        {
+          model: Movie,
+          attributes: ['id', 'vo_title', 'firstname', 'lastname']
         }
-      }));
+      ],
+    });
 
-      res.status(200).json({ success: true, count: formattedReports.length, data: formattedReports });
-    } catch (error) {
-      console.error("Erreur getAllReports:", error);
-      res.status(500).json({ success: false, message: "Erreur lors de la récupération des signalements" });
-    }
-  } 
+    const formattedReports = reports.map(report => ({
+      id: report.id,
+      // ATTENTION : vérifie si dans ta base c'est 'cause' ou 'reason'
+      reason: report.cause, 
+      comment: report.comment,
+      createdAt: report.createdAt,
+      movie: report.Movie ? {
+        id: report.Movie.id,
+        title: report.Movie.vo_title,
+        director: `${report.Movie.firstname} ${report.Movie.lastname}`.trim()
+      } : null // Au cas où le film n'existe plus
+    }));
+
+    res.status(200).json({ 
+      success: true, 
+      count: formattedReports.length, 
+      data: formattedReports 
+    });
+  } catch (error) {
+    console.error("Erreur AllMoviesReports:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: "Erreur lors de la récupération des signalements" 
+    });
+  }
+}
 }
 
 module.exports = AdminMovieController;
