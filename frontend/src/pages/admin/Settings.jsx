@@ -3,6 +3,7 @@ import { Upload, Info, List, Award, Users, Mail, Calendar, Save } from 'lucide-r
 import { useHomeContent } from '../../hooks/useHomeContent';
 import VideoUpload from '../../components/admin/VideoUpload';
 import ImageUpload from '../../components/admin/ImageUpload';
+import TimelinePreview from '../../components/admin/TimelinePreview';
 
 const tabs = [
   { id: 'hero', label: 'Hero', icon: Upload },
@@ -448,6 +449,16 @@ export default function Settings() {
                 />
               </div>
 
+              {/* 🆕 Preview de la timeline avec contrôle d'étape */}
+              <div className="border border-gray-700 rounded-lg p-6 bg-gray-800">
+                <h3 className="text-lg font-semibold mb-4">🎬 Preview de la Timeline</h3>
+                <TimelinePreview
+                  phases={content.timeline?.[activeLang]?.phases || []}
+                  activeStep={content.timeline?.[activeLang]?.activeStep || 1}
+                  onStepChange={(step) => updateField('timeline', activeLang, 'activeStep', step)}
+                />
+              </div>
+
               <div className="border-t border-gray-700 pt-6">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold">Phases de la Timeline</h3>
@@ -532,6 +543,46 @@ export default function Settings() {
                           className="w-full px-4 py-2 bg-gray-600 text-white rounded resize-none"
                         />
                       </div>
+
+                      {/* 🆕 Section Lien (optionnel) */}
+                      <div className="border-t border-gray-600 pt-4 space-y-3">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={phase.linkEnabled || false}
+                            onChange={(e) => updateTimelinePhase(activeLang, index, 'linkEnabled', e.target.checked)}
+                            className="w-4 h-4"
+                          />
+                          <label className="text-sm font-medium">Activer un lien pour cette phase</label>
+                        </div>
+
+                        {phase.linkEnabled && (
+                          <>
+                            <div>
+                              <label className="block text-sm font-medium mb-2">URL du lien</label>
+                              <input
+                                type="text"
+                                value={phase.linkUrl || ''}
+                                onChange={(e) => updateTimelinePhase(activeLang, index, 'linkUrl', e.target.value)}
+                                placeholder="/gallery"
+                                className="w-full px-4 py-2 bg-gray-600 text-white rounded"
+                              />
+                              <p className="text-xs text-gray-400 mt-1">Ex: /gallery, /submit-movie, https://...</p>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium mb-2">Texte du bouton</label>
+                              <input
+                                type="text"
+                                value={phase.linkLabel || ''}
+                                onChange={(e) => updateTimelinePhase(activeLang, index, 'linkLabel', e.target.value)}
+                                placeholder="Voir les films sélectionnés"
+                                className="w-full px-4 py-2 bg-gray-600 text-white rounded"
+                              />
+                            </div>
+                          </>
+                        )}
+                      </div>
                     </div>
                   ))}
 
@@ -547,8 +598,8 @@ export default function Settings() {
 
               <div className="bg-blue-600/20 border border-blue-600 rounded-lg p-4">
                 <p className="text-sm text-blue-400">
-                  💡 <strong>Conseil :</strong> Les phases s'affichent dans l'ordre sur la page d'accueil. 
-                  Utilisez des clés cohérentes (ex: registrations, deliberation, festival).
+                  💡 <strong>Conseil :</strong> Utilisez la preview ci-dessus pour tester visuellement la timeline. 
+                  L'étape active sera celle affichée sur la page Home après sauvegarde.
                 </p>
               </div>
             </div>

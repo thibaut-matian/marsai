@@ -43,7 +43,10 @@ export default function Home() {
         </div>
       </div>
 
-      <MovieTimeline />
+      <MovieTimeline 
+        phases={content?.timeline?.phases || []} 
+        activeStep={content?.timeline?.activeStep || 1}
+      />
 
       {/* À propos Section */}
       <div className="pb-16 bg-black">
