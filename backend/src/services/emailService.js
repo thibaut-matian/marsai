@@ -258,5 +258,6 @@ module.exports = {
   sendJuryInvitation,
   sendTicketConfirmation,
   sendTicketConfirmationPDF,
-  sendModerationVideo
+  sendModerationVideo,
+  sendMailToDirector,
 };
