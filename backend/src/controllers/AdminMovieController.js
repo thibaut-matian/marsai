@@ -19,7 +19,7 @@ class AdminMovieController {
         include: [
           {
             model: Note,
-            as: "notes",
+            as: "Notes", // Correction ici (majuscule)
             attributes: ["decision"],
             required: false,
           },
@@ -28,7 +28,7 @@ class AdminMovieController {
       });
 
       const formattedMovies = movies.map((movie) => {
-        const notes = movie.notes || [];
+        const notes = movie.Notes || [];
 
         // Calcul du statut depuis les décisions jury
         const decisions = notes.map((n) => n.decision).filter(Boolean);
