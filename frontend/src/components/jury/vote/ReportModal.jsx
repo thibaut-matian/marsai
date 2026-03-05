@@ -7,7 +7,7 @@ import getAPI from "../../../services/getAPI.jsx";
  * Props :
  *   - movieId : identifiant du film en cours de visionnage
  */
-const ReportModal = ({ movieId }) => {
+const ReportModal = ({ movieId, onReported }) => {
   const [reportReason, setReportReason] = useState("");
   const [reportDetails, setReportDetails] = useState("");
   const [reportSubmitted, setReportSubmitted] = useState(false);

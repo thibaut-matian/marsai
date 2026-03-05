@@ -11,16 +11,41 @@ class JuryController {
     try {
       const juryId = req.user.id;
 
-      // IDs des films déjà notés par ce jury
+      // Films assignés à ce jury (toutes les notes, votées ou non)
       const myNotes = await Note.findAll({
         where: { user_id: juryId },
-        attributes: ["movie_id"],
+        attributes: ["movie_id", "decision"],
       });
-      const notedIds = myNotes.map((n) => n.movie_id);
 
-      // Premier film pas encore noté
+      // IDs déjà votés (decision réelle != 'null')
+      const doneIds = myNotes
+        .filter((n) => n.decision !== "null")
+        .map((n) => n.movie_id);
+
+      // IDs assignés à ce jury
+      const assignedIds = myNotes.map((n) => n.movie_id);
+
+      if (assignedIds.length === 0) {
+        return res.status(200).json({
+          success: true,
+          data: null,
+          message: "Aucun film ne vous a encore été assigné.",
+        });
+      }
+
+      // Prochain film assigné non encore voté
+      const remainingIds = assignedIds.filter((id) => !doneIds.includes(id));
+
+      if (remainingIds.length === 0) {
+        return res.status(200).json({
+          success: true,
+          data: null,
+          message: "Tous vos films ont été visionnés !",
+        });
+      }
+
       const movie = await Movie.findOne({
-        where: notedIds.length > 0 ? { id: { [Op.notIn]: notedIds } } : {},
+        where: { id: { [Op.in]: remainingIds } },
         attributes: [
           "id",
           "vo_title",
@@ -156,26 +181,44 @@ class JuryController {
     try {
       const juryId = req.user.id;
 
-      // 1. Tous les films
-      const allMovies = await Movie.findAll({
-        attributes: ["id", "vo_title", "en_title", "duration"],
-      });
-
-      // 2. Notes soumises par CE jury
+      // 1. Toutes les notes de ce jury (assignées = decision 'null' ou votées)
       const myNotes = await Note.findAll({
         where: { user_id: juryId },
         attributes: ["movie_id", "decision"],
       });
 
-      // Construire un Set des movie_id déjà notés (accès O(1))
-      const notedMovieIds = new Set(myNotes.map((n) => n.movie_id));
+      // Si aucun film assigné → 0/0
+      if (myNotes.length === 0) {
+        return res.status(200).json({
+          success: true,
+          data: {
+            totalFilms: 0,
+            watchedFilms: 0,
+            percentage: 0,
+            movies: [],
+          },
+        });
+      }
 
-      // 3. Construire la liste enrichie
-      const movies = allMovies.map((m) => ({
+      // 2. IDs assignés à ce jury
+      const assignedMovieIds = myNotes.map((n) => n.movie_id);
+
+      // 3. Films votés (decision réelle, pas 'null')
+      const votedIds = new Set(
+        myNotes.filter((n) => n.decision !== "null").map((n) => n.movie_id),
+      );
+
+      // 4. Récupérer les infos des films assignés
+      const assignedMovies = await Movie.findAll({
+        where: { id: { [Op.in]: assignedMovieIds } },
+        attributes: ["id", "vo_title", "en_title", "duration"],
+      });
+
+      const movies = assignedMovies.map((m) => ({
         id: m.id,
         title: m.vo_title || m.en_title,
         duration: m.duration,
-        watched: notedMovieIds.has(m.id),
+        watched: votedIds.has(m.id),
       }));
 
       const totalFilms = movies.length;
@@ -210,7 +253,11 @@ class JuryController {
       const juryId = req.user.id;
 
       const notes = await Note.findAll({
-        where: { user_id: juryId },
+        where: {
+          user_id: juryId,
+          // On n'inclut que les votes réels (pas les assignations en attente)
+          decision: { [Op.notIn]: ["null"] },
+        },
         include: [
           {
             model: Movie,
@@ -258,6 +305,10 @@ class JuryController {
   /**
    * POST /api/jury/report
    * Signale un problème ET enregistre une note vide (NULL) pour exclure le film.
+   * Signale un problème sur un film.
+   * - Met la décision de la note du juré à 'signalé'
+   * - Enregistre dans MovieReport
+   * - Le juré passe automatiquement au film suivant
    */
   static async reportMovie(req, res) {
     try {
@@ -302,11 +353,34 @@ class JuryController {
         });
       }
 
-      console.log(`🚨 Signalement effectué. Film #${movie_id} marqué comme vu (Note NULL) pour le jury #${juryId}`);
+      // 1. Mettre à jour ou créer la note du juré avec decision = 'signalé'
+      const existingNote = await Note.findOne({
+        where: { user_id: juryId, movie_id },
+      });
+
+      if (existingNote) {
+        await existingNote.update({
+          decision: "signalé",
+          feedback: details || null,
+        });
+      } else {
+        await Note.create({
+          user_id: juryId,
+          movie_id,
+          decision: "signalé",
+          feedback: details || null,
+        });
+      }
+
+      // 2. Enregistrer dans MovieReport
+      const existingReport = await MovieReport.findOne({ where: { movie_id } });
+      if (!existingReport) {
+        await MovieReport.create({ movie_id, decision: reason });
+      }
 
       return res.status(200).json({
         success: true,
-        message: "Signalement enregistré. Le film ne vous sera plus proposé.",
+        message: "Film signalé. Passage au film suivant.",
       });
 
     } catch (error) {

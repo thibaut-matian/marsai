@@ -71,15 +71,15 @@ export default function FAQ() {
             className={`
               collapse mb-4 border transition-all duration-300 ease-in-out
               ${activeIndex === index 
-                ? "collapse-open border-indigo-500/50 bg-white/5 shadow-[0_0_15px_-3px_rgba(99,102,241,0.4)] rounded-xl" 
-                : "border-gray-800 bg-transparent rounded-none border-t-0 border-x-0 border-b" 
+                ? "collapse-open border-white/50 bg-white/5 shadow-[0_0_15px_-3px_rgba(255,255,255,0.3)] rounded-xl" 
+                : "bg-transparent rounded-none border-t-0 border-x-0 border-b" 
               }
             `}
             onClick={() => toggleQuestion(index)}
           >
             <div className="collapse-title text-white cursor-pointer text-base flex justify-between items-center w-full pr-4">
               <span className="flex-1 font-medium">{question}</span>
-              <span className="text-indigo-400">
+              <span className="text-white">
                 {activeIndex === index 
                   ? <Minus size={24} /> 
                   : <Plus size={24} />

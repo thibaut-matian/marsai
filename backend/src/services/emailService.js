@@ -11,6 +11,38 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const sendMailToDirector = async (vo_title, firstname, lastname, mail) => {
+  return transporter.sendMail({
+    from: `"MarsAI Festival" <${process.env.EMAIL_USER}>`,
+    to: mail,
+    subject: `🎬 Confirmation de soumission - ${vo_title}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; background: #000; color: #fff; padding: 32px; border-radius: 12px;">
+        <h1 style="text-align: center; font-weight: 300; letter-spacing: 4px;">MARS AI FESTIVAL</h1>
+        <hr style="border-color: rgba(255,255,255,0.2); margin: 24px 0;" />
+        
+        <p>Bonjour <strong>${firstname} ${lastname}</strong>,</p>
+        <p>Votre candidature au Festival MarsAI a bien été enregistrée ! 🎉</p>
+
+        <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 20px; margin: 24px 0;">
+          <p style="margin: 4px 0;"><span style="color: #aaa;">Film :</span> <strong>${vo_title}</strong></p>
+          <p style="margin: 4px 0;"><span style="color: #aaa;">Réalisateur :</span> ${firstname} ${lastname}</p>
+          <p style="margin: 4px 0;"><span style="color: #aaa;">Email :</span> ${mail}</p>
+        </div>
+
+        <p style="color: #aaa; font-size: 15px; margin: 20px 0;">
+          Nous examinerons votre œuvre avec attention et vous contacterons prochainement pour vous informer de la suite du processus de sélection.
+        </p>
+
+        <hr style="border-color: rgba(255,255,255,0.2); margin: 24px 0;" />
+        <p style="text-align: center; color: #666; font-size: 11px;">
+          Gardez cet email comme confirmation de votre participation au MarsAI Festival 2026.
+        </p>
+      </div>
+    `,
+  });
+};
+
 /**
  * Envoie l'email de confirmation de réservation avec le QR code en pièce jointe
  */

@@ -52,7 +52,7 @@ const VerdictButton = ({ type, icon, label, sublabel, current, set, color }) => 
 /**
  * Panneau de verdict : boutons de vote + bouton valider + messages feedback
  */
-const VerdictPanel = ({ decision, setDecision, comment, onSubmit, voteSubmitted, voteLoading, voteError }) => {
+const VerdictPanel = ({ decision, setDecision, comment, onSubmit, voteSubmitted, voteLoading, voteError, onOpenReport }) => {
   return (
     <div className="w-full lg:w-1/4">
       <div className="card bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/10 h-full rounded-3xl overflow-hidden">
@@ -65,8 +65,8 @@ const VerdictPanel = ({ decision, setDecision, comment, onSubmit, voteSubmitted,
 
         <div className="card-body justify-center gap-4 p-5">
           <VerdictButton type="validate" icon="✓" label="J'aime"        sublabel="Sélectionner" current={decision} set={setDecision} color="success" />
-          <VerdictButton type="discuss" icon="?" label="À discuter"     sublabel="Hésitant"     current={decision} set={setDecision} color="warning" />
-          <VerdictButton type="refuse"  icon="✕" label="Je n'aime pas"  sublabel="Refuser"      current={decision} set={setDecision} color="error"   />
+          <VerdictButton type="discuss"  icon="?" label="À discuter"    sublabel="Hésitant"     current={decision} set={setDecision} color="warning" />
+          <VerdictButton type="refuse"   icon="✕" label="Je n'aime pas" sublabel="Refuser"      current={decision} set={setDecision} color="error"   />
 
           <div className="divider my-1 before:bg-white/10 after:bg-white/10"></div>
 
@@ -99,6 +99,19 @@ const VerdictPanel = ({ decision, setDecision, comment, onSubmit, voteSubmitted,
               }`}
             >
               {voteLoading ? <span className="loading loading-spinner loading-sm"></span> : "Valider mon vote"}
+            </button>
+          )}
+
+          {/* Lien signalement */}
+          {!voteSubmitted && (
+            <button
+              onClick={onOpenReport}
+              className="flex items-center justify-center gap-1.5 text-xs text-red-500 hover:text-red-400 transition-colors w-full"
+            >
+              <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <span className="underline underline-offset-2 font-medium">Signaler un problème</span>
             </button>
           )}
 

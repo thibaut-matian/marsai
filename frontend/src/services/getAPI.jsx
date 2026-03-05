@@ -103,6 +103,9 @@ const getAPI = {
     AllMoviesReports: () => api.get('admin/movie/reports'),
 
 
+    distributeMovies: () => api.post('admin/distribute'),
+    redistributeMovies: () => api.post('admin/redistribute'),
+    selectMovie: (id) => api.patch(`admin/movie/${id}/select`),
     
     // ===== GESTION DES JURYS (useJuryManagement) =====
     getAllJuries: () => api.get('users?role=jury'),

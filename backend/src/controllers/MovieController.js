@@ -1,5 +1,10 @@
 const Movie = require("../models/MovieModel");
 const MovieAward = require("../models/MovieAwardModel");
+const Newsletter = require("../models/NewsletterModel");
+const Squad = require("../models/SquadModel");
+const SocialLink = require("../models/SocialLinkModel");
+const MovieSocial = require("../models/MovieSocialModel");
+const SocialMedia = require("../models/SocialMediaModel");
 const { uploadToScaleway, deleteFromScaleway } = require("../config/scaleway");
 const { youtube } = require("../config/Youtube");
 const { sendMailToDirector } = require("../services/emailService");
@@ -18,6 +23,8 @@ class MovieController {
       console.log("🎬 MovieController.create appelé");
       console.log("📦 Body:", req.body);
       console.log("📁 Files:", req.files);
+      console.log("👥 Team members brut:", req.body.team_members);
+      console.log("🌐 Socials brut:", req.body.socials); // ✅ DEBUG socials
 
       const files = req.files;
       const {
@@ -43,36 +50,13 @@ class MovieController {
         en_desc,
         ia_used,
         creative_method,
+        team_members,
+        socials, // ✅ Récupérer socials
       } = req.body;
 
-      // 1️⃣ Vérification fichiers...
-      if (!files || !files.video || !files.video[0]) {
-        console.error("❌ Vidéo manquante");
-        return res.status(400).json({ message: "La vidéo est obligatoire" });
-      }
-
-      // 1️⃣ BIS : Validation des champs obligatoires AVANT upload
-      const requiredFields = [
-        { key: "mail", label: "Email" },
-        { key: "lastname", label: "Nom" },
-        { key: "firstname", label: "Prénom" },
-        { key: "birthdate", label: "Date de naissance" },
-        { key: "actual_job", label: "Métier" },
-        { key: "duration", label: "Durée" },
-        { key: "vo_title", label: "Titre original" },
-        { key: "vo_desc", label: "Synopsis" },
-      ];
-      const missing = requiredFields.filter(
-        (f) => !req.body[f.key] || req.body[f.key].toString().trim() === "",
-      );
-      if (missing.length > 0) {
-        const missingLabels = missing.map((f) => f.label).join(", ");
-        return res
-          .status(400)
-          .json({
-            message: `Champs obligatoires manquants : ${missingLabels}`,
-          });
-      }
+      // ✅ PLUS BESOIN de valider ici ! 
+      // Si le code arrive ici, c'est que Joi a déjà tout vérifié.
+      // req.body contient déjà les données castées (ex: duration est déjà un Number).
 
       let cloud_url_video = null;
       let youtube_id = null;
@@ -141,6 +125,20 @@ class MovieController {
       const url = `${firstname.toLowerCase()}-${lastname.toLowerCase()}-${Date.now()}`;
       console.log("6️⃣ URL générée:", url);
 
+      // ✅ TRAITER L'ÉQUIPE
+      let parsedTeamMembers = null;
+      if (team_members) {
+        try {
+          parsedTeamMembers =
+            typeof team_members === "string"
+              ? JSON.parse(team_members)
+              : team_members;
+          console.log("👥 Équipe reçue:", parsedTeamMembers);
+        } catch (parseError) {
+          console.warn("⚠️ Erreur parsing équipe, ignoré:", parseError.message);
+        }
+      }
+
       // Préparer les données pour la DB
       const movieData = {
         url,
@@ -180,6 +178,108 @@ class MovieController {
       const movie = await Movie.create(movieData);
       console.log("✅ Film créé avec ID:", movie.id);
 
+      // Newsletter
+      const newsletterWanted =
+        req.body.newsletter === "1" || req.body.newsletter === true;
+      if (newsletterWanted && mail) {
+        console.log("📧 Inscription newsletter pour:", mail);
+        try {
+          const existing = await Newsletter.findOne({ where: { email: mail } });
+          if (!existing) {
+            await Newsletter.create({ email: mail, is_active: true });
+            console.log("✅ Inscription newsletter créée");
+          } else {
+            console.log("ℹ️ Email déjà inscrit à la newsletter");
+          }
+        } catch (newsletterError) {
+          console.error(
+            "⚠️ Erreur inscription newsletter:",
+            newsletterError.message,
+          );
+        }
+      }
+
+      // Gérer l'équipe dans la table Squad
+      if (
+        parsedTeamMembers &&
+        Array.isArray(parsedTeamMembers) &&
+        parsedTeamMembers.length > 0
+      ) {
+        console.log("👥 Création des collaborateurs...");
+        for (const member of parsedTeamMembers) {
+          let memberGender = "other";
+          if (member.civilite === "m") memberGender = "m";
+          else if (member.civilite === "mrs") memberGender = "mrs";
+          const squadData = {
+            gender: memberGender,
+            firstname: member.firstname || "",
+            lastname: member.lastname || "",
+            birthdate: member.birthdate || birthdate,
+            mail: member.email || "",
+            role: member.role || "Collaborateur",
+            movie_id: movie.id,
+          };
+          try {
+            await Squad.create(squadData);
+            console.log(
+              `   ✅ Membre créé: ${member.firstname} ${member.lastname} (${member.role})`,
+            );
+          } catch (squadError) {
+            console.error(
+              `   ❌ Erreur création membre ${member.firstname}:`,
+              squadError.message,
+            );
+          }
+        }
+        console.log(
+          `✅ ${parsedTeamMembers.length} collaborateur(s) traité(s)`,
+        );
+      } else {
+        console.log("👥 Aucun collaborateur à créer");
+      }
+
+      // Réseaux sociaux
+      if (socials) {
+        try {
+          const socialsList =
+            typeof socials === "string" ? JSON.parse(socials) : socials;
+          console.log("🌐 Réseaux sociaux parsés:", socialsList);
+
+          for (const social of socialsList) {
+            if (!social.url || !social.platform) continue;
+            // Trouver la plateforme dans socials_medias
+            const platform = await SocialMedia.findOne({
+              where: { name: social.platform.toLowerCase() },
+            });
+            if (!platform) {
+              console.warn(`⚠️ Plateforme inconnue : ${social.platform}`);
+              continue;
+            }
+            // Créer le lien social
+            const link = await SocialLink.create({
+              social_id: platform.id,
+              social_url: social.url,
+            });
+            // Lier au film via movies_socials
+            await MovieSocial.create({
+              movie_id: movie.id,
+              social_id: link.id,
+            });
+            console.log(
+              `   ✅ Réseau social ajouté : ${social.platform} → ${social.url}`,
+            );
+          }
+        } catch (socialError) {
+          console.error(
+            "⚠️ Erreur traitement réseaux sociaux:",
+            socialError.message,
+          );
+          console.error("⚠️ Stack:", socialError.stack);
+        }
+      } else {
+        console.log("🌐 Aucun réseau social à créer");
+      }
+
       // Association award par défaut
       console.log("9️⃣ Association award par défaut...");
       await MovieAward.create({
@@ -205,35 +305,9 @@ class MovieController {
 
       // ✅ NOUVEAU : Envoyer l'email de confirmation
       console.log("1️⃣ Envoi email de confirmation...");
-      const accessUrl = `${process.env.FRONTEND_URL || "http://localhost:5173"}/movie/${movie.url}?token=${token}`;
-
-      const emailSubject = `🎬 Confirmation de soumission - ${vo_title}`;
-      const emailMessage = `
-Bonjour ${firstname} ${lastname},
-
-Votre candidature au Festival MarsAI a bien été enregistrée ! 🎉
-
-📽️ Titre du film : ${vo_title}
-🆔 Numéro de candidature : ${movie.id}
-🔗 Lien d'accès sécurisé : ${accessUrl}
-
-Vous pouvez consulter votre candidature à tout moment via ce lien.
-
-Ce lien est valable pendant 30 jours et vous permet de :
-- Visualiser votre film
-- Télécharger vos fichiers
-- Suivre le statut de votre candidature
-
-Nous vous contacterons prochainement pour vous informer de la suite.
-
-Bonne chance ! 🚀
-
----
-L'équipe MarsAI Festival
-      `.trim();
 
       try {
-        await sendMailToDirector(mail, emailSubject, emailMessage);
+        await sendMailToDirector(vo_title, firstname, lastname, mail);
         console.log("✅ Email envoyé à:", mail);
       } catch (emailError) {
         console.error("⚠️ Erreur envoi email:", emailError.message);
@@ -251,7 +325,6 @@ L'équipe MarsAI Festival
           youtube_id: movie.youtube_id,
         },
         token,
-        accessUrl,
       });
     } catch (error) {
       console.error("❌❌❌ ERREUR CRÉATION CANDIDATURE ❌❌❌");
@@ -277,7 +350,23 @@ L'équipe MarsAI Festival
         process.env.JWT_SECRET || "marsai_secret_key_2026",
       );
 
-      const movie = await Movie.findByPk(decoded.movieId);
+      const movie = await Movie.findByPk(decoded.movieId, {
+        include: [
+          {
+            model: Squad,
+            as: "team",
+            attributes: [
+              "id",
+              "gender",
+              "firstname",
+              "lastname",
+              "mail",
+              "role",
+              "birthdate",
+            ],
+          },
+        ],
+      });
 
       if (!movie) {
         return res.status(404).json({ message: "Film non trouvé" });
@@ -339,6 +428,19 @@ L'équipe MarsAI Festival
               },
             ],
           },
+          {
+            model: Squad,
+            as: "team",
+            attributes: [
+              "id",
+              "gender",
+              "firstname",
+              "lastname",
+              "mail",
+              "role",
+              "birthdate",
+            ],
+          },
         ],
       });
 
@@ -385,6 +487,19 @@ L'équipe MarsAI Festival
               },
             ],
           },
+          {
+            model: Squad,
+            as: "team",
+            attributes: [
+              "id",
+              "gender",
+              "firstname",
+              "lastname",
+              "mail",
+              "role",
+              "birthdate",
+            ],
+          },
         ],
       });
 
@@ -411,7 +526,7 @@ L'équipe MarsAI Festival
       const SocialLink = require("../models/SocialLinkModel");
       const SocialMedia = require("../models/SocialMediaModel");
 
-      const movie = await Movie.findOne({ 
+      const movie = await Movie.findOne({
         where: { url },
         include: [
           {
