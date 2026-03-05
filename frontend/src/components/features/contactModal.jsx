@@ -71,7 +71,7 @@ const ContactModal = ({ isOpen, onClose, data, onSend, loading }) => {
                 className="textarea textarea-bordered bg-black/30 border-white/10 focus:border-amber-500 text-white h-32 w-full text-sm outline-none"
                 defaultValue={
                   data.status === 3 
-                    ? `Bonjour ${data.director?.trim()},\n\nVotre vidéo "${data.title}" a été signalée.\n\nAprès vérification, nous vous informons que celle-ci va être traitée par notre équipe de modération.`
+                    ? `Bonjour ${data.director?.trim()},\n\nVotre vidéo "${data.title}" a été signalée pour les raisons suivante : ${data.comment || 'Raison non spécifiée'}.\n\nAprès vérification, nous vous informons que celle-ci va être traitée par notre équipe de modération et donc supprimer. Pour reparticipé à nouveau, veuillez soumettre une nouvelle vidéo en vous assurant de respecter les règles du festival.`
                     : `Bonjour ${data.director?.trim()},\n\nNous vous contactons concernant votre film "${data.title}" dont le statut actuel est : ${currentStatusText}.\n\nNous aurions besoin de précisions complémentaires.`
                 }
               />

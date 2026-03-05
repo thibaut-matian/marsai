@@ -227,12 +227,36 @@ const sendJuryInvitation = async (jury) => {
   });
 };
 
+const sendModerationVideo = async (to, subject, message) => {
+  return transporter.sendMail({
+    from: `"MarsAI Modération" <${process.env.EMAIL_USER}>`,
+    to: to,
+    subject: subject,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; background: #000; color: #fff; padding: 32px; border-radius: 12px;">
+        <h1 style="text-align: center; font-weight: 300; letter-spacing: 4px; color: #fff;">MARS AI FESTIVAL</h1>
+        <div style="text-align: center; color: #f59e0b; font-size: 12px; font-weight: bold; text-transform: uppercase; margin-bottom: 20px;">Espace Modération</div>
+        <hr style="border-color: rgba(255,255,255,0.2); margin: 24px 0;" />
+        
+        <div style="line-height: 1.6; color: #ddd;">
+          ${message.replace(/\n/g, '<br>')}
+        </div>
+
+        <hr style="border-color: rgba(255,255,255,0.2); margin: 24px 0;" />
+        <p style="text-align: center; color: #666; font-size: 11px;">
+          Ceci est un message automatique de l'équipe de modération MarsAI.
+        </p>
+      </div>
+    `,
+  });
+};
+
 //
 
 //
 module.exports = {
-  sendMailToDirector,
   sendJuryInvitation,
   sendTicketConfirmation,
   sendTicketConfirmationPDF,
+  sendModerationVideo
 };

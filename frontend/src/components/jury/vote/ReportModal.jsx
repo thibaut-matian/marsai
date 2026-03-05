@@ -18,10 +18,15 @@ const ReportModal = ({ movieId, onReported }) => {
     setReportLoading(true);
     setReportError(null);
     try {
+    console.log("DONNÉES ENVOYÉES :", { 
+    movie_id: movieId, 
+    cause: reportReason, 
+    comment: reportDetails 
+  });
       await getAPI.reportMovie({
         movie_id: movieId,
-        reason: reportReason,
-        details: reportDetails || null,
+        cause: reportReason,
+        comment: reportDetails || null,
       });
       setReportSubmitted(true);
       setTimeout(() => {
@@ -29,7 +34,7 @@ const ReportModal = ({ movieId, onReported }) => {
         setReportSubmitted(false);
         setReportReason("");
         setReportDetails("");
-        if (onReported) onReported(); // → passe au film suivant
+        window.location.reload();
       }, 2000);
     } catch (err) {
       console.error("Erreur signalement:", err);
@@ -63,6 +68,7 @@ const ReportModal = ({ movieId, onReported }) => {
                 <option value="loading">La vidéo ne charge pas</option>
                 <option value="content">Contenu inapproprié</option>
                 <option value="quality">Problème de qualité</option>
+                <option value="author">Droit d'auteur</option>
                 <option value="other">Autre</option>
               </select>
             </div>

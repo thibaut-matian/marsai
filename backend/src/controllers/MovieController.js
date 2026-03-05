@@ -15,8 +15,12 @@ const fs = require("fs").promises;
 const path = require("path");
 const jwt = require("jsonwebtoken");
 const { Readable } = require("stream");
+const MovieReport = require("../models/MovieReportModel");
+const Note = require("../models/NoteModel");         
 
 class MovieController {
+
+  
   async create(req, res) {
     try {
       console.log("🎬 MovieController.create appelé");
@@ -577,48 +581,79 @@ class MovieController {
     }
   }
 
-  // Supprimer un film
+// Supprimer un film
   async delete(req, res) {
+    const extractKey = (url) => {
+      if (!url || typeof url !== 'string' || !url.includes('/')) return null;
+      return url.split('/').pop(); 
+    };
+
     try {
       const { id } = req.params;
-
       const movie = await Movie.findByPk(id);
 
       if (!movie) {
         return res.status(404).json({ message: "Film non trouvé" });
       }
 
-      // Supprimer les fichiers de Scaleway
-      if (movie.cloud_url_video) {
-        await deleteFromScaleway(movie.cloud_url_video);
-      }
-      if (movie.poster_url) {
-        await deleteFromScaleway(movie.poster_url);
-      }
-      if (movie.subtitle_url) {
-        await deleteFromScaleway(movie.subtitle_url);
-      }
+      console.log(`🗑️ Tentative de suppression du film ID: ${id}`);
 
-      // Supprimer la vidéo YouTube
-      if (movie.youtube_id && movie.youtube_id !== "pending") {
-        try {
-          await youtube.videos.delete({ id: movie.youtube_id });
-        } catch (youtubeError) {
-          console.error("Erreur suppression YouTube:", youtubeError);
+      // 1️⃣ Supprimer la vidéo de Scaleway
+      if (movie.cloud_url_video) {
+        const videoKey = extractKey(movie.cloud_url_video);
+        if (videoKey) {
+          await deleteFromScaleway(videoKey).catch(err => console.error("Erreur S3 Vidéo ignorée:", err.message));
         }
       }
 
-      await movie.destroy();
+      // 2️⃣ Supprimer le poster
+      if (movie.poster_url) {
+        const posterKey = extractKey(movie.poster_url);
+        if (posterKey) {
+          await deleteFromScaleway(posterKey).catch(err => console.error("Erreur S3 Poster ignorée:", err.message));
+        }
+      }
 
-      res.status(200).json({ message: "Film supprimé avec succès" });
+      // 3️⃣ Supprimer les sous-titres
+      if (movie.subtitle_url) {
+        const subtitleKey = extractKey(movie.subtitle_url);
+        if (subtitleKey) {
+          await deleteFromScaleway(subtitleKey).catch(err => console.error("Erreur S3 Sub ignorée:", err.message));
+        }
+      }
+
+      // 4️⃣ Supprimer YouTube
+      if (movie.youtube_id && movie.youtube_id !== "pending" && movie.youtube_id !== "upload-failed") {
+        try {
+          await youtube.videos.delete({ id: movie.youtube_id });
+        } catch (youtubeError) {
+          console.error("⚠️ Erreur YouTube ignorée:", youtubeError.message);
+        }
+      }
+
+      console.log("🧹 Nettoyage des tables liées...");
+      
+      // Suppression des dépendances pour éviter l'erreur Foreign Key
+      await Note.destroy({ where: { movie_id: id } });
+      await MovieReport.destroy({ where: { movie_id: id } });
+      await MovieAward.destroy({ where: { movie_id: id } });
+
+      // ENFIN, on supprime le film
+      await movie.destroy();
+      console.log("✅ Film supprimé avec succès");
+
+      return res.status(200).json({ message: "Film supprimé avec succès" });
+
     } catch (error) {
-      console.error("Erreur suppression film:", error);
-      res.status(500).json({
+      console.error("❌ Erreur critique suppression film:", error);
+      return res.status(500).json({
         message: "Erreur lors de la suppression du film",
         error: error.message,
       });
     }
   }
-}
+} 
 
 module.exports = new MovieController();
+
+

@@ -4,10 +4,12 @@ import useReport from "../../hooks/useReport";
 import usePagination from "../../hooks/usePagination";
 import PaginationControls from "../pagination";
 import ContactModal from "../features/contactModal";
+import ActionButton from "./actionButton";
+import ModalDetails from "../features/movies/ModalDetails";
 import SearchBar from '../ui/SearchBar';
 
 const ReportTable = () => {
-  const { reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport } = useReport();
+  const { reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport, handleOpenModal, handleOpenDetail, handleCloseDetail, isDetailOpen, detailMovie } = useReport();
   const [query, setQuery] = useState('');
 
   // On récupère tout l'objet pagination
@@ -35,50 +37,63 @@ const ReportTable = () => {
             </tr>
           </thead>
           
-          <tbody className="text-white">
-            {/* On utilise pagination.currentItems pour n'afficher que les 20 du moment */}
+         <tbody className="text-white">
             {pagination.currentItems.map((report) => (
-              <tr key={report.id} className="border-b border-white/5 hover:bg-white/5 transition-all">
+              <tr key={report.id} className="...">
                 <td>
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-red-500/10 rounded-lg text-red-500">
-                      <Video size={20} />
-                    </div>
+                    <Video size={20} className="text-red-500" />
                     <div>
-                      <div className="font-bold text-md">{report.titre}</div>
-                      <div className="text-xs text-gray-500">{report.timestamp}</div>
+                      {/* On utilise les noms renvoyés par le controller */}
+                      <div className="font-bold text-md">{report.movie?.title || "Titre inconnu"}</div>
                     </div>
                   </div>
                 </td>
                 <td>
                   <div className="flex items-center gap-2 text-gray-300 italic">
-                    <User size={14} className="text-gray-500" /> {report.auteur}
+                    <User size={14} /> {report.movie?.director || "Inconnu"}
                   </div>
                 </td>
-                  <td className="text-center min-w-[180px]"> {/* On force une largeur mini ici */}
-                  <span className="badge badge-outline border-error/50 text-error bg-error/5 py-4 px-4 text-[10px] sm:text-xs font-semibold uppercase tracking-tight whitespace-nowrap h-auto inline-flex items-center justify-center">
-                    {report.raison}
+                <td className="text-center">
+                  <span className="badge badge-outline border-error/50 text-error uppercase text-[10px]">
+                    {report.reason}
                   </span>
                 </td>
                 <td>
-                  <div className="flex justify-center gap-2">
-                    <button className="btn btn-square shadow-none btn-sm bg-blue-600 hover:bg-blue-500 border-none text-white" title="Voir">
-                      <Eye size={18} />
-                    </button>
-                    <button 
-                      className="btn btn-square shadow-none btn-sm bg-amber-500/20 border border-amber-500 text-amber-500"
-                      onClick={() => setSelectedReport(report)} 
-                    >
-                      <Mail size={18} />
-                    </button>
-                    <button 
-                      className="btn btn-square shadow-none btn-sm bg-red-600/20 hover:bg-red-600 border border-red-600 text-red-500 hover:text-white transition-all"
-                      onClick={() => handleDelete(report.id, report.titre)}
-                      title="Supprimer"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
+
+<      div className="flex justify-center items-center gap-2">
+      <ActionButton 
+    icon={Eye} 
+    variant="blue" 
+    onClick={() => handleOpenDetail(report.movie)} 
+    title="Voir les détails"
+  />
+  
+<ActionButton 
+  icon={Mail} 
+  variant="amber" 
+  onClick={() => {
+    
+    setSelectedReport({
+      id: report.movie?.id,
+      email: report.email,
+      title: report.movie?.title || "Titre inconnu",
+      director: report.movie?.director || "Réalisateur inconnu",
+      status: 3,
+      comment: report.comment 
+
+    });
+  }} 
+  title="Contacter"
+/>
+  
+  <ActionButton 
+  icon={Trash2} 
+  variant="red" 
+  onClick={() => handleDelete(report.id, report.movie?.id, report.movie?.title)} 
+  title="Supprimer"
+/>
+</div>
                 </td>
               </tr>
             ))}
@@ -90,12 +105,22 @@ const ReportTable = () => {
       </div>
 
       {/* MODALE DE CONTACT */}
-      <ContactModal 
-        isOpen={!!selectedReport} // Ouvert si selectedMovie n'est pas null
-        data={selectedReport} 
-        onClose={() => setSelectedReport(null)} 
-        onSend={handleSendEmail}
-      />
+    <ContactModal 
+  isOpen={!!selectedReport}
+  data={selectedReport} 
+  onClose={() => setSelectedReport(null)} 
+  onSend={handleSendEmail}
+/>
+
+{isDetailOpen && detailMovie && (
+  <ModalDetails 
+    // Si detailMovie est l'objet film, on prend .id. 
+    // Si detailMovie est déjà l'ID (simple chiffre), on le prend direct.
+    movieId={detailMovie.id || detailMovie} 
+    isOpen={isDetailOpen}
+    onClose={handleCloseDetail} 
+  />
+)}
     </div>
   );
 };

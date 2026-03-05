@@ -302,8 +302,10 @@ class JuryController {
     }
   }
 
+
   /**
    * POST /api/jury/report
+   * Signale un problème ET enregistre une note vide (NULL) pour exclure le film.
    * Signale un problème sur un film.
    * - Met la décision de la note du juré à 'signalé'
    * - Enregistre dans MovieReport
@@ -312,21 +314,43 @@ class JuryController {
   static async reportMovie(req, res) {
     try {
       const juryId = req.user.id;
-      const { movie_id, reason, details } = req.body;
+      const { movie_id, cause, comment } = req.body; // 'decision' ici est la raison du signalement (ex: 'technical')
+      console.log(movie_id, cause, comment);
 
-      if (!movie_id || !reason) {
+      // 1. Validation
+      if (!movie_id || !cause) {
         return res.status(400).json({
           success: false,
-          message: "Les champs movie_id et reason sont obligatoires",
+          message: "Tous les champs sont obligatoires (film, raison, détails)",
         });
       }
 
-      // Vérifier que le film existe
-      const movie = await Movie.findByPk(movie_id);
-      if (!movie) {
-        return res.status(404).json({
-          success: false,
-          message: "Film introuvable",
+      // 2. INSERTION DANS MovieReport (La table de log des erreurs)
+      await MovieReport.create({
+        movie_id: movie_id,
+        cause: cause, // La raison (ex: 'technical')
+        comment: comment
+      });
+
+      // 3. ENREGISTREMENT DANS LA TABLE Note
+      // On laisse 'decision' à NULL car 'signalé' n'est pas dans ton ENUM
+      const feedbackTexte = `[SIGNALEMENT] Type: ${cause} | Détails: ${comment}`;
+
+      const existingNote = await Note.findOne({
+        where: { user_id: juryId, movie_id },
+      });
+
+      if (existingNote) {
+        await existingNote.update({ 
+          decision: null, 
+          feedback: feedbackTexte 
+        });
+      } else {
+        await Note.create({
+          user_id: juryId,
+          movie_id: movie_id,
+          decision: null,
+          feedback: feedbackTexte
         });
       }
 
@@ -359,15 +383,13 @@ class JuryController {
         success: true,
         message: "Film signalé. Passage au film suivant.",
       });
+
     } catch (error) {
-      console.error("Erreur JuryController.reportMovie:", error);
-      return res.status(500).json({
-        success: false,
-        message: "Erreur lors de l'enregistrement du signalement",
-        error: error.message,
-      });
+      console.error("Erreur reportMovie:", error);
+      return res.status(500).json({ success: false, message: "Erreur serveur" });
     }
   }
+
 }
 
 module.exports = JuryController;

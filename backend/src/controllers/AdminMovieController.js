@@ -84,13 +84,13 @@ class AdminMovieController {
       res.status(200).json({
         success: true,
         count: formattedMovies.length,
-        data: formattedMovies,
+        data: formattedMovies
       });
     } catch (error) {
       res.status(500).json({
         success: false,
         message: "Erreur lors de la récupération de la liste des films",
-        error: error.message,
+        error: error.message
       });
     }
   }
@@ -99,7 +99,10 @@ class AdminMovieController {
     const { to, subject, message } = req.body;
 
     try {
-      await emailService.sendMailToDirector(to, subject, message);
+      // 2. Le controller appelle le service
+      await emailService.sendModerationVideo(to, subject, message);
+
+      // 3. Le controller répond au Front-end
       res.status(200).json({ success: true, message: "Email envoyé !" });
     } catch (error) {
       console.error("Erreur dans le controller email:", error);
@@ -107,6 +110,43 @@ class AdminMovieController {
     }
   }
 
+  static async AllMoviesReports(req, res) {
+    try {
+      const reports = await MovieReport.findAll({
+        include: [
+          {
+            model: Movie,
+            attributes: ['id', 'vo_title', 'firstname', 'lastname', 'mail']
+          }
+        ],
+      });
+
+      const formattedReports = reports.map(report => ({
+        id: report.id,
+        reason: report.cause,
+        comment: report.comment,
+        createdAt: report.createdAt,
+        movie: report.Movie ? {
+          id: report.Movie.id,
+          title: report.Movie.vo_title,
+          director: `${report.Movie.firstname} ${report.Movie.lastname}`.trim()
+        } : null, // Au cas où le film n'existe plus
+        email: report.Movie.mail // Pour le contact
+      }));
+
+      res.status(200).json({
+        success: true,
+        count: formattedReports.length,
+        data: formattedReports
+      });
+    } catch (error) {
+      console.error("Erreur AllMoviesReports:", error);
+      res.status(500).json({
+        success: false,
+        message: "Erreur lors de la récupération des signalements"
+      });
+    }
+  }
   /**
    * POST /api/admin/distribute
    * Distribue aléatoirement les films non encore assignés entre les jurés actifs.
