@@ -4,12 +4,15 @@ import useReport from "../../hooks/useReport";
 import usePagination from "../../hooks/usePagination";
 import PaginationControls from "../pagination";
 import ContactModal from "../features/contactModal";
+import ActionButton from "./actionButton";
 
 const ReportTable = () => {
-  const {reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport } = useReport();
+  const {reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport, handleOpenModal, handleOpenDetail, handleCloseDetail } = useReport();
 
   // On récupère tout l'objet pagination
   const pagination = usePagination(reports, 10);
+
+  console.log("STRUCTURE DU PREMIER SIGNALEMENT :", reports[0]);
 
   return (
     <div className="p-6 relative">
@@ -52,24 +55,40 @@ const ReportTable = () => {
                   </span>
                 </td>
                 <td>
-                  <div className="flex justify-center gap-2">
-                    <button className="btn btn-square shadow-none btn-sm bg-blue-600 hover:bg-blue-500 border-none text-white" title="Voir">
-                      <Eye size={18} />
-                    </button>
-                    <button 
-                      className="btn btn-square shadow-none btn-sm bg-amber-500/20 border border-amber-500 text-amber-500"
-                      onClick={() => setSelectedReport(report)} 
-                    >
-                      <Mail size={18} />
-                    </button>
-                    <button 
-                      className="btn btn-square shadow-none btn-sm bg-red-600/20 hover:bg-red-600 border border-red-600 text-red-500 hover:text-white transition-all"
-                      onClick={() => handleDelete(report.id, report.movie?.title || "Titre inconnu")}
-                      title="Supprimer"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
+
+<      div className="flex justify-center items-center gap-2">
+      <ActionButton 
+    icon={Eye} 
+    variant="blue" 
+    onClick={() => handleOpenDetail(report.movie.id)} 
+    title="Voir les détails"
+  />
+  
+<ActionButton 
+  icon={Mail} 
+  variant="amber" 
+  onClick={() => {
+    
+    setSelectedReport({
+      id: report.movie?.id,
+      email: report.email,
+      title: report.movie?.title || "Titre inconnu",
+      director: report.movie?.director || "Réalisateur inconnu",
+      status: 3,
+      comment: report.comment 
+
+    });
+  }} 
+  title="Contacter"
+/>
+  
+  <ActionButton 
+  icon={Trash2} 
+  variant="red" 
+  onClick={() => handleDelete(report.id, report.movie?.id, report.movie?.title)} 
+  title="Supprimer"
+/>
+</div>
                 </td>
               </tr>
             ))}
@@ -81,12 +100,12 @@ const ReportTable = () => {
       </div>
 
       {/* MODALE DE CONTACT */}
-      <ContactModal 
-        isOpen={!!selectedReport} // Ouvert si selectedMovie n'est pas null
-        data={selectedReport} 
-        onClose={() => setSelectedReport(null)} 
-        onSend={handleSendEmail}
-      />
+    <ContactModal 
+  isOpen={!!selectedReport}
+  data={selectedReport} 
+  onClose={() => setSelectedReport(null)} 
+  onSend={handleSendEmail}
+/>
     </div>
   );
 };
