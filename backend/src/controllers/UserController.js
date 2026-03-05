@@ -35,7 +35,7 @@ class UserController {
         include: [
           {
             model: Role,
-            as: "role",
+            as: "Role",
             attributes: ["id", "name"],
           },
         ],
@@ -85,7 +85,7 @@ class UserController {
         include: [
           {
             model: Role,
-            as: "role",
+            as: "Role",
             attributes: ["id", "name"],
           },
         ],
@@ -258,7 +258,7 @@ class UserController {
         include: [
           {
             model: Role,
-            as: "role",
+            as: "Role",
             attributes: ["id", "name"],
           },
         ],
@@ -326,17 +326,15 @@ class UserController {
       try {
         decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
       } catch (err) {
-        return res
-          .status(403)
-          .json({
-            success: false,
-            message: "refreshToken invalide ou expiré, reconnexion requise",
-          });
+        return res.status(403).json({
+          success: false,
+          message: "refreshToken invalide ou expiré, reconnexion requise",
+        });
       }
 
       // Récupérer l'utilisateur en BDD
       const user = await User.findByPk(decoded.id, {
-        include: [{ model: Role, as: "role", attributes: ["id", "name"] }],
+        include: [{ model: Role, as: "Role", attributes: ["id", "name"] }],
       });
 
       if (!user || !user.is_active) {
@@ -351,7 +349,7 @@ class UserController {
         firstName: user.firstname,
         lastName: user.lastname,
         mail: user.mail,
-        role: user.role.name,
+        role: user.Role.name,
         iat: Math.floor(Date.now() / 1000),
       };
 
@@ -362,13 +360,11 @@ class UserController {
         data: { accessToken: newAccessToken },
       });
     } catch (error) {
-      return res
-        .status(500)
-        .json({
-          success: false,
-          message: "Erreur serveur",
-          error: error.message,
-        });
+      return res.status(500).json({
+        success: false,
+        message: "Erreur serveur",
+        error: error.message,
+      });
     }
   }
 
@@ -394,7 +390,7 @@ class UserController {
         include: [
           {
             model: Role,
-            as: "role",
+            as: "Role",
             attributes: ["id", "name"],
           },
         ],
@@ -420,7 +416,7 @@ class UserController {
         firstName: user.firstname,
         lastName: user.lastname,
         mail: user.mail,
-        role: user.role.name,
+        role: user.Role.name,
         iat: Math.floor(Date.now() / 1000),
       };
 
@@ -444,7 +440,7 @@ class UserController {
             mail: user.mail,
             firstName: user.firstname,
             lastName: user.lastname,
-            role: user.role.name,
+            role: user.Role.name,
           },
           accessToken,
           refreshToken,

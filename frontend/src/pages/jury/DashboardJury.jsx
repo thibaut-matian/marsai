@@ -1,13 +1,32 @@
+import { useState, useEffect } from "react";
 import NavbarJury from "../../components/layout/NavbarJury.jsx";
-import useProjectProgress from "../../hooks/useProjectProgress.js";
 import useJuryAuth from "../../hooks/useJuryAuth.js";
 import ProgressCard from "../../components/jury/ProgressCard.jsx";
 import TimeRemainingCard from "../../components/jury/TimeRemainingCard.jsx";
 import DashboardActions from "../../components/jury/DashboardActions.jsx";
+import getAPI from "../../services/getAPI.jsx";
 
 export default function DashboardJury() {
   const { userInfo } = useJuryAuth();
-  const { progress, loading: progressLoading } = useProjectProgress();
+  const [progress, setProgress] = useState({ watchedFilms: 0, totalFilms: 0, percentage: 0 });
+  const [progressLoading, setProgressLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProgress = async () => {
+      try {
+        setProgressLoading(true);
+        const response = await getAPI.getJuryProgress();
+        if (response.data?.success) {
+          setProgress(response.data.data);
+        }
+      } catch (err) {
+        console.error("Erreur chargement progression jury:", err);
+      } finally {
+        setProgressLoading(false);
+      }
+    };
+    fetchProgress();
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#100b18] text-white font-sans overflow-x-hidden">

@@ -56,16 +56,6 @@ Note.belongsTo(Movie, {
   as: "Movie",
 });
 
-// ✅ Movie <-> Status
-Movie.belongsTo(Status, {
-  foreignKey: "status_id",
-  as: "Status",
-});
-Status.hasMany(Movie, {
-  foreignKey: "status_id",
-  as: "Movies",
-});
-
 // ============================================
 // 🔗 AUTRES ASSOCIATIONS EXISTANTES
 // ============================================
@@ -122,13 +112,26 @@ Award.hasMany(MovieAward, {
 
 // SocialMedia relations
 MovieSocial.belongsTo(SocialMedia, {
-  foreignKey: "social_media_id",
+  foreignKey: "social_id",
   as: "SocialMedia",
 });
 SocialMedia.hasMany(MovieSocial, {
-  foreignKey: "social_media_id",
+  foreignKey: "social_id",
   as: "MovieSocials",
 });
+
+// Movie <-> Squad
+Movie.hasMany(Squad, {
+  foreignKey: "movie_id",
+  as: "Squad",
+});
+Squad.belongsTo(Movie, {
+  foreignKey: "movie_id",
+  as: "Movie",
+});
+
+// Movie <-> SocialLink (via MovieSocial is already done, but direct link for queries)
+// SocialMedia <-> MovieSocial already defined above
 
 // Squad <-> SocialLink
 Squad.hasMany(SocialLink, {
@@ -150,36 +153,7 @@ SocialMedia.hasMany(SocialLink, {
   as: "SocialLinks",
 });
 
-// Event relations
-Event.belongsTo(EventType, {
-  foreignKey: "event_type_id",
-  as: "EventType",
-});
-EventType.hasMany(Event, {
-  foreignKey: "event_type_id",
-  as: "Events",
-});
-
-// Booking relations
-Booking.belongsTo(Event, {
-  foreignKey: "event_id",
-  as: "Event",
-});
-Event.hasMany(Booking, {
-  foreignKey: "event_id",
-  as: "Bookings",
-});
-
 // EventTicket relations
-EventTicket.belongsTo(Event, {
-  foreignKey: "event_id",
-  as: "Event",
-});
-Event.hasMany(EventTicket, {
-  foreignKey: "event_id",
-  as: "EventTickets",
-});
-
 EventTicket.belongsTo(TicketType, {
   foreignKey: "ticket_type_id",
   as: "TicketType",
@@ -187,15 +161,6 @@ EventTicket.belongsTo(TicketType, {
 TicketType.hasMany(EventTicket, {
   foreignKey: "ticket_type_id",
   as: "EventTickets",
-});
-
-Booking.belongsTo(EventTicket, {
-  foreignKey: "event_ticket_id",
-  as: "EventTicket",
-});
-EventTicket.hasMany(Booking, {
-  foreignKey: "event_ticket_id",
-  as: "Bookings",
 });
 
 console.log("✅ Tous les modèles et associations chargés");

@@ -332,7 +332,7 @@ class AdminMovieController {
       }
 
       // Vérifier la limite des 50 finalistes
-      const currentCount = await Movie.count({ where: { is_selected: true } });
+      const currentCount = await Movie.count({ where: { is_selected: 1 } });
       if (currentCount >= 50) {
         return res.status(400).json({
           success: false,
@@ -375,7 +375,7 @@ class AdminMovieController {
         });
       }
 
-      await movie.update({ is_selected: true });
+      await movie.update({ is_selected: 1 });
 
       return res.status(200).json({
         success: true,
