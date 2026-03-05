@@ -5,14 +5,14 @@ import usePagination from "../../hooks/usePagination";
 import PaginationControls from "../pagination";
 import ContactModal from "../features/contactModal";
 import ActionButton from "./actionButton";
+import ModalDetails from "../features/movies/ModalDetails";
 
 const ReportTable = () => {
-  const {reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport, handleOpenModal, handleOpenDetail, handleCloseDetail } = useReport();
+  const {reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport, handleOpenModal, handleOpenDetail, handleCloseDetail, isDetailOpen,
+  detailMovie } = useReport();
 
   // On récupère tout l'objet pagination
   const pagination = usePagination(reports, 10);
-
-  console.log("STRUCTURE DU PREMIER SIGNALEMENT :", reports[0]);
 
   return (
     <div className="p-6 relative">
@@ -60,7 +60,7 @@ const ReportTable = () => {
       <ActionButton 
     icon={Eye} 
     variant="blue" 
-    onClick={() => handleOpenDetail(report.movie.id)} 
+    onClick={() => handleOpenDetail(report.movie)} 
     title="Voir les détails"
   />
   
@@ -106,6 +106,16 @@ const ReportTable = () => {
   onClose={() => setSelectedReport(null)} 
   onSend={handleSendEmail}
 />
+
+{isDetailOpen && detailMovie && (
+  <ModalDetails 
+    // Si detailMovie est l'objet film, on prend .id. 
+    // Si detailMovie est déjà l'ID (simple chiffre), on le prend direct.
+    movieId={detailMovie.id || detailMovie} 
+    isOpen={isDetailOpen}
+    onClose={handleCloseDetail} 
+  />
+)}
     </div>
   );
 };

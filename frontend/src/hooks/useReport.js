@@ -100,6 +100,8 @@ const handleSendEmail = async (e) => {
         handleOpenModal,
         handleOpenDetail,
         handleCloseDetail,
+        isDetailOpen,
+        detailMovie,
         refreshReports: fetchReports // Pour recharger si besoin
     };
 }
