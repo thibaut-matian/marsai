@@ -66,7 +66,7 @@ export default function JuryVote() {
               L'administrateur n'a pas encore assigné de films à votre compte. Revenez plus tard.
             </p>
             <Link
-              to="/jury/dashboard"
+              to="/jury/DashboardJury"
               className="btn bg-white/10 border border-white/20 text-white rounded-2xl px-8 hover:bg-white/20 transition-all"
             >
               ← Retour au dashboard

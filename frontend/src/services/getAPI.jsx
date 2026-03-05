@@ -66,6 +66,7 @@ const getAPI = {
     login: (credentials) => api.post('auth/login', credentials),
     getProfile: () => api.get('auth/me'),
     validateInvitation: (invitationToken) => api.post('users/validate-invitation', { invitationToken }),
+    getUserByToken: (token) => api.get(`users/by-token/${token}`),
 
     // ===== FILMS & SOUMISSIONS (useListFilm, useSubmission) =====
     getAllMovies: (params) => api.get('movies', { params }),
