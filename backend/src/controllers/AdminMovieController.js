@@ -116,10 +116,12 @@ class AdminMovieController {
         include: [
           {
             model: Movie,
-            attributes: ['id', 'vo_title', 'firstname', 'lastname', 'mail']
+            attributes: ['id', 'vo_title', 'firstname', 'lastname', 'mail'],
+            as: 'Movie'
           }
         ],
       });
+
 
       const formattedReports = reports.map(report => ({
         id: report.id,
