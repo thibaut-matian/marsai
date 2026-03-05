@@ -9,6 +9,9 @@ const { authenticate, authorize } = require("../middlewares");
 // Route de validation du token d'invitation (publique) - EN PREMIER !
 router.post("/validate-invitation", UserController.validateInvitationToken);
 
+// Route pour récupérer un user par token (publique)
+router.get("/by-token/:token", UserController.getUserByToken);
+
 // Route de refresh token (publique)
 router.post("/refresh-token", UserController.refreshToken);
 

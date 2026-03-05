@@ -454,6 +454,66 @@ class UserController {
       });
     }
   }
+
+  /**
+   * Récupère un utilisateur par son token d'invitation
+   */
+  static async getUserByToken(req, res) {
+    try {
+      const { token } = req.params;
+
+      if (!token) {
+        return res.status(400).json({
+          success: false,
+          message: "Token requis",
+        });
+      }
+
+      const user = await User.findOne({
+        where: { token },
+        include: [
+          {
+            model: Role,
+            as: "Role",
+            attributes: ["id", "name"],
+          },
+        ],
+        attributes: { exclude: ["password"] },
+      });
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "Token invalide ou utilisateur non trouvé",
+        });
+      }
+
+      if (!user.is_active) {
+        return res.status(403).json({
+          success: false,
+          message: "Compte désactivé",
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        data: {
+          id: user.id,
+          mail: user.mail,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          role: user.Role.name,
+          roleId: user.role_id,
+        },
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Erreur lors de la récupération de l'utilisateur",
+        error: error.message,
+      });
+    }
+  }
 }
 
 module.exports = UserController;
