@@ -155,7 +155,7 @@ class TicketController {
       const tickets = await EventTicket.findAll({
         where,
         include: [
-          { model: TicketType, as: "ticketType", attributes: ["id", "name"] },
+          { model: TicketType, as: "TicketType", attributes: ["id", "name"] },
         ],
         order: [["reserved_at", "DESC"]],
       });

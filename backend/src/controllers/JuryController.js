@@ -261,6 +261,7 @@ class JuryController {
         include: [
           {
             model: Movie,
+            as: "Movie",
             attributes: [
               "id",
               "vo_title",

@@ -1,10 +1,13 @@
-const Movie = require("../models/MovieModel");
-const MovieAward = require("../models/MovieAwardModel");
-const Newsletter = require("../models/NewsletterModel");
-const Squad = require("../models/SquadModel");
-const SocialLink = require("../models/SocialLinkModel");
-const MovieSocial = require("../models/MovieSocialModel");
-const SocialMedia = require("../models/SocialMediaModel");
+const {
+  Movie,
+  MovieAward,
+  Newsletter,
+  Squad,
+  SocialLink,
+  MovieSocial,
+  SocialMedia,
+  MovieScreenshot,
+} = require("../models");
 const { uploadToScaleway, deleteFromScaleway } = require("../config/scaleway");
 const { youtube } = require("../config/Youtube");
 const { sendMailToDirector } = require("../services/emailService");
@@ -50,7 +53,7 @@ class MovieController {
         socials, // ✅ Récupérer socials
       } = req.body;
 
-      // ✅ PLUS BESOIN de valider ici ! 
+      // ✅ PLUS BESOIN de valider ici !
       // Si le code arrive ici, c'est que Joi a déjà tout vérifié.
       // req.body contient déjà les données castées (ex: duration est déjà un Number).
 
@@ -350,7 +353,7 @@ class MovieController {
         include: [
           {
             model: Squad,
-            as: "team",
+            as: "Squad",
             attributes: [
               "id",
               "gender",
@@ -397,10 +400,6 @@ class MovieController {
       const where =
         is_selected !== undefined ? { is_selected: parseInt(is_selected) } : {};
 
-      const MovieScreenshot = require("../models/MovieScreenshotModel");
-      const SocialLink = require("../models/SocialLinkModel");
-      const SocialMedia = require("../models/SocialMediaModel");
-
       const movies = await Movie.findAndCountAll({
         where,
         limit: parseInt(limit),
@@ -409,24 +408,24 @@ class MovieController {
         include: [
           {
             model: MovieScreenshot,
-            as: "screenshots",
+            as: "Screenshots",
             attributes: ["id", "url"],
           },
           {
-            model: SocialLink,
-            as: "socials",
-            attributes: ["id", "social_url"],
+            model: MovieSocial,
+            as: "Socials",
+            attributes: ["id"],
             include: [
               {
                 model: SocialMedia,
-                as: "platform",
+                as: "SocialMedia",
                 attributes: ["id", "name"],
               },
             ],
           },
           {
             model: Squad,
-            as: "team",
+            as: "Squad",
             attributes: [
               "id",
               "gender",
@@ -460,32 +459,28 @@ class MovieController {
     try {
       const { id } = req.params;
 
-      const MovieScreenshot = require("../models/MovieScreenshotModel");
-      const SocialLink = require("../models/SocialLinkModel");
-      const SocialMedia = require("../models/SocialMediaModel");
-
       const movie = await Movie.findByPk(id, {
         include: [
           {
             model: MovieScreenshot,
-            as: "screenshots",
+            as: "Screenshots",
             attributes: ["id", "url"],
           },
           {
-            model: SocialLink,
-            as: "socials",
-            attributes: ["id", "social_url"],
+            model: MovieSocial,
+            as: "Socials",
+            attributes: ["id"],
             include: [
               {
                 model: SocialMedia,
-                as: "platform",
+                as: "SocialMedia",
                 attributes: ["id", "name"],
               },
             ],
           },
           {
             model: Squad,
-            as: "team",
+            as: "Squad",
             attributes: [
               "id",
               "gender",
@@ -518,26 +513,22 @@ class MovieController {
     try {
       const { url } = req.params;
 
-      const MovieScreenshot = require("../models/MovieScreenshotModel");
-      const SocialLink = require("../models/SocialLinkModel");
-      const SocialMedia = require("../models/SocialMediaModel");
-
       const movie = await Movie.findOne({
         where: { url },
         include: [
           {
             model: MovieScreenshot,
-            as: "screenshots",
+            as: "Screenshots",
             attributes: ["id", "url"],
           },
           {
-            model: SocialLink,
-            as: "socials",
-            attributes: ["id", "social_url"],
+            model: MovieSocial,
+            as: "Socials",
+            attributes: ["id"],
             include: [
               {
                 model: SocialMedia,
-                as: "platform",
+                as: "SocialMedia",
                 attributes: ["id", "name"],
               },
             ],
