@@ -2,6 +2,9 @@ const Movie = require("../models/MovieModel");
 const MovieAward = require("../models/MovieAwardModel");
 const Newsletter = require("../models/NewsletterModel");
 const Squad = require("../models/SquadModel");
+const SocialLink = require("../models/SocialLinkModel");
+const MovieSocial = require("../models/MovieSocialModel");
+const SocialMedia = require("../models/SocialMediaModel");
 const { uploadToScaleway, deleteFromScaleway } = require("../config/scaleway");
 const { youtube } = require("../config/Youtube");
 const { sendMailToDirector } = require("../services/emailService");
@@ -16,7 +19,8 @@ class MovieController {
       console.log("🎬 MovieController.create appelé");
       console.log("📦 Body:", req.body);
       console.log("📁 Files:", req.files);
-      console.log("👥 Team members brut:", req.body.team_members); // ✅ DEBUG team_members
+      console.log("👥 Team members brut:", req.body.team_members);
+      console.log("🌐 Socials brut:", req.body.socials); // ✅ DEBUG socials
 
       const files = req.files;
       const {
@@ -42,7 +46,8 @@ class MovieController {
         en_desc,
         ia_used,
         creative_method,
-        team_members, // ✅ AJOUTER : Récupérer team_members
+        team_members,
+        socials, // ✅ Récupérer socials
       } = req.body;
 
       // ✅ PLUS BESOIN de valider ici ! 
@@ -227,6 +232,48 @@ class MovieController {
         );
       } else {
         console.log("👥 Aucun collaborateur à créer");
+      }
+
+      // Réseaux sociaux
+      if (socials) {
+        try {
+          const socialsList =
+            typeof socials === "string" ? JSON.parse(socials) : socials;
+          console.log("🌐 Réseaux sociaux parsés:", socialsList);
+
+          for (const social of socialsList) {
+            if (!social.url || !social.platform) continue;
+            // Trouver la plateforme dans socials_medias
+            const platform = await SocialMedia.findOne({
+              where: { name: social.platform.toLowerCase() },
+            });
+            if (!platform) {
+              console.warn(`⚠️ Plateforme inconnue : ${social.platform}`);
+              continue;
+            }
+            // Créer le lien social
+            const link = await SocialLink.create({
+              social_id: platform.id,
+              social_url: social.url,
+            });
+            // Lier au film via movies_socials
+            await MovieSocial.create({
+              movie_id: movie.id,
+              social_id: link.id,
+            });
+            console.log(
+              `   ✅ Réseau social ajouté : ${social.platform} → ${social.url}`,
+            );
+          }
+        } catch (socialError) {
+          console.error(
+            "⚠️ Erreur traitement réseaux sociaux:",
+            socialError.message,
+          );
+          console.error("⚠️ Stack:", socialError.stack);
+        }
+      } else {
+        console.log("🌐 Aucun réseau social à créer");
       }
 
       // Association award par défaut

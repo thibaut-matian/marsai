@@ -1,18 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Eye, Trash2, AlertOctagon, User, Video, Mail, X, Send } from "lucide-react";
 import useReport from "../../hooks/useReport";
 import usePagination from "../../hooks/usePagination";
 import PaginationControls from "../pagination";
 import ContactModal from "../features/contactModal";
+import SearchBar from '../ui/SearchBar';
 
 const ReportTable = () => {
   const { reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport } = useReport();
+  const [query, setQuery] = useState('');
 
   // On récupère tout l'objet pagination
-  const pagination = usePagination(reports, 10);
+  const filtered = query.trim() ? reports.filter(r => r.titre.toLowerCase().includes(query.toLowerCase()) || r.auteur.toLowerCase().includes(query.toLowerCase())) : reports;
+  const pagination = usePagination(filtered, 10);
 
   return (
     <div className="p-6 relative">
+      <div className="max-w-3xl mx-auto mb-4">
+        <SearchBar value={query} onChange={setQuery} placeholder="Rechercher un signalement..." />
+      </div>
       <div className="flex items-center gap-3 mb-6">
         <AlertOctagon className="text-error" size={32} />
         <h2 className="text-2xl font-bold text-white">Signalements en attente</h2>

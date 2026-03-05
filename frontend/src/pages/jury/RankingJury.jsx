@@ -61,17 +61,15 @@ export default function RankingJury() {
               defaultOpen={true}
             />
 
-            {/* REFUSÉS — sur toute la largeur si présent */}
-            {refusedFilms.length > 0 && (
-              <div className="lg:col-span-2">
-                <AccordionList
-                  title="❌ Refusés"
-                  films={refusedFilms}
-                  color="red"
-                  defaultOpen={false}
-                />
-              </div>
-            )}
+            {/* REFUSÉS — sur toute la largeur */}
+            <div className="lg:col-span-2">
+              <AccordionList
+                title="❌ Refusés"
+                films={refusedFilms}
+                color="red"
+                defaultOpen={false}
+              />
+            </div>
 
           </div>
         )}

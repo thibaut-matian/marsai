@@ -25,10 +25,10 @@ export default function StepContact({ formData, handleChange, errors }) {
         <h3 className="text-blue-300 font-bold text-sm tracking-wide mb-4 uppercase">{t('form.socials')}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input label={t('form.youtube')} name="socialYoutube" placeholder="https://youtube.com/..." value={formData.socialYoutube} onChange={handleChange} />
-          <Input label={t('form.instagram')} name="socialInstagram" placeholder="@pseudo" value={formData.socialInstagram} onChange={handleChange} />
-          <Input label={t('form.linkedin')} name="socialLinkedin" placeholder="Lien profil" value={formData.socialLinkedin} onChange={handleChange} />
-          <Input label={t('form.facebook')} name="socialFacebook" placeholder="Lien page" value={formData.socialFacebook} onChange={handleChange} />
-          <Input label={t('form.x')} name="socialX" placeholder="@pseudo" value={formData.socialX} onChange={handleChange} />
+          <Input label={t('form.instagram')} name="socialInstagram" placeholder="https://instagram.com/..." value={formData.socialInstagram} onChange={handleChange} />
+          <Input label={t('form.linkedin')} name="socialLinkedin" placeholder="https://linkedin.com/in/..." value={formData.socialLinkedin} onChange={handleChange} />
+          <Input label={t('form.facebook')} name="socialFacebook" placeholder="https://facebook.com/..." value={formData.socialFacebook} onChange={handleChange} />
+          <Input label={t('form.x')} name="socialX" placeholder="https://x.com/..." value={formData.socialX} onChange={handleChange} />
         </div>
       </div>
       {/* Source & newsletter */}

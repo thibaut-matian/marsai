@@ -7,7 +7,7 @@ import getAPI from "../../../services/getAPI.jsx";
  * Props :
  *   - movieId : identifiant du film en cours de visionnage
  */
-const ReportModal = ({ movieId }) => {
+const ReportModal = ({ movieId, onReported }) => {
   const [reportReason, setReportReason] = useState("");
   const [reportDetails, setReportDetails] = useState("");
   const [reportSubmitted, setReportSubmitted] = useState(false);
@@ -29,6 +29,7 @@ const ReportModal = ({ movieId }) => {
         setReportSubmitted(false);
         setReportReason("");
         setReportDetails("");
+        if (onReported) onReported(); // → passe au film suivant
       }, 2000);
     } catch (err) {
       console.error("Erreur signalement:", err);

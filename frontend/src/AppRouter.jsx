@@ -10,6 +10,7 @@ import Submission from "./pages/Submission.jsx";
 import Dashboard from "./pages/admin/Dashboard.jsx";
 import JuryManagement from "./pages/admin/JuryManagement.jsx";
 import MovieModeration from "./pages/admin/movieModeration.jsx";
+import MovieList from "./pages/admin/MovieList.jsx";
 import Settings from './pages/admin/Settings';
 import DashboardJury from "./pages/jury/DashboardJury.jsx";
 import JuryVote from "./pages/jury/JuryVote.jsx";
@@ -38,6 +39,7 @@ function AppRouter() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="jury-management" element={<JuryManagement />} />
           <Route path="/admin/movies" element={<MovieModeration />} />
+          <Route path="/admin/movies/list" element={<MovieList />} />
           <Route path="/admin/settings" element={<Settings />} />
         </Route>
 
