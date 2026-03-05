@@ -314,79 +314,59 @@ class JuryController {
   static async reportMovie(req, res) {
     try {
       const juryId = req.user.id;
-      const { movie_id, cause, comment } = req.body; // 'decision' ici est la raison du signalement (ex: 'technical')
-      console.log(movie_id, cause, comment);
+      const { movie_id, cause, comment } = req.body; 
 
       // 1. Validation
       if (!movie_id || !cause) {
         return res.status(400).json({
           success: false,
-          message: "Tous les champs sont obligatoires (film, raison, détails)",
+          message: "Le film et la raison du signalement sont obligatoires",
         });
       }
 
-      // 2. INSERTION DANS MovieReport (La table de log des erreurs)
-      await MovieReport.create({
-        movie_id: movie_id,
-        cause: cause, // La raison (ex: 'technical')
-        comment: comment
-      });
-
-      // 3. ENREGISTREMENT DANS LA TABLE Note
-      // On laisse 'decision' à NULL car 'signalé' n'est pas dans ton ENUM
-      const feedbackTexte = `[SIGNALEMENT] Type: ${cause} | Détails: ${comment}`;
-
-      const existingNote = await Note.findOne({
-        where: { user_id: juryId, movie_id },
-      });
-
-      if (existingNote) {
-        await existingNote.update({ 
-          decision: null, 
-          feedback: feedbackTexte 
-        });
-      } else {
-        await Note.create({
-          user_id: juryId,
-          movie_id: movie_id,
-          decision: null,
-          feedback: feedbackTexte
+      // 2. ENREGISTREMENT DANS LA TABLE MovieReport (Le log pour l'admin)
+      // On vérifie si un signalement existe déjà pour ce film pour éviter les doublons inutiles
+      const existingReport = await MovieReport.findOne({ where: { movie_id } });
+      if (!existingReport) {
+        await MovieReport.create({ 
+          movie_id: movie_id, 
+          cause: cause, 
+          comment: comment || "Aucun commentaire" 
         });
       }
 
-      // 1. Mettre à jour ou créer la note du juré avec decision = 'signalé'
+      // 3. MISE À JOUR DE LA NOTE DU JURY
+      // On marque le film comme 'signalé' pour que le jury ne le revoie plus
       const existingNote = await Note.findOne({
         where: { user_id: juryId, movie_id },
       });
 
       if (existingNote) {
         await existingNote.update({
-          decision: "signalé",
-          feedback: details || null,
+          decision: "signalé", // Assure-toi que ton ENUM MySQL accepte 'signalé'
+          feedback: `[SIGNALEMENT] ${cause}: ${comment || ""}`,
         });
       } else {
         await Note.create({
           user_id: juryId,
           movie_id,
           decision: "signalé",
-          feedback: details || null,
+          feedback: `[SIGNALEMENT] ${cause}: ${comment || ""}`,
         });
-      }
-
-      // 2. Enregistrer dans MovieReport
-      const existingReport = await MovieReport.findOne({ where: { movie_id } });
-      if (!existingReport) {
-        await MovieReport.create({ movie_id, decision: reason });
       }
 
       return res.status(200).json({
         success: true,
-        message: "Film signalé. Passage au film suivant.",
+        message: "Film signalé avec succès.",
       });
 
     } catch (error) {
-      console.error("Erreur reportMovie:", error);
-      return res.status(500).json({ success: false, message: "Erreur serveur" });
+      console.error("Erreur détaillée reportMovie:", error);
+      return res.status(500).json({ 
+        success: false, 
+        message: "Erreur serveur lors du signalement",
+        error: error.message 
+      });
     }
   }
 
