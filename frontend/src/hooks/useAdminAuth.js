@@ -162,7 +162,7 @@ export const useAdminAuth = () => {
       localStorage.removeItem("userRole");
       localStorage.removeItem("isAuthenticated");
 
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       console.error("Erreur lors de la déconnexion:", error);
     }
