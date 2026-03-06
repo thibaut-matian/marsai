@@ -191,7 +191,7 @@ export const useAdminAuth = () => {
       // ✅ Sauvegarder les tokens JWT
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("user", JSON.stringify(user));
+      // localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("userRole", user.Role.name);
       localStorage.setItem("isAuthenticated", "true");
 
