@@ -16,7 +16,7 @@ import MovieModeration from "./pages/admin/movieModeration.jsx";
 import DashboardJury from "./pages/jury/DashboardJury.jsx";
 import JuryVote from "./pages/jury/JuryVote.jsx";
 import RankingJury from "./pages/jury/RankingJury.jsx";
-import Login from "./pages/Login.jsx";
+import Login from "./pages/jury/Login.jsx";
 import getAPI from "./services/getAPI.jsx";
 
 // Fonction pour vérifier l'authentification et le rôle
