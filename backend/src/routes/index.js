@@ -1,28 +1,61 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-// Import des routes
-const authRoutes = require('./AuthRoutes');
-const userRoutes = require('./UserRoutes');
-const movieRoutes = require('./MovieRoutes');
-const adminMovieRoutes = require('./AdminMovieRoutes');
-const juryRoutes = require('./JuryRoutes');
-const dashboardRoutes = require('./DashboardRoutes');
-const homeContentRoutes = require('./HomeContentRoutes');
-const ticketRoutes = require('./TicketRoutes');
-const uploadRoutes = require('./UploadRoutes');
-const youtubeAuthRoutes = require('./YoutubeAuthRoutes');
+console.log("📂 ═════════════════════════════════════════════════════════");
+console.log("📂 Chargement de routes/index.js");
+console.log("📂 ═════════════════════════════════════════════════════════");
 
-// Montage des routes
-router.use('/auth', authRoutes);
-router.use('/users', userRoutes);
-router.use('/movies', movieRoutes);
-router.use('/admin/movies', adminMovieRoutes);
-router.use('/jury', juryRoutes);
-router.use('/dashboard', dashboardRoutes);
-router.use('/home-content', homeContentRoutes);
-router.use('/tickets', ticketRoutes);
+const UserRoutes = require("./UserRoutes");
+const MovieRoutes = require("./MovieRoutes");
+const AdminMovieRoutes = require("./AdminMovieRoutes");
+const TicketRoutes = require("./TicketRoutes");
+const YoutubeAuthRoutes = require("./YoutubeAuthRoutes");
+const JuryRoutes = require("./JuryRoutes");
+const HomeContentRoutes = require("./HomeContentRoutes");
+const uploadRoutes = require('./UploadRoutes');
+const dashboardRoutes = require('./DashboardRoutes'); // 🆕
+
+console.log("✅ Toutes les routes importées avec succès");
+
+// Routes publiques
+router.use("/users", UserRoutes);
+console.log("   → /api/users monté");
+
+router.use("/movies", MovieRoutes);
+console.log("   → /api/movies monté");
+
+router.use("/", YoutubeAuthRoutes);
+console.log("   → /api/ (YouTube auth) monté");
+
+// Routes admin (protégées)
+router.use("/admin", AdminMovieRoutes);
+console.log("   → /api/admin monté");
+
+router.use("/tickets", TicketRoutes);
+console.log("   → /api/tickets monté");
+
+router.use("/jury", JuryRoutes);
+console.log("   → /api/jury monté");
+
+router.use("/home-content", HomeContentRoutes);
+console.log("   → /api/home-content monté");
+
 router.use('/upload', uploadRoutes);
-router.use('/youtube', youtubeAuthRoutes);
+console.log("   → /api/upload monté"); // ✅ Ajouter cette ligne
+
+router.use('/admin/dashboard', dashboardRoutes); // 🆕
+
+// Route de test
+router.get("/test", (req, res) => {
+  console.log("✅ Route /api/test appelée");
+  res.json({
+    message: "✅ API Routes fonctionnent !",
+    routes: ["/users", "/movies", "/admin", "/tickets", "/auth/youtube"],
+  });
+});
+
+console.log("📂 ═════════════════════════════════════════════════════════");
+console.log("✅ routes/index.js configuré avec succès");
+console.log("📂 ═════════════════════════════════════════════════════════");
 
 module.exports = router;
