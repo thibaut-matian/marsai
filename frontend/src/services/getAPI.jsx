@@ -102,14 +102,14 @@ const getAPI = {
     getDashboardProgress: () => api.get('admin/dashboard/progress'),
     getDashboardActivity: () => api.get('admin/dashboard/activity'),
     getReports: () => api.get('admin/reports'),
-    getAdminMovies: () => api.get('admin/movie'),
-    deleteMovie: (id) => api.delete(`admin/movie/${id}`),
-    moderateMovie: (id, status) => api.patch(`admin/movie/${id}`, { status }),
-    AllMoviesReports: () => api.get('admin/movie/reports'),
+    getAdminMovies: () => api.get('admin/movies'),
+    deleteMovie: (id) => api.delete(`admin/movies/${id}`),
+    moderateMovie: (id, status) => api.patch(`admin/movies/${id}`, { status }),
+    AllMoviesReports: () => api.get('admin/movies/reports'),
 
 
-    distributeMovies: () => api.post('admin/distribute'),
-    redistributeMovies: () => api.post('admin/redistribute'),
+    distributeMovies: () => api.post('admin/movies/distribute'),
+    redistributeMovies: () => api.post('admin/movies/redistribute'),
     selectMovie: (id) => api.patch(`admin/movie/${id}/select`),
     
     // ===== GESTION DES JURYS (useJuryManagement) =====
@@ -126,6 +126,9 @@ const getAPI = {
     // ===== RECHERCHE & FILTRES =====
     searchMovies: (query) => api.get('search', { params: { q: query } }),
     getGenres: () => api.get('genres'),
+
+    // ===== HOME CONTENT =====
+    getHomeContent: () => api.get('home-content'),
 };
 
 export default getAPI;

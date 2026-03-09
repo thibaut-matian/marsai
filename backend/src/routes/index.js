@@ -19,7 +19,7 @@ router.use('/users', userRoutes);
 router.use('/movies', movieRoutes);
 router.use('/admin/movies', adminMovieRoutes);
 router.use('/jury', juryRoutes);
-router.use('/dashboard', dashboardRoutes);
+router.use('/admin/dashboard', dashboardRoutes);
 router.use('/home-content', homeContentRoutes);
 router.use('/tickets', ticketRoutes);
 router.use('/upload', uploadRoutes);

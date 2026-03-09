@@ -418,12 +418,19 @@ class MovieController {
           {
             model: MovieSocial,
             as: "Socials",
-            attributes: ["id"],
+            attributes: ["id", "social_id"],
             include: [
               {
-                model: SocialMedia,
-                as: "SocialMedia",
-                attributes: ["id", "name"],
+                model: SocialLink,
+                as: "SocialLink",
+                attributes: ["id", "social_url"],
+                include: [
+                  {
+                    model: SocialMedia,
+                    as: "SocialMedia",
+                    attributes: ["id", "name"],
+                  },
+                ],
               },
             ],
           },
@@ -473,12 +480,19 @@ class MovieController {
           {
             model: MovieSocial,
             as: "Socials",
-            attributes: ["id"],
+            attributes: ["id", "social_id"],
             include: [
               {
-                model: SocialMedia,
-                as: "SocialMedia",
-                attributes: ["id", "name"],
+                model: SocialLink,
+                as: "SocialLink",
+                attributes: ["id", "social_url"],
+                include: [
+                  {
+                    model: SocialMedia,
+                    as: "SocialMedia",
+                    attributes: ["id", "name"],
+                  },
+                ],
               },
             ],
           },
@@ -528,12 +542,19 @@ class MovieController {
           {
             model: MovieSocial,
             as: "Socials",
-            attributes: ["id"],
+            attributes: ["id", "social_id"],
             include: [
               {
-                model: SocialMedia,
-                as: "SocialMedia",
-                attributes: ["id", "name"],
+                model: SocialLink,
+                as: "SocialLink",
+                attributes: ["id", "social_url"],
+                include: [
+                  {
+                    model: SocialMedia,
+                    as: "SocialMedia",
+                    attributes: ["id", "name"],
+                  },
+                ],
               },
             ],
           },

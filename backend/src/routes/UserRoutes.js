@@ -31,7 +31,7 @@ router.get(
 router.post(
   "/",
   isAuthenticated,
-  hasRole('super_admin'),
+  hasRole('super_admin', 'admin'),
   UserController.createUser,
 );
 
