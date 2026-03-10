@@ -7,8 +7,6 @@ require("dotenv").config();
 const sequelize = require("./src/config/Database");
 const { Movie, Squad, User, Role } = require("./src/models");
 const routes = require("./src/routes");
-const session = require('express-session');
-const authConfig = require('./src/config/Auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,9 +23,6 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Configuration des sessions (AVANT les routes)
-app.use(session(authConfig.session));
 
 // ✅ LOG GLOBAL : Toutes les requêtes qui arrivent
 app.use((req, res, next) => {
@@ -82,58 +77,57 @@ app.get("/", (req, res) => {
 
 /**
  * ROUTE LOGIN (Authentification Admin)
- * ⚠️ DÉSACTIVÉE - Utilisez /api/auth/login via AuthController
  */
-// app.post("/api/auth/login", async (req, res) => {
-//   console.log('🔐 Tentative de connexion...');
-//   const { email, password } = req.body;
+app.post("/api/auth/login", async (req, res) => {
+  console.log('🔐 Tentative de connexion...');
+  const { email, password } = req.body;
 
-//   if (!email || !password) {
-//     console.log('❌ Champs manquants');
-//     return res.status(400).json({ message: "Champs manquants" });
-//   }
+  if (!email || !password) {
+    console.log('❌ Champs manquants');
+    return res.status(400).json({ message: "Champs manquants" });
+  }
 
-//   try {
-//     console.log('🔍 Recherche utilisateur:', email);
-//     const user = await User.findOne({
-//       where: { mail: email, is_active: 1 },
-//       include: [{ model: Role, as: "role" }],
-//     });
+  try {
+    console.log('🔍 Recherche utilisateur:', email);
+    const user = await User.findOne({
+      where: { mail: email, is_active: 1 },
+      include: [{ model: Role, as: "role" }],
+    });
 
-//     if (!user) {
-//       console.log('❌ Utilisateur introuvable');
-//       return res.status(401).json({ message: "Identifiants incorrects" });
-//     }
+    if (!user) {
+      console.log('❌ Utilisateur introuvable');
+      return res.status(401).json({ message: "Identifiants incorrects" });
+    }
 
-//     console.log('🔑 Vérification mot de passe...');
-//     const isPasswordValid = await bcrypt.compare(password, user.password);
-//     if (!isPasswordValid) {
-//       console.log('❌ Mot de passe incorrect');
-//       return res.status(401).json({ message: "Identifiants incorrects" });
-//     }
+    console.log('🔑 Vérification mot de passe...');
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      console.log('❌ Mot de passe incorrect');
+      return res.status(401).json({ message: "Identifiants incorrects" });
+    }
 
-//     console.log('✅ Connexion réussie:', user.firstname, user.lastname);
-//     const secret = process.env.JWT_SECRET;
-//     const token = jwt.sign({ id: user.id, role: user.role.name }, secret, {
-//       expiresIn: "8h",
-//     });
+    console.log('✅ Connexion réussie:', user.firstname, user.lastname);
+    const secret = process.env.JWT_SECRET;
+    const token = jwt.sign({ id: user.id, role: user.role.name }, secret, {
+      expiresIn: "8h",
+    });
 
-//     return res.status(200).json({
-//       success: true,
-//       token,
-//       user: {
-//         id: user.id,
-//         firstname: user.firstname,
-//         lastname: user.lastname,
-//         mail: user.mail,
-//         role: user.role.name,
-//       },
-//     });
-//   } catch (error) {
-//     console.error("❌ Erreur login:", error);
-//     return res.status(500).json({ message: "Erreur serveur", error: error.message });
-//   }
-// });
+    return res.status(200).json({
+      success: true,
+      token,
+      user: {
+        id: user.id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        mail: user.mail,
+        role: user.role.name,
+      },
+    });
+  } catch (error) {
+    console.error("❌ Erreur login:", error);
+    return res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
 
 // Gestion des erreurs 404
 app.use((req, res) => {
