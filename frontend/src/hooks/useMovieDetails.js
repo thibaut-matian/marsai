@@ -37,13 +37,13 @@ const mapMovieData = (dbMovie) => {
     actual_job: dbMovie.actual_job,
     poster: dbMovie.poster_url,
     // Mapper les screenshots: extraire uniquement les URLs
-    screenshots: dbMovie.Screenshots?.map(s => s.url) || [],
+    screenshots: dbMovie.screenshots?.map(s => s.url) || [],
     country: dbMovie.country,
     language: dbMovie.language,
     // Mapper les socials: formater avec platform name et url
-    socials: dbMovie.Socials?.map(s => ({
-      platform: s.SocialLink?.SocialMedia?.name || 'Unknown',
-      url: s.SocialLink?.social_url || '#'
+    socials: dbMovie.socials?.map(s => ({
+      platform: s.platform?.name || 'Unknown',
+      url: s.social_url
     })) || [],
   };
 };

@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
-import getAPI from '../services/getAPI'; // ✅ Importer getAPI
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const API_URL = 'http://localhost:3000/api/admin/dashboard';
 
 export default function useProjectProgress() {
   const [projectProgress, setProjectProgress] = useState([]);
@@ -15,8 +17,7 @@ export default function useProjectProgress() {
       setLoading(true);
       setError(null);
       
-      // ✅ Utiliser getAPI
-      const response = await getAPI.getDashboardProgress();
+      const response = await axios.get(`${API_URL}/progress`);
       
       console.log('📈 Project progress:', response.data);
       

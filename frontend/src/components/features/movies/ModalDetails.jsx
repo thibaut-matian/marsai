@@ -141,20 +141,15 @@ const ModalDetails = ({ movieId, isOpen = true, onClose = () => {} }) => {
                     onChange={(e) => setIsGalleryOpen(e.target.checked)}
                   />
                   <div className="collapse-title flex justify-between font-semibold pr-4">
-                    <label>Galerie photo ({Math.min(movieData.screenshots.length, 3)} photos)</label>
+                    <label>Galerie photo</label>
                     <ChevronDown 
                       className={`transition-transform duration-300 ${isGalleryOpen ? 'rotate-180' : ''}`} 
                     />
                   </div>
                   <div className="collapse-content flex justify-center text-sm">
                       <figure className="hover-gallery max-w-full">
-                        {movieData.screenshots.slice(0, 3).map((screenshot, index) => (
-                          <img 
-                            key={index} 
-                            src={screenshot} 
-                            alt={`Screenshot ${index + 1}`}
-                            className="w-full aspect-video object-cover"
-                          />
+                        {movieData.screenshots?.map((screenshot, index) => (
+                          <img key={index} src={screenshot} alt={`Screenshot ${index + 1}`} />
                         ))}
                       </figure>
                   </div>

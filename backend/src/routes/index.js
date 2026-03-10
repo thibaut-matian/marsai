@@ -13,17 +13,33 @@ const YoutubeAuthRoutes = require("./YoutubeAuthRoutes");
 const JuryRoutes = require("./JuryRoutes");
 const HomeContentRoutes = require("./HomeContentRoutes");
 const uploadRoutes = require('./UploadRoutes');
-const youtubeAuthRoutes = require('./YoutubeAuthRoutes');
+const dashboardRoutes = require('./DashboardRoutes'); // 🆕
 
-// Montage des routes
-router.use('/auth', authRoutes);
-router.use('/users', userRoutes);
-router.use('/movies', movieRoutes);
-router.use('/admin/movies', adminMovieRoutes);
-router.use('/jury', juryRoutes);
-router.use('/admin/dashboard', dashboardRoutes);
-router.use('/home-content', homeContentRoutes);
-router.use('/tickets', ticketRoutes);
+console.log("✅ Toutes les routes importées avec succès");
+
+// Routes publiques
+router.use("/users", UserRoutes);
+console.log("   → /api/users monté");
+
+router.use("/movies", MovieRoutes);
+console.log("   → /api/movies monté");
+
+router.use("/", YoutubeAuthRoutes);
+console.log("   → /api/ (YouTube auth) monté");
+
+// Routes admin (protégées)
+router.use("/admin", AdminMovieRoutes);
+console.log("   → /api/admin monté");
+
+router.use("/tickets", TicketRoutes);
+console.log("   → /api/tickets monté");
+
+router.use("/jury", JuryRoutes);
+console.log("   → /api/jury monté");
+
+router.use("/home-content", HomeContentRoutes);
+console.log("   → /api/home-content monté");
+
 router.use('/upload', uploadRoutes);
 console.log("   → /api/upload monté"); // ✅ Ajouter cette ligne
 

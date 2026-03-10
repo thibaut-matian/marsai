@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
-import getAPI from '../services/getAPI'; // ✅ Importer getAPI
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const API_URL = 'http://localhost:3000/api/admin/dashboard';
 
 export default function useRecentActivity() {
   const [recentActivity, setRecentActivity] = useState([]);
@@ -19,8 +21,7 @@ export default function useRecentActivity() {
       setLoading(true);
       setError(null);
       
-      // ✅ Utiliser getAPI
-      const response = await getAPI.getDashboardActivity();
+      const response = await axios.get(`${API_URL}/activity`);
       
       console.log('🔔 Recent activity:', response.data);
       
