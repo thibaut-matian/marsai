@@ -102,7 +102,7 @@ const ProtectedGalleryRoute = ({ children }) => {
         <div className="text-center max-w-md px-6">
           <h1 className="text-4xl font-bold text-white mb-4 text-nowrap">Galerie non disponible</h1>
           <p className="text-gray-300 mb-6">
-            La galerie des films sélectionnés ne sera accessible que pendant la dernière phase.
+            La galerie des films sélectionnés ne sera accessible que pendant la dernière phase du festival.
           </p>
           <a 
             href="/" 

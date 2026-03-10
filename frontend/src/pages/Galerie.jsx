@@ -12,7 +12,7 @@ export default function Galerie() {
   const { desktopCheckRef, currentImages, paginationData } = useGalleryPagination(movies, galleryTopRef);
 
   return (
-    <div ref={galleryTopRef} className="flex flex-col w-full bg-black">
+    <div ref={galleryTopRef} className="flex flex-col w-full bg-black min-h-screen">
       <span ref={desktopCheckRef} className="hidden md:block" aria-hidden="true"></span>
       
       <h1 className="text-4xl font-bold text-center mt-30 text-white">Galerie</h1>

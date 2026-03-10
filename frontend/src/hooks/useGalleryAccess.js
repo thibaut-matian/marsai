@@ -3,38 +3,69 @@ import getAPI from '../services/getAPI';
 
 /**
  * Hook pour vérifier si la galerie est accessible
- * La galerie n'est accessible que pendant la dernière phase (festival)
+ * La galerie n'est accessible que pendant la dernière phase
  */
 export function useGalleryAccess() {
   const [isAccessible, setIsAccessible] = useState(null); // null = loading
   const [error, setError] = useState(null);
 
+  // Fonction pour normaliser les clés (snake_case -> camelCase)
+  const normalizeCamelCase = (obj) => {
+    if (Array.isArray(obj)) {
+      return obj.map(item => normalizeCamelCase(item));
+    }
+    
+    if (obj !== null && typeof obj === 'object') {
+      return Object.keys(obj).reduce((acc, key) => {
+        const camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+        acc[camelKey] = normalizeCamelCase(obj[key]);
+        return acc;
+      }, {});
+    }
+    
+    return obj;
+  };
+
   useEffect(() => {
     const checkAccess = async () => {
       try {
+        // Bypass si le mode DEV est activé
+        if (import.meta.env.VITE_DEVMODE === 'true') {
+          console.log('🔧 Mode DEV activé - Accès galerie autorisé');
+          setIsAccessible(true);
+          return;
+        }
+
         const response = await getAPI.getHomeContent();
+        console.log('🔍 Response complète:', response.data);
+        
         const timelineContent = response.data.data.find(item => item.section === 'timeline');
+        console.log('📅 Timeline content brut:', timelineContent);
         
         if (!timelineContent) {
+          console.warn('⚠️ Aucun contenu timeline trouvé');
           setIsAccessible(false);
           return;
         }
 
-        // Récupérer les phases et l'étape active (on prend la version FR par défaut)
-        const timelineFr = timelineContent.content_fr || {};
+        // Normaliser les données (snake_case -> camelCase)
+        const timelineFr = normalizeCamelCase(timelineContent.content_fr) || {};
+        console.log('📅 Timeline FR normalisé:', timelineFr);
+        
         const phases = timelineFr.phases || [];
         const activeStep = timelineFr.activeStep || 1;
         
-        // Vérifier si on est à la dernière phase (festival)
-        // La dernière phase est généralement celle avec la key "festival" ou la dernière dans la liste
-        const lastPhaseIndex = phases.length;
-        const isLastPhase = activeStep === lastPhaseIndex;
+        console.log('📊 Phases:', phases);
+        console.log('📍 Active step:', activeStep);
+        console.log('🔢 Nombre de phases:', phases.length);
         
-        // Alternative : vérifier par la clé "festival"
-        const activePhase = phases[activeStep - 1];
-        const isFestivalPhase = activePhase?.key === 'festival';
+        // Vérifier si on est à la dernière phase (phase 3)
+        // activeStep est 1-indexed, donc la dernière phase a un activeStep === phases.length
+        const isLastPhase = activeStep === phases.length;
         
-        setIsAccessible(isLastPhase || isFestivalPhase);
+        console.log('✅ Est à la dernière phase?', isLastPhase);
+        
+        setIsAccessible(isLastPhase);
       } catch (err) {
         console.error('Erreur lors de la vérification de l\'accès galerie:', err);
         setError(err);
