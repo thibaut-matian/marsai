@@ -29,6 +29,13 @@ export function useGalleryAccess() {
   useEffect(() => {
     const checkAccess = async () => {
       try {
+        // Bypass si le mode DEV est activé
+        if (import.meta.env.VITE_DEVMODE === 'true') {
+          console.log('🔧 Mode DEV activé - Accès galerie autorisé');
+          setIsAccessible(true);
+          return;
+        }
+
         const response = await getAPI.getHomeContent();
         console.log('🔍 Response complète:', response.data);
         
@@ -52,7 +59,7 @@ export function useGalleryAccess() {
         console.log('📍 Active step:', activeStep);
         console.log('🔢 Nombre de phases:', phases.length);
         
-        // Vérifier si on est à la dernière phase
+        // Vérifier si on est à la dernière phase (phase 3)
         // activeStep est 1-indexed, donc la dernière phase a un activeStep === phases.length
         const isLastPhase = activeStep === phases.length;
         
