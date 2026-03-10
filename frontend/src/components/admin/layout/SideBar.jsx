@@ -1,8 +1,10 @@
-import { Home, Clapperboard, Users, Settings, LogOut, Film, ShieldAlert } from 'lucide-react';
+import { Clapperboard, Film, Home, LogOut, Settings, ShieldAlert, Users } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { useAdminAuth } from '../../../hooks/useAdminAuth'; // ← Ajouter cet import
 
 const Sidebar = () => {
   const location = useLocation();
+  const { handleLogout } = useAdminAuth(); // ← Extraire handleLogout
 
   // --- VARIABLES DE STYLE ---
   const baseLinkStyle = "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium";
@@ -123,7 +125,10 @@ const Sidebar = () => {
 
       {/* 3. Footer du Menu (Déconnexion) */}
       <div className="p-4 m-4 border-t border-white/5">
-        <button className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-xl w-full transition-colors">
+        <button 
+          onClick={handleLogout} // ← Ajouter l'événement onClick
+          className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-xl w-full transition-colors"
+        >
           <LogOut size={20} /> 
           <span>Se déconnecter</span>
         </button>

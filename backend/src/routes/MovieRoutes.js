@@ -1,33 +1,25 @@
 const express = require("express");
 const router = express.Router();
 const MovieController = require("../controllers/MovieController");
-const { uploadFields } = require("../middlewares/Upload");
+const { upload } = require("../middlewares/Upload");
 
-// ✅ Wrapper Multer : intercepte les erreurs Multer sans bloquer la requête
-const handleUpload = (req, res, next) => {
-  uploadFields(req, res, (err) => {
-    if (err) {
-      console.error("⚠️ Erreur Multer (non bloquante):", err.message);
-      // On continue quand même, les fichiers partiels seront dans req.files
-    }
-    // Log après parsing Multer
-    const fileList = Array.isArray(req.files)
-      ? req.files.map((f) => f.fieldname)
-      : "aucun";
-    console.log("� Files reçus après Multer:", fileList);
-    next();
-  });
-};
-
+// ✅ CHANGEZ "/movies" en "/"
 router.post(
   "/",
   (req, res, next) => {
-    console.log("� ROUTE POST /api/movies ATTEINTE !");
-    console.log("� Method:", req.method);
+    console.log("🚀 ROUTE POST /api/movies ATTEINTE !");
+    console.log("📍 Method:", req.method);
     console.log("📍 URL:", req.originalUrl);
+    console.log("📦 Body:", req.body);
+    console.log("📁 Files:", req.files);
     next();
   },
-  handleUpload,
+  upload.fields([
+    { name: "video", maxCount: 1 },
+    { name: "poster", maxCount: 1 },
+    { name: "subtitle", maxCount: 1 },
+    { name: "stills", maxCount: 3 },
+  ]),
   MovieController.create,
 );
 

@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import AdminLayout from "./components/admin/layout/AdminLayout.jsx";
 import MainLayout from "./components/layout/MainLayout.jsx";
+import { useGalleryAccess } from "./hooks/useGalleryAccess";
 import FAQ from "./pages/FAQ.jsx";
 import Galerie from "./pages/Galerie.jsx";
 import Home from "./pages/Home.jsx";
+import Login from "./pages/Login.jsx";
 import Planning from "./pages/Planning.jsx";
 import Reservation from "./pages/Reservation.jsx";
 import Submission from "./pages/Submission.jsx";
@@ -16,7 +18,6 @@ import MovieModeration from "./pages/admin/movieModeration.jsx";
 import DashboardJury from "./pages/jury/DashboardJury.jsx";
 import JuryVote from "./pages/jury/JuryVote.jsx";
 import RankingJury from "./pages/jury/RankingJury.jsx";
-import Login from "./pages/jury/Login.jsx";
 import getAPI from "./services/getAPI.jsx";
 
 // Fonction pour vérifier l'authentification et le rôle
@@ -78,6 +79,45 @@ const ProtectedRoute = ({ children, requiredRole = null }) => {
   return children;
 };
 
+// Composant de protection pour la galerie (accessible uniquement pendant la phase festival)
+const ProtectedGalleryRoute = ({ children }) => {
+  const { isAccessible, error } = useGalleryAccess();
+  
+  // Pendant le chargement
+  if (isAccessible === null) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-black">
+        <div className="text-center">
+          <span className="loading loading-spinner loading-lg text-white"></span>
+          <p className="text-white mt-4">Vérification de l'accès...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // Si la galerie n'est pas accessible
+  if (!isAccessible) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center max-w-md px-6">
+          <h1 className="text-4xl font-bold text-white mb-4 text-nowrap">Galerie non disponible</h1>
+          <p className="text-gray-300 mb-6">
+            La galerie des films sélectionnés ne sera accessible que pendant la dernière phase.
+          </p>
+          <a 
+            href="/" 
+            className="btn-custom-glass text-white transition-colors"
+          >
+            Retour à l'accueil
+          </a>
+        </div>
+      </div>
+    );
+  }
+  
+  return children;
+};
+
 function AppRouter() {
   return (
     <Router>
@@ -90,7 +130,14 @@ function AppRouter() {
           <Route path="/reservation" element={<Reservation />} />
           <Route path="/submission" element={<Submission />} />
           <Route path="/submit-movie" element={<Submission />} />
-          <Route path="/galerie" element={<Galerie />} />
+          <Route 
+            path="/galerie" 
+            element={
+              <ProtectedGalleryRoute>
+                <Galerie />
+              </ProtectedGalleryRoute>
+            } 
+          />
           <Route path="/admin/login" element={<Login />} />
         </Route>
 
