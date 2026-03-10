@@ -1,43 +1,84 @@
 import { Input } from "./FormUI";
+import { useTranslation } from "react-i18next";
 
 export default function StepIdentity({ formData, handleChange, setCustomValue, errors }) {
-  const civilites = ['M', 'Mme', 'Iel'];
-  const activeIndex = civilites.indexOf(formData.civilite);
-  const sliderTranslate = ["translate-x-0", "translate-x-full", "translate-x-[200%]"][activeIndex];
+  const { t } = useTranslation();
 
   return (
     <div className="space-y-6 md:space-y-8 animate-fade-in">
-      <h2 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-white/90">Identité du Réalisateur</h2>
-      
-      {/* Civilité - Sliding Toggle */}
-      <div>
-        <label className="block text-sm text-blue-200/80 mb-3 ml-1">Civilité</label>
-        <div className="relative flex bg-black/20 border border-white/10 p-1.5 rounded-2xl backdrop-blur-sm">
-          {/* Slider Background */}
-          <div 
-            className={`absolute top-1.5 bottom-1.5 left-1.5 w-1/3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-lg transition-all duration-300 ease-out ${sliderTranslate}`}
-          />
-          {/* Buttons */}
-          {civilites.map((civ) => (
-            <button 
-              key={civ} 
-              type="button" 
-              onClick={() => setCustomValue('civilite', civ)} 
-              className={`relative z-10 flex-1 py-2.5 text-sm font-semibold rounded-xl transition-colors duration-300 ${formData.civilite === civ ? 'text-white' : 'text-white/60 hover:text-white'}`}
+      <h2 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-white">
+        {t('form.identityTitle')}
+      </h2>
+
+      {/* Civilité / Genre - version moderne sobre sans emoji */}
+      <div className="flex flex-col mb-4">
+        <label className="block text-base mb-2 ml-3 font-semibold text-gray-200">
+          {t('form.civilite') || "Civilité *"}
+        </label>
+        <div className="flex gap-3 ml-3">
+          {[
+            { value: "M", label: "Mr" },
+            { value: "Mme", label: "Mme" },
+            { value: "Iel", label: "Iel" }
+          ].map(option => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => setCustomValue('civilite', option.value)}
+              className={`flex items-center px-6 py-2 rounded-full border font-semibold text-base transition-all shadow-sm cursor-pointer
+                ${formData.civilite === option.value
+                  ? 'bg-white text-black border-gray-300 shadow-md'
+                  : 'bg-gray-800 text-gray-200 border-gray-600 hover:bg-gray-700 hover:text-white'}
+              `}
+              aria-pressed={formData.civilite === option.value}
+              style={{ cursor: 'pointer' }}
             >
-              {civ}
+              {option.label}
             </button>
           ))}
         </div>
+        {errors.civilite && <p className="text-red-400 text-xs mt-1 ml-3">{errors.civilite}</p>}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Input label="Nom *" name="lastname" value={formData.lastname} onChange={handleChange} error={errors.lastname} />
-        <Input label="Prénom *" name="firstname" value={formData.firstname} onChange={handleChange} error={errors.firstname} />
+        <Input 
+          label={t('form.lastname')} 
+          name="lastname" 
+          value={formData.lastname || ""} 
+          onChange={handleChange} 
+          error={errors.lastname} 
+          className="cursor-text"
+        />
+        <Input 
+          label={t('form.firstname')} 
+          name="firstname" 
+          value={formData.firstname || ""} 
+          onChange={handleChange} 
+          error={errors.firstname} 
+          className="cursor-text"
+        />
       </div>
-      
-      <Input label="Date de Naissance *" name="birthdate" type="date" value={formData.birthdate} onChange={handleChange} error={errors.birthdate} />
-      <Input label="Métier actuel *" name="profession" value={formData.profession} onChange={handleChange} placeholder="Réalisateur, Étudiant..." error={errors.profession} />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Input 
+          label={t('form.birthdate')} 
+          name="birthdate" 
+          type="date" 
+          value={formData.birthdate || ""} 
+          onChange={handleChange} 
+          error={errors.birthdate} 
+          className="cursor-pointer"
+        />
+        <Input 
+          label={t('form.profession')} 
+          name="profession" 
+          value={formData.profession || ""} 
+          onChange={handleChange} 
+          placeholder={t('form.professionPlaceholder')} 
+          error={errors.profession} 
+          className="cursor-text"
+        />
+      </div>
     </div>
   );
 }

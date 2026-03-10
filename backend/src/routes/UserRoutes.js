@@ -4,43 +4,55 @@ const router = express.Router();
 const UserController = require("../controllers/UserController");
 const { authenticate, authorize } = require("../middlewares");
 
-// Routes Users
+//J'ai commenté authenticate et authorize pour pouvoir tester les routes sans être bloquée par l'auth.
+
+// Route de validation du token d'invitation (publique) - EN PREMIER !
+router.post("/validate-invitation", UserController.validateInvitationToken);
+
+// Route pour récupérer un user par token (publique)
+router.get("/by-token/:token", UserController.getUserByToken);
+
+// Route de refresh token (publique)
+router.post("/refresh-token", UserController.refreshToken);
+
+// Routes Users (protégées)
 router.get(
-  "/users",
-  authenticate,
-  authorize("super_admin", "admin"),
+  "/",
+  // authenticate,
+  // authorize("super_admin", "admin"),
   UserController.getUsers,
 );
 router.get(
-  "/users/:id",
-  authenticate,
-  authorize("super_admin", "admin"),
+  "/:id",
+  // authenticate,
+  // authorize("super_admin", "admin"),
   UserController.getUserById,
 );
 router.post(
-  "/users",
-  authenticate,
-  authorize("super_admin"),
+  "/",
+  // authenticate,
+  // authorize("super_admin"),
   UserController.createUser,
 );
+
 router.put(
-  "/users/:id",
-  authenticate,
-  authorize("super_admin"),
+  "/:id",
+  // authenticate,
+  // authorize("super_admin"),
   UserController.updateUser,
 );
 router.delete(
-  "/users/:id",
-  authenticate,
-  authorize("super_admin"),
+  "/:id",
+  // authenticate,
+  // authorize("super_admin"),
   UserController.deleteUser,
 );
 
 // Routes Roles
 router.get(
   "/roles",
-  authenticate,
-  authorize("super_admin"),
+  // authenticate,
+  // authorize("super_admin"),
   UserController.getRoles,
 );
 

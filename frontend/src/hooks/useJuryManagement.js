@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { juryService } from '../services/juryService';
+import { useCallback, useEffect, useState } from 'react';
+import getAPI from '../services/getAPI';
 
 export const useJuryManagement = () => {
   const [juryList, setJuryList] = useState([]);
@@ -13,11 +13,17 @@ export const useJuryManagement = () => {
     try {
       setIsLoadingData(true);
       setError(null);
-      const juryData = await juryService.getAll();
+      const response = await getAPI.getAllJuries(); // Plus de paramètre ici
+      console.log('Réponse API getAll:', response); // Debug
+      
+      // Vérifier si la réponse a une propriété 'data'
+      const juryData = Array.isArray(response.data) ? response.data : (response?.data?.data || []);
       setJuryList(juryData);
+      console.log("JURYDATA usejurymanagment", juryData)
     } catch (err) {
       console.error('Erreur lors du chargement des jurys:', err);
       setError('Impossible de charger les jurys');
+      setJuryList([]); // S'assurer que c'est toujours un tableau
     } finally {
       setIsLoadingData(false);
     }
@@ -60,7 +66,7 @@ export const useJuryManagement = () => {
     
     if (confirmDelete) {
       try {
-        await juryService.delete(juryId);
+        await getAPI.deleteJury(juryId);
         await fetchAllJuries();
         closeJuryModal();
       } catch (err) {
@@ -78,7 +84,7 @@ export const useJuryManagement = () => {
     
     if (confirmDeactivate) {
       try {
-        await juryService.deactivate(juryId);
+        await getAPI.deactivateJury(juryId);
         await fetchAllJuries();
         closeJuryModal();
       } catch (err) {
@@ -91,7 +97,7 @@ export const useJuryManagement = () => {
   // Réactiver un jury
   const reactivateJury = useCallback(async (juryId) => {
     try {
-      await juryService.reactivate(juryId);
+      await getAPI.reactivateJury(juryId);
       await fetchAllJuries();
       closeJuryModal();
     } catch (err) {

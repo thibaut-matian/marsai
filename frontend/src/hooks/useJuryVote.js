@@ -1,46 +1,82 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import getAPI from "../services/getAPI";
 
 export function useJuryVote() {
-  // 1. GESTION DE L'ÉTAT (Le vote)
+  // État du film
   const [decision, setDecision] = useState(null);
+  const [film, setFilm] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [allWatched, setAllWatched] = useState(false);
+  const [noAssignment, setNoAssignment] = useState(false);
+  const [error, setError] = useState(null);
 
-  // 2. DONNÉES SIMULÉES (MOCK DATA)
-  // C'est ici que tu mettras tes appels API (fetch) plus tard.
-  const film = {
-    title: "Chroniques du Silicium",
-    duration: 60,
-    aiClassification: "HYBRID",
+  // État du vote
+  const [comment, setComment] = useState("");
+  const [voteSubmitted, setVoteSubmitted] = useState(false);
+  const [voteError, setVoteError] = useState(null);
+  const [voteLoading, setVoteLoading] = useState(false);
 
-    // Identité Réalisateur
-    director: {
-      firstname: "Léa",
-      lastname: "Dubois",
-      profession: "Motion Designer",
-      city: "Lyon",
-      country: "France",
-      socials: {
-        instagram: "@lea_dbs_art",
-        website: "www.lea-dubois.com",
-      },
-    },
+  // Fonction réutilisable : charge le prochain film non vu
+  const loadNextMovie = useCallback(async () => {
+    setLoading(true);
+    setFilm(null);
+    setDecision(null);
+    setError(null);
+    setNoAssignment(false);
+    try {
+      const response = await getAPI.getNextMovie();
+      const data = response.data;
+      if (data.data === null) {
+        if (data.message === "Aucun film ne vous a encore été assigné.") {
+          setNoAssignment(true);
+        } else {
+          setAllWatched(true);
+        }
+      } else {
+        setFilm(data.data);
+        setAllWatched(false);
+      }
+    } catch (err) {
+      console.error("Erreur chargement film suivant:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-    // Tech & IA
-    aiStack: "Midjourney v6, Runway Gen-2, ElevenLabs, After Effects",
-    aiMethodology:
-      "Génération des arrière-plans sur MJ, incrustation d'acteurs réels filmés sur fond vert, puis style transfer via Runway pour l'ambiance onirique.",
+  // Chargement initial
+  useEffect(() => {
+    loadNextMovie();
+  }, [loadNextMovie]);
 
-    // Textes
-    synopsis:
-      "Dans un futur où la mémoire est stockée sur quartz, une archiviste découvre une faille dans l'histoire officielle de l'humanité. Elle doit choisir entre révéler la vérité au monde ou préserver la paix sociale factice qui règne depuis un siècle.",
-    directorNote:
-      "Je voulais explorer la texture du souvenir numérique. L'aspect hybride sert le propos : le réel (les acteurs) se perd peu à peu dans l'artificiel (les décors générés par IA).",
+  // Soumission du vote
+  const handleVoteSubmit = async () => {
+    const decisionMap = {
+      validate: "j'aime",
+      discuss: "à discuter",
+      refuse: "je n'aime pas",
+    };
 
-    // Équipe (Liste dynamique)
-    team: [
-      { role: "Sound Designer", firstname: "Marc", lastname: "Veral" },
-      { role: "Voix Off", firstname: "Sarah", lastname: "Connor" },
-      { role: "Prompt Engineer", firstname: "Alex", lastname: "Turing" },
-    ],
+    setVoteLoading(true);
+    setVoteError(null);
+    try {
+      await getAPI.submitVote({
+        movie_id: film.id,
+        decision: decisionMap[decision],
+        feedback: comment,
+      });
+      setVoteSubmitted(true);
+      setComment("");
+      setTimeout(() => {
+        setVoteSubmitted(false);
+        loadNextMovie();
+      }, 1500);
+    } catch (err) {
+      console.error("Erreur soumission vote:", err);
+      setVoteError("Une erreur est survenue. Veuillez réessayer.");
+    } finally {
+      setVoteLoading(false);
+    }
   };
 
   // 3. FONCTION UTILITAIRE (Formatage du temps 145 -> 02:25)
@@ -56,6 +92,18 @@ export function useJuryVote() {
     decision,
     setDecision,
     film,
+    loading,
+    allWatched,
+    noAssignment,
+    error,
+    loadNextMovie,
     formatDuration,
+    // Vote
+    comment,
+    setComment,
+    voteSubmitted,
+    voteError,
+    voteLoading,
+    handleVoteSubmit,
   };
 }

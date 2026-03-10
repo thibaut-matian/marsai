@@ -22,13 +22,26 @@ const Note = sequelize.define(
       allowNull: true,
     },
     decision: {
-      type: DataTypes.ENUM("j'aime", "je n'aime pas", "à discuter"),
+      type: DataTypes.ENUM(
+        "j'aime",
+        "je n'aime pas",
+        "à discuter",
+        "null",
+        "signalé",
+      ),
       allowNull: true,
+      defaultValue: "null",
     },
   },
   {
     tableName: "notes",
     timestamps: false,
+    indexes: [
+      {
+        unique: true,
+        fields: ["user_id", "movie_id"], // Un jury ne peut voter qu'une fois par film
+      },
+    ],
   },
 );
 

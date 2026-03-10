@@ -1,13 +1,30 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import { ExternalLink } from 'lucide-react';
 
-const steps = [
-  { id: 1, label: 'INSCRIPTIONS' },
-  { id: 2, label: 'DÉLIBÉRATION' },
-  { id: 3, label: 'FESTIVAL' },
-];
+const MovieTimeline = ({ phases = [], activeStep = 1 }) => {
+  const { t } = useTranslation();
 
-const MovieTimeline = ({ activeStep = 2 }) => {
+  const steps = phases.length > 0 
+    ? phases.map((phase, index) => ({
+        id: index + 1,
+        key: phase.key,
+        label: phase.label,
+        startDate: phase.startDate,
+        endDate: phase.endDate,
+        description: phase.description,
+        linkUrl: phase.linkUrl,
+        linkLabel: phase.linkLabel,
+        linkEnabled: phase.linkEnabled
+      }))
+    : [
+        { id: 1, label: t('home.timeline.registrations') },
+        { id: 2, label: t('home.timeline.deliberation') },
+        { id: 3, label: t('home.timeline.festival') },
+      ];
+
   return (
     <div className="bg-black w-full py-20 md:py-32 px-10 overflow-hidden">
       <div className="max-w-5xl mx-auto relative">
@@ -15,12 +32,11 @@ const MovieTimeline = ({ activeStep = 2 }) => {
         {/* Ligne de fond (Grise) */}
         <div className="absolute top-[30px] md:top-[40px] left-0 w-full h-[2px] bg-neutral-800" />
 
-        {/* Ligne de progression (Blanche) - CORRECTION DU CALCUL ICI */}
+        {/* Ligne de progression (Blanche) */}
         <motion.div 
           className="absolute top-[30px] md:top-[40px] left-0 h-[2px] bg-white shadow-[0_0_15px_white] z-0"
           initial={{ width: "0%" }}
           animate={{ 
-            // On calcule le pourcentage exact selon l'étape active
             width: `${((activeStep - 1) / (steps.length - 1)) * 100}%` 
           }}
           transition={{ duration: 1, ease: "easeInOut" }}
@@ -51,18 +67,55 @@ const MovieTimeline = ({ activeStep = 2 }) => {
                 }`} />
               </div>
 
-              {/* Texte responsive (Uniquement l'actif sur mobile) */}
+              {/* Texte responsive */}
               <div className="mt-2 h-10 flex items-center justify-center">
                 <span className={`
                   text-[12px] md:text-[18px] tracking-[0.2em] font-black uppercase text-center transition-all duration-500
                   ${activeStep === step.id 
                     ? 'text-white opacity-100 scale-100' 
-                    : 'hidden md:block text-neutral-600' // On utilise hidden/block pour un rendu propre
+                    : 'hidden md:block text-neutral-600'
                   }
                 `}>
                   {step.label}
                 </span>
               </div>
+
+              {/* Description + Bouton (visible seulement pour l'étape active) */}
+              {activeStep === step.id && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 text-center max-w-[300px] space-y-4"
+                >
+                  {step.description && (
+                    <p className="text-gray-400 text-sm hidden md:block">{step.description}</p>
+                  )}
+                  
+                  {step.startDate && step.endDate && (
+                    <p className="text-gray-500 text-xs hidden md:block">
+                      {new Date(step.startDate).toLocaleDateString('fr-FR')} - {new Date(step.endDate).toLocaleDateString('fr-FR')}
+                    </p>
+                  )}
+
+                  {/* 🆕 Bouton si lien activé */}
+                  {step.linkEnabled && step.linkUrl && (
+                    <motion.div
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      <Link
+                        to={step.linkUrl}
+                        target={step.linkUrl.startsWith('http') ? '_blank' : '_self'}
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold rounded-lg transition-all hover:scale-105 shadow-lg hover:shadow-cyan-500/50"
+                      >
+                        <span>{step.linkLabel}</span>
+                        {step.linkUrl.startsWith('http') && <ExternalLink size={18} />}
+                      </Link>
+                    </motion.div>
+                  )}
+                </motion.div>
+              )}
             </div>
           ))}
         </div>

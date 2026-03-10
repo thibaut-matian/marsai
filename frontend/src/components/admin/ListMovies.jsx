@@ -1,25 +1,56 @@
-import React, { useEffect } from 'react'; // Ajout de useEffect pour le reset de page
+import { useEffect } from "react";
+import ContactModal from "../../components/features/contactModal";
+import PaginationControls from "../../components/pagination";
+import { useEmailSend } from "../../hooks/useEmailSend";
 import useListFilm from "../../hooks/useListFilm";
 import usePagination from "../../hooks/usePagination";
-import PaginationControls from "../../components/pagination"; 
-import { Eye, Mail, Trash2, Clapperboard, User } from "lucide-react";
-import ContactModal from "../../components/features/contactModal";
-import { useEmailSend } from "../../hooks/useEmailSend";
+import ModalDetails from "../features/movies/ModalDetails";
+import DeleteMovieModal from "./DeleteMovieModal";
+import FinalistCounter from "./FinalistCounter";
+import FinalistModal from "./FinalistModal";
 import Filtre from "./filtre";
+import MovieTableRow from "./MovieTableRow";
 
 const ListMovies = () => {
-  const { 
-    movies, 
-    loading, 
-    error, 
-    getBadgeClass, 
+  const {
+    movies,
+    loading,
+    error,
+    getBadgeClass,
     getStatusText,
-    handleDelete, 
-    selectedMovie, 
+    handleDelete,
+    confirmDelete,
+    deleteTarget,
+    setDeleteTarget,
+    deleteLoading,
+    selectedMovie,
     setSelectedMovie,
-    statusFilter,   // Vient de ton hook
-    setStatusFilter, // Vient de ton hook
-    filteredMovies,  // Vient de ton hook
+    statusFilter,
+    setStatusFilter,
+    searchQuery,
+    setSearchQuery,
+    finalistFilter,
+    setFinalistFilter,
+    filteredMovies,
+    detailMovie,
+    isDetailOpen,
+    handleOpenDetail,
+    handleCloseDetail,
+    // Finaliste
+    finalistModal,
+    openFinalistModal,
+    closeFinalistModal,
+    selectLoading,
+    selectError,
+    setSelectError,
+    confirmInput,
+    setConfirmInput,
+    selectedIds,
+    FINALIST_LIMIT,
+    finalistCount,
+    limitReached,
+    handleSelectConfirm,
+    isConfirmInputValid,
   } = useListFilm();
 
   const { sendEmail, loading: emailLoading } = useEmailSend();
@@ -34,29 +65,46 @@ const ListMovies = () => {
       () => setSelectedMovie(null),
     );
   };
-  
-  // On branche la pagination sur les films filtrés
+
+  // Pagination sur les films filtrés
   const pagination = usePagination(filteredMovies, 20);
 
-  // Petit ajout pour ne pas rester bloqué sur une page vide quand on change de filtre
+  // Retour page 1 quand les filtres changent
   useEffect(() => {
     if (pagination.goToPage) pagination.goToPage(1);
-  }, [statusFilter]);
+  }, [statusFilter, searchQuery]);
 
-  if (loading) return <div className="p-10 text-center text-blue-400 animate-pulse font-bold">Chargement des films de MarsAI...</div>;
-  if (error)   return <div className="p-10 text-center text-red-500 font-bold">⚠️ Erreur : {error}</div>;
+  if (loading)
+    return (
+      <div className="p-10 text-center text-blue-400 animate-pulse font-bold">
+        Chargement des films de MarsAI...
+      </div>
+    );
+  if (error)
+    return (
+      <div className="p-10 text-center text-red-500 font-bold">⚠️ Erreur : {error}</div>
+    );
 
   return (
     <div>
-      {/* Ton nouveau composant Filtre */}
-      <Filtre 
-        statusFilter={statusFilter} 
-        setStatusFilter={setStatusFilter} 
-        filteredMovies={filteredMovies} 
-        movies={movies} 
+      <Filtre
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        finalistFilter={finalistFilter}
+        setFinalistFilter={setFinalistFilter}
+        filteredMovies={filteredMovies}
+        movies={movies}
       />
-      
+
       <div className="p-6">
+        <FinalistCounter
+          finalistCount={finalistCount}
+          FINALIST_LIMIT={FINALIST_LIMIT}
+          limitReached={limitReached}
+        />
+
         <div className="overflow-x-auto rounded-2xl border border-white/10 bg-[#1E1E24]/90 backdrop-blur-md shadow-2xl">
           <table className="table w-full">
             <thead className="text-gray-400 bg-black/40">
@@ -64,62 +112,25 @@ const ListMovies = () => {
                 <th className="bg-transparent py-5">Film</th>
                 <th className="bg-transparent">Réalisateur</th>
                 <th className="bg-transparent">Description</th>
+                <th className="bg-transparent text-center">Votes jury</th>
                 <th className="bg-transparent text-center">Statut</th>
                 <th className="bg-transparent text-center">Actions</th>
               </tr>
             </thead>
-            
             <tbody className="text-white">
-              {/* TON TABLEAU ORIGINAL INCHANGÉ */}
               {pagination.currentItems.map((film) => (
-                <tr key={film.id} className="border-b border-white/5 hover:bg-white/5 transition-all">
-                  <td className="align-middle py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="flex-shrink-0 p-2 bg-blue-500/10 rounded-lg text-blue-400">
-                        <Clapperboard size={20} />
-                      </div>
-                      <span className="font-bold text-sm md:text-md truncate max-w-[150px] md:max-w-none">
-                        {film.title}
-                      </span>
-                    </div>
-                  </td>
-
-                  <td className="align-middle">
-                    <div className="flex items-center gap-2 text-gray-300 italic text-sm">
-                      <User size={14} className="text-gray-500 flex-shrink-0" />
-                      <span className="truncate">{film.director?.trim()}</span>
-                    </div>
-                  </td>
-
-                  <td className="align-middle max-w-md italic text-gray-400 text-sm">
-                    <div className="line-clamp-1">
-                      {film.vo_desc || film.description}
-                    </div>
-                  </td>
-
-                  <td className="text-center align-middle">
-                    <div className={`badge ${getBadgeClass(film.status)} py-3 px-4 font-semibold whitespace-nowrap inline-flex items-center justify-center`}>
-                      {getStatusText(film.status)}
-                    </div>
-                  </td>
-
-                  <td className="align-middle">
-                    <div className="flex justify-center items-center gap-2">
-                      <button className="btn btn-square btn-sm bg-blue-600 hover:bg-blue-500 border-none text-white">
-                        <Eye size={18} />
-                      </button>
-                      <button 
-                        className="btn btn-square btn-sm bg-amber-500/20 hover:bg-amber-500 border border-amber-500 text-amber-500 hover:text-black transition-all"
-                        onClick={() => setSelectedMovie(film)}
-                      >
-                        <Mail size={18} />
-                      </button>
-                      <button className="btn btn-square btn-sm bg-red-600/20 hover:bg-red-600 border border-red-600 text-red-500 hover:text-white transition-all">
-                        <Trash2 size={18} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                <MovieTableRow
+                  key={film.id}
+                  film={film}
+                  getBadgeClass={getBadgeClass}
+                  getStatusText={getStatusText}
+                  selectedIds={selectedIds}
+                  limitReached={limitReached}
+                  onOpenDetail={handleOpenDetail}
+                  onOpenContact={setSelectedMovie}
+                  onOpenFinalist={openFinalistModal}
+                  onDelete={handleDelete}
+                />
               ))}
             </tbody>
           </table>
@@ -127,13 +138,43 @@ const ListMovies = () => {
           <PaginationControls pagination={pagination} label="films" />
         </div>
 
-        {/* TON MODAL ORIGINAL INCHANGÉ */}
+        {/* Modal contact */}
         <ContactModal
-          isOpen={!!selectedMovie}               
+          isOpen={!!selectedMovie}
           data={selectedMovie}
           onClose={() => setSelectedMovie(null)}
-          onSend={handleSendEmail}               
-          loading={emailLoading}               
+          onSend={handleSendEmail}
+          loading={emailLoading}
+        />
+
+        {/* Modal détail */}
+        {isDetailOpen && detailMovie && (
+          <ModalDetails
+            movieId={detailMovie.id}
+            isOpen={isDetailOpen}
+            onClose={handleCloseDetail}
+          />
+        )}
+
+        {/* Modal suppression */}
+        <DeleteMovieModal
+          deleteTarget={deleteTarget}
+          deleteLoading={deleteLoading}
+          onCancel={() => setDeleteTarget(null)}
+          onConfirm={confirmDelete}
+        />
+
+        {/* Modal finaliste */}
+        <FinalistModal
+          finalistModal={finalistModal}
+          selectLoading={selectLoading}
+          selectError={selectError}
+          setSelectError={setSelectError}
+          confirmInput={confirmInput}
+          setConfirmInput={setConfirmInput}
+          onClose={closeFinalistModal}
+          onConfirm={handleSelectConfirm}
+          isConfirmInputValid={isConfirmInputValid}
         />
       </div>
     </div>

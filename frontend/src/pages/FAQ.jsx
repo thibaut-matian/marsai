@@ -1,21 +1,23 @@
 import React, { useState } from "react";
 import { Plus, Minus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import videoFAQ from "../assets/videos/videoFAQ.mp4";
 
 export default function FAQ() {
+  const { t } = useTranslation();
   const [activeIndex, setActiveIndex] = useState(null);
 
   const questions = [
-    "Quels sont les prix décernés lors du festival ?", 
-    "Quelle doit être la durée du court-métrage soumis ?",
-    "Puis-je soumettre plusieurs films ?",
-    "Puis-je modifier ma soumission après l’avoir envoyée ?",
-    "Une équipe peut-elle soumettre un film ?",
-    "Comment l’intelligence artificielle doit-elle être intégrée dans le film ?",
-    "Quels sont les critères d’évaluation des films soumis ?",
-    "Comment serai-je informé(e) de la bonne réception de ma soumission ?",
-    "Les films soumis seront-ils rendus publics ?",
-    "Où puis-je consulter le règlement et les conditions de participation ?",
+    t('faq.q1'),
+    t('faq.q2'),
+    t('faq.q3'),
+    t('faq.q4'),
+    t('faq.q5'),
+    t('faq.q6'),
+    t('faq.q7'),
+    t('faq.q8'),
+    t('faq.q9'),
+    t('faq.q10'),
   ];
 
   const toggleQuestion = (index) => {
@@ -69,15 +71,15 @@ export default function FAQ() {
             className={`
               collapse mb-4 border transition-all duration-300 ease-in-out
               ${activeIndex === index 
-                ? "collapse-open border-indigo-500/50 bg-white/5 shadow-[0_0_15px_-3px_rgba(99,102,241,0.4)] rounded-xl" 
-                : "border-gray-800 bg-transparent rounded-none border-t-0 border-x-0 border-b" 
+                ? "collapse-open border-white/50 bg-white/5 shadow-[0_0_15px_-3px_rgba(255,255,255,0.3)] rounded-xl" 
+                : "bg-transparent rounded-none border-t-0 border-x-0 border-b" 
               }
             `}
             onClick={() => toggleQuestion(index)}
           >
             <div className="collapse-title text-white cursor-pointer text-base flex justify-between items-center w-full pr-4">
               <span className="flex-1 font-medium">{question}</span>
-              <span className="text-indigo-400">
+              <span className="text-white">
                 {activeIndex === index 
                   ? <Minus size={24} /> 
                   : <Plus size={24} />
@@ -86,7 +88,7 @@ export default function FAQ() {
             </div>
 
             <div className="collapse-content text-sm text-gray-300"> 
-              <p className="pt-2">Click the "Sign Up" button in the top right corner and follow the registration process.</p>
+              <p className="pt-2">{t(`faq.a${index+1}`)}</p>
             </div>
           </div>
         ))}

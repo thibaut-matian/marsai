@@ -4,15 +4,18 @@ import useReport from "../../hooks/useReport";
 import usePagination from "../../hooks/usePagination";
 import PaginationControls from "../pagination";
 import ContactModal from "../features/contactModal";
+import ActionButton from "./actionButton";
+import ModalDetails from "../features/movies/ModalDetails";
 
 const ReportTable = () => {
-  const { reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport } = useReport();
+  const {reports, handleDelete, handleSendEmail, selectedReport, setSelectedReport, handleOpenModal, handleOpenDetail, handleCloseDetail, isDetailOpen,
+  detailMovie } = useReport();
 
   // On récupère tout l'objet pagination
   const pagination = usePagination(reports, 10);
 
   return (
-    <div className="p-6 bg-[#14141b] relative">
+    <div className="p-6 relative">
       <div className="flex items-center gap-3 mb-6">
         <AlertOctagon className="text-error" size={32} />
         <h2 className="text-2xl font-bold text-white">Signalements en attente</h2>
@@ -29,54 +32,68 @@ const ReportTable = () => {
             </tr>
           </thead>
           
-          <tbody className="text-white">
-            {/* On utilise pagination.currentItems pour n'afficher que les 20 du moment */}
-            {pagination.currentItems.map((report) => (
-              <tr key={report.id} className="border-b border-white/5 hover:bg-white/5 transition-all">
-                <td>
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-red-500/10 rounded-lg text-red-500">
-                      <Video size={20} />
-                    </div>
-                    <div>
-                      <div className="font-bold text-md">{report.titre}</div>
-                      <div className="text-xs text-gray-500">{report.timestamp}</div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="flex items-center gap-2 text-gray-300 italic">
-                    <User size={14} className="text-gray-500" /> {report.auteur}
-                  </div>
-                </td>
-                  <td className="text-center min-w-[180px]"> {/* On force une largeur mini ici */}
-  <span className="badge badge-outline border-error/50 text-error bg-error/5 py-4 px-4 text-[10px] sm:text-xs font-semibold uppercase tracking-tight whitespace-nowrap h-auto inline-flex items-center justify-center">
-    {report.raison}
-  </span>
-                </td>
-                <td>
-                  <div className="flex justify-center gap-2">
-                    <button className="btn btn-square btn-sm bg-blue-600 hover:bg-blue-500 border-none text-white" title="Voir">
-                      <Eye size={18} />
-                    </button>
-                    <button 
-                      className="btn btn-square btn-sm bg-amber-500/20 border border-amber-500 text-amber-500"
-                      onClick={() => setSelectedReport(report)} 
-                    >
-                      <Mail size={18} />
-                    </button>
-                    <button 
-                      className="btn btn-square btn-sm bg-red-600/20 hover:bg-red-600 border border-red-600 text-red-500 hover:text-white transition-all"
-                      onClick={() => handleDelete(report.id, report.titre)}
-                      title="Supprimer"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+        <tbody className="text-white">
+  {pagination.currentItems.map((report) => (
+    <tr key={report.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+      <td>
+        <div className="flex items-center gap-3">
+          <Video size={20} className="text-red-500" />
+          <div>
+            {/* On utilise .movie (minuscule) et .title */}
+            <div className="font-bold text-md">{report.movie?.title || "Titre inconnu"}</div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div className="flex items-center gap-2 text-gray-300 italic">
+          <User size={14} /> 
+          {/* On utilise .director qui existe déjà dans ton objet */}
+          {report.movie?.director || "Inconnu"}
+        </div>
+      </td>
+      <td className="text-center">
+        <span className="badge badge-outline border-error/50 text-error uppercase text-[10px]">
+          {report.reason} {/* C'est bien .reason dans ton log */}
+        </span>
+      </td>
+      <td>
+        <div className="flex justify-center items-center gap-2">
+          <ActionButton 
+            icon={Eye} 
+            variant="blue" 
+            onClick={() => handleOpenDetail(report.movie)} 
+            title="Voir les détails"
+          />
+          
+          <ActionButton 
+            icon={Mail} 
+            variant="amber" 
+            onClick={() => {
+              // IMPORTANT : On mappe selon ce que ton hook useEmailSend attend
+              setSelectedReport({
+                id: report.movie?.id,
+                email: report.email, // L'email est à la racine dans ton log
+                title: report.movie?.title,
+                director: report.movie?.director,
+                cause: report.reason,
+                comment: report.comment,
+                status: 3
+              });
+            }} 
+            title="Contacter"
+          />
+          
+          <ActionButton 
+            icon={Trash2} 
+            variant="red" 
+            onClick={() => handleDelete(report.id, report.movie?.id, report.movie?.title)} 
+            title="Supprimer"
+          />
+        </div>
+      </td>
+    </tr>
+  ))}
+</tbody>
         </table>
 
         {/* --- UTILISATION DU COMPOSANT GÉNÉRIQUE --- */}
@@ -84,12 +101,20 @@ const ReportTable = () => {
       </div>
 
       {/* MODALE DE CONTACT */}
-      <ContactModal 
-        isOpen={!!selectedReport} // Ouvert si selectedMovie n'est pas null
-        data={selectedReport} 
-        onClose={() => setSelectedReport(null)} 
-        onSend={handleSendEmail}
-      />
+    <ContactModal 
+  isOpen={!!selectedReport}
+  data={selectedReport} 
+  onClose={() => setSelectedReport(null)} 
+  onSend={handleSendEmail}
+/>
+
+{isDetailOpen && detailMovie && (
+  <ModalDetails 
+    movieId={detailMovie.id || detailMovie} 
+    isOpen={isDetailOpen}
+    onClose={handleCloseDetail} 
+  />
+)}
     </div>
   );
 };

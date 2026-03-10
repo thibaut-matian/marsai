@@ -16,7 +16,14 @@ const authenticate = (req, res, next) => {
     req.user = decoded; // { id, role }
     next();
   } catch (error) {
-    return res.status(403).json({ message: "Token invalide ou expiré" });
+    if (error.name === "TokenExpiredError") {
+      return res
+        .status(401)
+        .json({ message: "Token expiré", code: "TOKEN_EXPIRED" });
+    }
+    return res
+      .status(403)
+      .json({ message: "Token invalide", code: "TOKEN_INVALID" });
   }
 };
 
@@ -27,7 +34,9 @@ const authenticate = (req, res, next) => {
 const authorize = (...roles) => {
   return (req, res, next) => {
     if (!req.user || !roles.includes(req.user.role)) {
-      return res.status(403).json({ message: "Accès refusé : droits insuffisants" });
+      return res
+        .status(403)
+        .json({ message: "Accès refusé : droits insuffisants" });
     }
     next();
   };

@@ -13,10 +13,21 @@ const MovieReport = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    decision: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+    cause: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-});
+    comment: {
+      type: DataTypes.TEXT, // TEXT est préférable à STRING pour les commentaires
+      allowNull: true,
+    },
+  },
+  {
+    tableName: "movies_reports",
+    timestamps: false,
+    createdAt: false,           // Désactive spécifiquement createdAt
+    updatedAt: false,
+  }
+);
 
 module.exports = MovieReport;
