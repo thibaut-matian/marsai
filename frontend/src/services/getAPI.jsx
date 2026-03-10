@@ -5,7 +5,6 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000
 const api = axios.create({
     baseURL: API_BASE_URL,
     timeout: 15000,
-    withCredentials: true, // ⚠️ IMPORTANT : Envoie les cookies de session
     headers: {
         'Content-Type': 'application/json',
     }
@@ -65,9 +64,6 @@ api.interceptors.response.use(
 const getAPI = {
     // ===== AUTHENTIFICATION (useAuth) =====
     login: (credentials) => api.post('auth/login', credentials),
-    logout: () => api.post('auth/logout'),  // ← AJOUT
-    register: (registrationData) => api.post('auth/register', registrationData),  // ← AJOUT
-    checkAuth: () => api.get('auth/check'),  // ← AJOUT
     getProfile: () => api.get('auth/me'),
     validateInvitation: (invitationToken) => api.post('users/validate-invitation', { invitationToken }),
     getUserByToken: (token) => api.get(`users/by-token/${token}`),
