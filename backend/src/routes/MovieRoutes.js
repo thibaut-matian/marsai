@@ -18,6 +18,7 @@ router.post(
     { name: "video", maxCount: 1 },
     { name: "poster", maxCount: 1 },
     { name: "subtitle", maxCount: 1 },
+    { name: "stills", maxCount: 3 },
   ]),
   MovieController.create,
 );

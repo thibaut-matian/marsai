@@ -269,7 +269,11 @@ export function useSubmission(t) {
           await submitForm();
           setIsSubmitted(true);
         } catch (error) {
-          alert("Erreur lors de l'envoi. Vérifiez la console.");
+          console.error("❌ Erreur lors de l'envoi:", error);
+          const errorMessage = error.code === 'ECONNABORTED' 
+            ? "La soumission prend plus de temps que prévu. Veuillez patienter ou réessayer."
+            : error.response?.data?.message || "Erreur lors de l'envoi. Vérifiez votre connexion.";
+          alert(errorMessage);
         } finally {
           setIsLoading(false);
         }
@@ -293,6 +297,14 @@ export function useSubmission(t) {
     if (formData.videoFile) form.append("video", formData.videoFile);
     if (formData.thumbnailFile) form.append("poster", formData.thumbnailFile);
     if (formData.subtitleFile) form.append("subtitle", formData.subtitleFile);
+    
+    // Screenshots (stills)
+    if (formData.stillsFiles && formData.stillsFiles.length > 0) {
+      formData.stillsFiles.forEach(file => {
+        form.append("stills", file);
+      });
+      console.log("📸 Screenshots envoyés:", formData.stillsFiles.length);
+    }
 
     // Identité & Genre (valeurs directement compatibles DB)
     let genderValue = "other";

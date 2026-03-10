@@ -77,7 +77,8 @@ const getAPI = {
     getMovieDetails: (id) => api.get(`movies/id/${id}`),
     getMovieByUrl: (url) => api.get(`movies/url/${url}`),
     submitMovie: (formData) => api.post('movies', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: 300000 // 5 minutes pour l'upload de fichiers volumineux
     }),
     
     // ===== JURY & VOTES (useJuryVote, useRankingJury) =====

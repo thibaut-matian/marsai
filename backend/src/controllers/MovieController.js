@@ -283,6 +283,26 @@ class MovieController {
         console.log("🌐 Aucun réseau social à créer");
       }
 
+      // ✅ UPLOAD DES SCREENSHOTS (STILLS)
+      if (files && files.stills && files.stills.length > 0) {
+        console.log(`📸 Upload de ${files.stills.length} screenshot(s) vers Scaleway...`);
+        try {
+          for (const stillFile of files.stills) {
+            const stillUrl = await uploadToScaleway(stillFile, "screenshots");
+            await MovieScreenshot.create({
+              url: stillUrl,
+              movie_id: movie.id,
+            });
+            console.log(`   ✅ Screenshot uploadé: ${stillUrl}`);
+          }
+          console.log(`✅ ${files.stills.length} screenshot(s) traité(s)`);
+        } catch (screenshotError) {
+          console.error("⚠️ Erreur upload screenshots:", screenshotError.message);
+        }
+      } else {
+        console.log("📸 Aucun screenshot à uploader");
+      }
+
       // Association award par défaut
       console.log("9️⃣ Association award par défaut...");
       await MovieAward.create({
