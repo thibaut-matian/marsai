@@ -30,8 +30,8 @@ router.get(
 );
 router.post(
   "/",
-  // authenticate,
-  // authorize("super_admin"),
+  isAuthenticated,
+  hasRole('super_admin', 'admin'),
   UserController.createUser,
 );
 
