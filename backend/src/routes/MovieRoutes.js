@@ -27,12 +27,7 @@ router.post(
     console.log("📍 URL:", req.originalUrl);
     next();
   },
-  upload.fields([
-    { name: "video", maxCount: 1 },
-    { name: "poster", maxCount: 1 },
-    { name: "subtitle", maxCount: 1 },
-    { name: "stills", maxCount: 3 },
-  ]),
+  handleUpload,
   MovieController.create,
 );
 

@@ -1,14 +1,14 @@
 import { motion } from 'framer-motion';
-import {
-  AlertCircle,
-  Award,
-  Calendar,
-  CheckCircle,
-  Clock,
-  FileText,
-  Loader,
+import { 
+  Users, 
+  FileText, 
+  CheckCircle, 
+  Clock, 
   TrendingUp,
-  Users
+  AlertCircle,
+  Calendar,
+  Award,
+  Loader
 } from 'lucide-react';
 import useDashboardStats from '../../hooks/useDashboardStats';
 import useProjectProgress from '../../hooks/useProjectProgress';
@@ -24,44 +24,30 @@ const Dashboard = () => {
   const safeRecentActivity = Array.isArray(recentActivity) ? recentActivity : [];
 
   const StatCard = ({ icon: Icon, title, value, trend, color }) => (
-    <div className="p-6 card-admin rounded-xl border transition-all">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="p-6 card-admin rounded-xl border transition-all"
+    >
       <div className="flex items-start justify-between">
-        <div className="flex-1">
+        <div>
           <p className="text-gray-400 text-sm mb-1">{title}</p>
-          <div className="h-10 flex items-center">
-            {statsLoading ? (
-              <div className="skeleton h-8 w-20 bg-gray-700/50"></div>
-            ) : (
-              <motion.h3 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.2 }}
-                className="text-3xl font-bold text-white"
-              >
-                {value}
-              </motion.h3>
-            )}
-          </div>
-          <div className="h-6 mt-2 flex items-center">
-            {trend && !statsLoading && (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.2, delay: 0.1 }}
-                className="flex items-center text-sm"
-              >
-                <TrendingUp className="w-4 h-4 mr-1 text-green-500" />
-                <span className="text-green-500">+{trend}%</span>
-                <span className="text-gray-500 ml-1">ce mois</span>
-              </motion.div>
-            )}
-          </div>
+          <h3 className="text-3xl font-bold text-white">
+            {statsLoading ? <Loader className="w-6 h-6 animate-spin" /> : value}
+          </h3>
+          {trend && !statsLoading && (
+            <div className="flex items-center mt-2 text-sm">
+              <TrendingUp className="w-4 h-4 mr-1 text-green-500" />
+              <span className="text-green-500">+{trend}%</span>
+              <span className="text-gray-500 ml-1">ce mois</span>
+            </div>
+          )}
         </div>
         <div className={`p-3 rounded-lg ${color}`}>
           <Icon className="w-6 h-6" />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 
   const ProgressBar = ({ phase, status, progress }) => (
@@ -239,13 +225,9 @@ const Dashboard = () => {
               <span className="text-sm text-gray-400">Jurés inscrits</span>
               <Users className="w-4 h-4 text-blue-500" />
             </div>
-            <div className="h-8 flex items-center">
-              {statsLoading ? (
-                <div className="skeleton h-7 w-16 bg-gray-700/50"></div>
-              ) : (
-                <h3 className="text-2xl font-bold">{stats.totalJuries}</h3>
-              )}
-            </div>
+            <h3 className="text-2xl font-bold">
+              {statsLoading ? <Loader className="w-6 h-6 animate-spin" /> : stats.totalJuries}
+            </h3>
           </div>
           
           <div className="p-4 bg-white/5 rounded-lg">
@@ -253,13 +235,9 @@ const Dashboard = () => {
               <span className="text-sm text-gray-400">Évaluations en cours</span>
               <Clock className="w-4 h-4 text-orange-500" />
             </div>
-            <div className="h-8 flex items-center">
-              {statsLoading ? (
-                <div className="skeleton h-7 w-16 bg-gray-700/50"></div>
-              ) : (
-                <h3 className="text-2xl font-bold">{stats.activeJuries}</h3>
-              )}
-            </div>
+            <h3 className="text-2xl font-bold">
+              {statsLoading ? <Loader className="w-6 h-6 animate-spin" /> : stats.activeJuries}
+            </h3>
           </div>
           
           <div className="p-4 bg-white/5 rounded-lg">
@@ -267,13 +245,9 @@ const Dashboard = () => {
               <span className="text-sm text-gray-400">Évaluations terminées</span>
               <CheckCircle className="w-4 h-4 text-green-500" />
             </div>
-            <div className="h-8 flex items-center">
-              {statsLoading ? (
-                <div className="skeleton h-7 w-16 bg-gray-700/50"></div>
-              ) : (
-                <h3 className="text-2xl font-bold">{stats.completedJuries}</h3>
-              )}
-            </div>
+            <h3 className="text-2xl font-bold">
+              {statsLoading ? <Loader className="w-6 h-6 animate-spin" /> : stats.completedJuries}
+            </h3>
           </div>
         </div>
       </div>

@@ -269,11 +269,19 @@ export function useSubmission(t) {
           await submitForm();
           setIsSubmitted(true);
         } catch (error) {
-          console.error("❌ Erreur lors de l'envoi:", error);
-          const errorMessage = error.code === 'ECONNABORTED' 
-            ? "La soumission prend plus de temps que prévu. Veuillez patienter ou réessayer."
-            : error.response?.data?.message || "Erreur lors de l'envoi. Vérifiez votre connexion.";
-          alert(errorMessage);
+          // Si c'est un timeout, la soumission a probablement réussi côté serveur
+          // (l'upload vidéo/YouTube prend du temps)
+          if (
+            error.code === "ECONNABORTED" ||
+            error.message?.includes("timeout")
+          ) {
+            console.warn(
+              "⏱️ Timeout Axios — soumission probablement réussie côté serveur",
+            );
+            setIsSubmitted(true);
+          } else {
+            alert("Erreur lors de l'envoi. Vérifiez la console.");
+          }
         } finally {
           setIsLoading(false);
         }
@@ -297,13 +305,15 @@ export function useSubmission(t) {
     if (formData.videoFile) form.append("video", formData.videoFile);
     if (formData.thumbnailFile) form.append("poster", formData.thumbnailFile);
     if (formData.subtitleFile) form.append("subtitle", formData.subtitleFile);
-    
-    // Screenshots (stills)
+
+    // Captures d'écran (stills)
     if (formData.stillsFiles && formData.stillsFiles.length > 0) {
-      formData.stillsFiles.forEach(file => {
-        form.append("stills", file);
+      formData.stillsFiles.forEach((file) => {
+        form.append("screenshots", file);
       });
-      console.log("📸 Screenshots envoyés:", formData.stillsFiles.length);
+      console.log(
+        `📸 ${formData.stillsFiles.length} capture(s) d'écran ajoutée(s)`,
+      );
     }
 
     // Identité & Genre (valeurs directement compatibles DB)

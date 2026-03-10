@@ -51,9 +51,17 @@ const fileFilter = (req, file, cb) => {
     }
   }
 
-  if (file.fieldname === 'poster' || file.fieldname === 'photo' || file.fieldname === 'thumbnailFile' || file.fieldname === 'stills') {
-    if (allowedImageTypes.includes(file.mimetype) || file.originalname.match(/\.(jpg|jpeg|png|webp|gif)$/i)) {
-      console.log('✅ Image acceptée:', file.originalname);
+  if (
+    file.fieldname === "poster" ||
+    file.fieldname === "photo" ||
+    file.fieldname === "thumbnailFile" ||
+    file.fieldname === "screenshots"
+  ) {
+    if (
+      allowedImageTypes.includes(file.mimetype) ||
+      file.originalname.match(/\.(jpg|jpeg|png|webp|gif)$/i)
+    ) {
+      console.log("✅ Image acceptée:", file.originalname);
       return cb(null, true);
     }
   }

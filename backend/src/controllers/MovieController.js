@@ -169,39 +169,10 @@ class MovieController {
               movie_id: movie.id,
               social_id: link.id,
             });
-            console.log(
-              `   ✅ Réseau social ajouté : ${social.platform} → ${social.url}`,
-            );
           }
-        } catch (socialError) {
-          console.error(
-            "⚠️ Erreur traitement réseaux sociaux:",
-            socialError.message,
-          );
-          console.error("⚠️ Stack:", socialError.stack);
+        } catch (e) {
+          console.warn("⚠️ Socials:", e.message);
         }
-      } else {
-        console.log("🌐 Aucun réseau social à créer");
-      }
-
-      // ✅ UPLOAD DES SCREENSHOTS (STILLS)
-      if (files && files.stills && files.stills.length > 0) {
-        console.log(`📸 Upload de ${files.stills.length} screenshot(s) vers Scaleway...`);
-        try {
-          for (const stillFile of files.stills) {
-            const stillUrl = await uploadToScaleway(stillFile, "screenshots");
-            await MovieScreenshot.create({
-              url: stillUrl,
-              movie_id: movie.id,
-            });
-            console.log(`   ✅ Screenshot uploadé: ${stillUrl}`);
-          }
-          console.log(`✅ ${files.stills.length} screenshot(s) traité(s)`);
-        } catch (screenshotError) {
-          console.error("⚠️ Erreur upload screenshots:", screenshotError.message);
-        }
-      } else {
-        console.log("📸 Aucun screenshot à uploader");
       }
 
       // ─── ÉTAPE 5 : Award par défaut ───────────────────────────────────────
@@ -413,19 +384,12 @@ class MovieController {
           {
             model: MovieSocial,
             as: "Socials",
-            attributes: ["id", "social_id"],
+            attributes: ["id"],
             include: [
               {
-                model: SocialLink,
-                as: "SocialLink",
-                attributes: ["id", "social_url"],
-                include: [
-                  {
-                    model: SocialMedia,
-                    as: "SocialMedia",
-                    attributes: ["id", "name"],
-                  },
-                ],
+                model: SocialMedia,
+                as: "SocialMedia",
+                attributes: ["id", "name"],
               },
             ],
           },
@@ -475,19 +439,12 @@ class MovieController {
           {
             model: MovieSocial,
             as: "Socials",
-            attributes: ["id", "social_id"],
+            attributes: ["id"],
             include: [
               {
-                model: SocialLink,
-                as: "SocialLink",
-                attributes: ["id", "social_url"],
-                include: [
-                  {
-                    model: SocialMedia,
-                    as: "SocialMedia",
-                    attributes: ["id", "name"],
-                  },
-                ],
+                model: SocialMedia,
+                as: "SocialMedia",
+                attributes: ["id", "name"],
               },
             ],
           },
@@ -537,20 +494,26 @@ class MovieController {
           {
             model: MovieSocial,
             as: "Socials",
-            attributes: ["id", "social_id"],
+            attributes: ["id"],
             include: [
               {
-                model: SocialLink,
-                as: "SocialLink",
-                attributes: ["id", "social_url"],
-                include: [
-                  {
-                    model: SocialMedia,
-                    as: "SocialMedia",
-                    attributes: ["id", "name"],
-                  },
-                ],
+                model: SocialMedia,
+                as: "SocialMedia",
+                attributes: ["id", "name"],
               },
+            ],
+          },
+          {
+            model: Squad,
+            as: "Squad",
+            attributes: [
+              "id",
+              "gender",
+              "firstname",
+              "lastname",
+              "mail",
+              "role",
+              "birthdate",
             ],
           },
         ],

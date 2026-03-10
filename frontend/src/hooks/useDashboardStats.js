@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
-import getAPI from '../services/getAPI'; // ✅ Importer getAPI
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const API_URL = 'http://localhost:3000/api/admin/dashboard';
 
 export default function useDashboardStats() {
   const [stats, setStats] = useState({
@@ -22,8 +24,7 @@ export default function useDashboardStats() {
       setLoading(true);
       setError(null);
       
-      // ✅ Utiliser getAPI au lieu d'axios
-      const response = await getAPI.getDashboardStats();
+      const response = await axios.get(`${API_URL}/stats`);
       
       console.log('📊 Dashboard stats:', response.data);
       
