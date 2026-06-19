@@ -110,7 +110,7 @@ class TicketController {
 
       // 8. Envoyer l'email de confirmation (sans bloquer la réponse si ça échoue)
       emailService
-        .sendTicketConfirmationPDF({
+        .sendTicketConfirmation({
           email,
           firstname,
           lastname,
