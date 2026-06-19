@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 require("dotenv").config();
 
 const sequelize = require("./src/config/Database");
@@ -9,6 +11,7 @@ const { Movie, Squad, User, Role } = require("./src/models");
 const routes = require("./src/routes");
 const session = require('express-session');
 const authConfig = require('./src/config/Auth');
+const deploymentGuard = require('./src/middleware/deploymentGuard');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,6 +19,9 @@ const PORT = process.env.PORT || 3000;
 console.log('🚀 ════════════════════════════════════════════════════════════');
 console.log('🚀 DÉMARRAGE DU SERVEUR MARSAI BACKEND');
 console.log('🚀 ════════════════════════════════════════════════════════════');
+
+// Security headers
+app.use(helmet());
 
 // Middleware CORS
 app.use(cors({
@@ -26,8 +32,20 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Rate limiting : 100 req / 15min par IP
+app.use('/api', rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Trop de requêtes, réessayez plus tard.' },
+}));
+
 // Configuration des sessions (AVANT les routes)
 app.use(session(authConfig.session));
+
+// Bloque les écritures en mode déploiement vitrine
+app.use(deploymentGuard);
 
 // ✅ LOG GLOBAL : Toutes les requêtes qui arrivent
 app.use((req, res, next) => {

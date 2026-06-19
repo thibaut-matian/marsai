@@ -1,6 +1,10 @@
 import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/';
+const DEPLOYMENT_MODE = import.meta.env.VITE_DEVMODE === 'true';
+
+// Routes toujours actives même en mode déploiement (authentification admin)
+const DEPLOYMENT_ALLOWED = ['auth/login', 'auth/logout', 'auth/refresh-token', 'users/refresh-token', 'users/validate-invitation'];
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -18,6 +22,24 @@ api.interceptors.request.use((config) => {
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
+
+    // Mode déploiement vitrine : intercepte les écritures sans toucher au réseau
+    if (DEPLOYMENT_MODE) {
+        const method = (config.method || '').toUpperCase();
+        const isWrite = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method);
+        const isAllowed = DEPLOYMENT_ALLOWED.some(path => config.url?.includes(path));
+        if (isWrite && !isAllowed) {
+            config.adapter = () => Promise.resolve({
+                data: { success: true, demo: true },
+                status: 200,
+                statusText: 'OK',
+                headers: {},
+                config,
+                request: {},
+            });
+        }
+    }
+
     return config;
 });
 
