@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { uploadToScaleway } = require('../config/scaleway');
+const { uploadToScaleway } = require('../config/Scaleway');
 
 // Configuration multer pour stocker temporairement
 const storage = multer.diskStorage({
