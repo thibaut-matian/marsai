@@ -1,37 +1,37 @@
-import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 
-const API_URL = 'http://localhost:3000/api/home-content';
+const API_URL = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/'}home-content`;
 
 export function useHomeContent() {
   const [content, setContent] = useState({
-    hero: { 
-      fr: { videoUrl: '', buttonText: '', buttonEnabled: true }, 
-      en: { videoUrl: '', buttonText: '', buttonEnabled: true } 
+    hero: {
+      fr: { videoUrl: '', buttonText: '', buttonEnabled: true },
+      en: { videoUrl: '', buttonText: '', buttonEnabled: true }
     },
-    about: { 
-      fr: { title: '', paragraph1: '', paragraph2: '' }, 
-      en: { title: '', paragraph1: '', paragraph2: '' } 
+    about: {
+      fr: { title: '', paragraph1: '', paragraph2: '' },
+      en: { title: '', paragraph1: '', paragraph2: '' }
     },
-    criteria: { 
-      fr: { title: '', items: [] }, 
-      en: { title: '', items: [] } 
+    criteria: {
+      fr: { title: '', items: [] },
+      en: { title: '', items: [] }
     },
-    rewards: { 
-      fr: { title: '', items: [] }, 
-      en: { title: '', items: [] } 
+    rewards: {
+      fr: { title: '', items: [] },
+      en: { title: '', items: [] }
     },
-    jury: { 
-      fr: { title: '', description: '', members: [] }, 
-      en: { title: '', description: '', members: [] } 
+    jury: {
+      fr: { title: '', description: '', members: [] },
+      en: { title: '', description: '', members: [] }
     },
-    contact: { 
-      fr: { title: '', phone: '', email: '', address: '', mapUrl: '' }, 
-      en: { title: '', phone: '', email: '', address: '', mapUrl: '' } 
+    contact: {
+      fr: { title: '', phone: '', email: '', address: '', mapUrl: '' },
+      en: { title: '', phone: '', email: '', address: '', mapUrl: '' }
     },
-    timeline: { 
-      fr: { title: '', phases: [] }, 
-      en: { title: '', phases: [] } 
+    timeline: {
+      fr: { title: '', phases: [] },
+      en: { title: '', phases: [] }
     },
   });
   const [isLoading, setIsLoading] = useState(true);
@@ -47,7 +47,7 @@ export function useHomeContent() {
     if (Array.isArray(obj)) {
       return obj.map(item => normalizeCamelCase(item));
     }
-    
+
     if (obj !== null && typeof obj === 'object') {
       return Object.keys(obj).reduce((acc, key) => {
         const camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
@@ -55,7 +55,7 @@ export function useHomeContent() {
         return acc;
       }, {});
     }
-    
+
     return obj;
   };
 
@@ -63,7 +63,7 @@ export function useHomeContent() {
     try {
       setIsLoading(true);
       const response = await axios.get(API_URL);
-      
+
       const transformedContent = {};
       response.data.data.forEach(item => {
         const contentFr = normalizeCamelCase(item.content_fr);
@@ -74,13 +74,13 @@ export function useHomeContent() {
           en: contentEn
         };
       });
-      
+
       setContent(transformedContent);
       setMessage({ type: '', text: '' });
     } catch (error) {
       console.error('Erreur lors du chargement:', error);
-      setMessage({ 
-        type: 'error', 
+      setMessage({
+        type: 'error',
         text: 'Erreur lors du chargement du contenu. Vérifiez que le backend est démarré.'
       });
     } finally {
@@ -123,7 +123,7 @@ export function useHomeContent() {
     setContent(prev => {
       const arrayField = section === 'timeline' ? 'phases' : 'items';
       let newItem;
-      
+
       if (section === 'timeline') {
         // Pour timeline, créer un objet phase complet
         newItem = {
@@ -136,7 +136,7 @@ export function useHomeContent() {
       } else {
         newItem = '';
       }
-      
+
       return {
         ...prev,
         [section]: {
@@ -237,7 +237,7 @@ export function useHomeContent() {
     if (Array.isArray(obj)) {
       return obj.map(item => toSnakeCase(item));
     }
-    
+
     if (obj !== null && typeof obj === 'object') {
       return Object.keys(obj).reduce((acc, key) => {
         const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
@@ -245,7 +245,7 @@ export function useHomeContent() {
         return acc;
       }, {});
     }
-    
+
     return obj;
   };
 
@@ -262,9 +262,9 @@ export function useHomeContent() {
 
       await axios.put(`${API_URL}/bulk-update`, { sections: sectionsToUpdate });
 
-      setMessage({ 
-        type: 'success', 
-        text: '✅ Contenu sauvegardé avec succès !' 
+      setMessage({
+        type: 'success',
+        text: '✅ Contenu sauvegardé avec succès !'
       });
 
       setTimeout(() => {
@@ -273,9 +273,9 @@ export function useHomeContent() {
 
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error);
-      setMessage({ 
-        type: 'error', 
-        text: '❌ Erreur lors de la sauvegarde. Réessayez.' 
+      setMessage({
+        type: 'error',
+        text: '❌ Erreur lors de la sauvegarde. Réessayez.'
       });
     } finally {
       setIsSaving(false);
