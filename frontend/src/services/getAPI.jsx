@@ -152,6 +152,7 @@ const getAPI = {
 
     // ===== HOME CONTENT =====
     getHomeContent: () => api.get('home-content'),
+    updateHomeContent: (sections) => api.put('home-content/bulk-update', { sections }),
 };
 
 export default getAPI;

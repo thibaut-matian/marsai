@@ -1,7 +1,5 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
-
-const API_URL = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/'}home-content`;
+import getAPI from '../services/getAPI';
 
 export function useHomeContent() {
   const [content, setContent] = useState({
@@ -62,7 +60,7 @@ export function useHomeContent() {
   const loadContent = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(API_URL);
+      const response = await getAPI.getHomeContent();
 
       const transformedContent = {};
       response.data.data.forEach(item => {
@@ -260,7 +258,7 @@ export function useHomeContent() {
         content_en: toSnakeCase(content[section].en)
       }));
 
-      await axios.put(`${API_URL}/bulk-update`, { sections: sectionsToUpdate });
+      await getAPI.updateHomeContent(sectionsToUpdate);
 
       setMessage({
         type: 'success',

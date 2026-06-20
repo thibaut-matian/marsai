@@ -48,7 +48,7 @@ export default function VideoUpload({ currentVideoUrl, onUploadComplete }) {
       formData.append('folder', 'hero');
 
       const response = await axios.post(
-        'http://localhost:3000/api/upload/video',
+        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/'}upload/video`,
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },

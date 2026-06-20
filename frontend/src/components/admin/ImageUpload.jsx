@@ -48,7 +48,7 @@ export default function ImageUpload({ currentImageUrl, onUploadComplete, label =
       formData.append('folder', 'jury');
 
       const response = await axios.post(
-        'http://localhost:3000/api/upload/image',
+        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/'}upload/image`,
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },

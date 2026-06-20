@@ -1,6 +1,6 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import getAPI from '../services/getAPI';
 
 import localJury0 from '../assets/img/adele.jpg';
 import localJury5 from '../assets/img/depp.jpg';
@@ -9,8 +9,6 @@ import localJury2 from '../assets/img/malik.jpg';
 import localJury3 from '../assets/img/reeve.jpg';
 import localJury4 from '../assets/img/rihanna.jpg';
 import teaserVideo from '../assets/videos/Teaser.mp4';
-
-const API_URL = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/'}home-content`;
 const USE_LOCAL_ASSETS = import.meta.env.VITE_USE_LOCAL_ASSETS === 'true';
 const LOCAL_JURY_IMAGES = [localJury0, localJury1, localJury2, localJury3, localJury4, localJury5];
 
@@ -60,7 +58,7 @@ export function useHomeData() {
   const loadContent = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(API_URL);
+      const response = await getAPI.getHomeContent();
 
       console.log('🔍 Données brutes:', response.data);
 
