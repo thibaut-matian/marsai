@@ -1,24 +1,25 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import AdminLayout from "./components/admin/layout/AdminLayout.jsx";
-import MainLayout from "./components/layout/MainLayout.jsx";
 import { useGalleryAccess } from "./hooks/useGalleryAccess";
-import FAQ from "./pages/FAQ.jsx";
-import Galerie from "./pages/Galerie.jsx";
-import Home from "./pages/Home.jsx";
-import Login from "./pages/Login.jsx";
-import Planning from "./pages/Planning.jsx";
-import Reservation from "./pages/Reservation.jsx";
-import Submission from "./pages/Submission.jsx";
-import Dashboard from "./pages/admin/Dashboard.jsx";
-import JuryManagement from "./pages/admin/JuryManagement.jsx";
-import MovieList from "./pages/admin/MovieList.jsx";
-import Settings from './pages/admin/Settings';
-import MovieModeration from "./pages/admin/movieModeration.jsx";
-import DashboardJury from "./pages/jury/DashboardJury.jsx";
-import JuryVote from "./pages/jury/JuryVote.jsx";
-import RankingJury from "./pages/jury/RankingJury.jsx";
 import getAPI from "./services/getAPI.jsx";
+
+const AdminLayout = lazy(() => import("./components/admin/layout/AdminLayout.jsx"));
+const MainLayout = lazy(() => import("./components/layout/MainLayout.jsx"));
+const FAQ = lazy(() => import("./pages/FAQ.jsx"));
+const Galerie = lazy(() => import("./pages/Galerie.jsx"));
+const Home = lazy(() => import("./pages/Home.jsx"));
+const Login = lazy(() => import("./pages/Login.jsx"));
+const Planning = lazy(() => import("./pages/Planning.jsx"));
+const Reservation = lazy(() => import("./pages/Reservation.jsx"));
+const Submission = lazy(() => import("./pages/Submission.jsx"));
+const Dashboard = lazy(() => import("./pages/admin/Dashboard.jsx"));
+const JuryManagement = lazy(() => import("./pages/admin/JuryManagement.jsx"));
+const MovieList = lazy(() => import("./pages/admin/MovieList.jsx"));
+const Settings = lazy(() => import("./pages/admin/Settings.jsx"));
+const MovieModeration = lazy(() => import("./pages/admin/movieModeration.jsx"));
+const DashboardJury = lazy(() => import("./pages/jury/DashboardJury.jsx"));
+const JuryVote = lazy(() => import("./pages/jury/JuryVote.jsx"));
+const RankingJury = lazy(() => import("./pages/jury/RankingJury.jsx"));
 
 // Fonction pour vérifier l'authentification et le rôle
 const isAuthenticated = async (requiredRole = null) => {
@@ -118,9 +119,16 @@ const ProtectedGalleryRoute = ({ children }) => {
   return children;
 };
 
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-screen bg-black">
+    <span className="loading loading-spinner loading-lg text-white"></span>
+  </div>
+);
+
 function AppRouter() {
   return (
     <Router>
+      <Suspense fallback={<PageLoader />}>
       <Routes>
         {/* 1. Routes Publiques (avec le Header du site) */}
         <Route element={<MainLayout />}>
@@ -183,7 +191,8 @@ function AppRouter() {
             </ProtectedRoute>
           } 
         />
-      </Routes> 
+      </Routes>
+      </Suspense>
     </Router>
   );
 }

@@ -23,6 +23,7 @@
   "scripts": {
     "start": "nodemon server.js",
     "dev": "node server.js",
+    "start:prod": "NODE_ENV=deployment node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
