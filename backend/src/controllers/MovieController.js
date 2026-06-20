@@ -8,7 +8,7 @@ const {
   SocialMedia,
   MovieScreenshot,
 } = require("../models");
-const { uploadToScaleway, deleteFromScaleway } = require("../config/scaleway");
+const { uploadToScaleway, deleteFromScaleway } = require("../config/Scaleway");
 const { youtube } = require("../config/Youtube");
 const { sendMailToDirector } = require("../services/emailService");
 const fs = require("fs").promises;
