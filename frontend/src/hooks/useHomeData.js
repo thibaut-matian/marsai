@@ -2,15 +2,27 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import getAPI from '../services/getAPI';
 
-import localJury0 from '../assets/img/adele.jpg';
-import localJury5 from '../assets/img/depp.jpg';
-import localJury1 from '../assets/img/jenna.jpg';
-import localJury2 from '../assets/img/malik.jpg';
-import localJury3 from '../assets/img/reeve.jpg';
-import localJury4 from '../assets/img/rihanna.jpg';
+import imgAdele from '../assets/img/adele.jpg';
+import imgDepp from '../assets/img/depp.jpg';
+import imgJenna from '../assets/img/jenna.jpg';
+import imgMalik from '../assets/img/malik.jpg';
+import imgReeve from '../assets/img/reeve.jpg';
+import imgRihanna from '../assets/img/rihanna.jpg';
+import imgEtchebest from '../assets/img/test-etchebest.jpg';
 import teaserVideo from '../assets/videos/Teaser.mp4';
+
 const USE_LOCAL_ASSETS = import.meta.env.VITE_USE_LOCAL_ASSETS === 'true';
-const LOCAL_JURY_IMAGES = [localJury0, localJury1, localJury2, localJury3, localJury4, localJury5];
+
+const JURY_IMAGE_MAP = {
+  'adèle exarchopoulos': imgAdele,
+  'adele exarchopoulos': imgAdele,
+  'johnny depp': imgDepp,
+  'jenna ortega': imgJenna,
+  'malik bentalha': imgMalik,
+  'keanu reeves': imgReeve,
+  'rihanna': imgRihanna,
+  'philippe etchebest': imgEtchebest,
+};
 
 const applyLocalAssets = (section, content) => {
   if (!content) return content;
@@ -20,9 +32,9 @@ const applyLocalAssets = (section, content) => {
   if (section === 'jury' && Array.isArray(content.members)) {
     return {
       ...content,
-      members: content.members.map((member, i) => ({
+      members: content.members.map((member) => ({
         ...member,
-        image: LOCAL_JURY_IMAGES[i % LOCAL_JURY_IMAGES.length],
+        image: JURY_IMAGE_MAP[member.name?.toLowerCase()] ?? member.image,
       })),
     };
   }
