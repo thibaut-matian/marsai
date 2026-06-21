@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import iaList from '../constants/iaList';
 import getAPI from '../services/getAPI';
 
+const USE_WEB_ASSETS = import.meta.env.VITE_USE_LOCAL_ASSETS === 'true';
+
 // Fonction pour extraire les IAs mentionnées dans la description
 const extractIAs = (iaDescription) => {
   if (!iaDescription) return [];
-  return iaList.filter(ia => 
+  return iaList.filter(ia =>
     iaDescription.toLowerCase().includes(ia.toLowerCase())
   );
 };
@@ -35,7 +37,9 @@ const mapMovieData = (dbMovie) => {
     real_lastname: dbMovie.lastname,
     real_firstname: dbMovie.firstname,
     actual_job: dbMovie.actual_job,
-    poster: dbMovie.poster_url,
+    poster: USE_WEB_ASSETS
+      ? `https://picsum.photos/seed/marsai-${dbMovie.id}/400/600`
+      : dbMovie.poster_url,
     // Mapper les screenshots: extraire uniquement les URLs
     screenshots: dbMovie.Screenshots?.map(s => s.url) || [],
     country: dbMovie.country,

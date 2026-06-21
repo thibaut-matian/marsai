@@ -162,10 +162,10 @@ class AuthController {
         });
       }
 
-      if (!['admin', 'super_admin'].includes(user.Role.name)) {
+      if (!['admin', 'super_admin', 'jury'].includes(user.Role.name)) {
         return res.status(403).json({
           success: false,
-          message: 'Accès réservé aux administrateurs'
+          message: 'Accès non autorisé'
         });
       }
 

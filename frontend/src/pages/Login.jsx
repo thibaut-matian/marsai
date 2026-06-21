@@ -1,7 +1,32 @@
-import { AlertCircle, Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { AlertCircle, Check, Copy, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../hooks/useAdminAuth';
+
+const DEMO_CREDENTIALS = [
+  { role: 'Admin', email: 'admin@marsai.fr', password: 'Admin123' },
+  { role: 'Jury',  email: 'jury1@marsai.fr', password: 'Jury1234' },
+];
+
+function CopyButton({ value }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    navigator.clipboard.writeText(value).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  };
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      className="ml-1 p-1 rounded text-gray-500 hover:text-amber-300 transition-colors"
+      title="Copier"
+    >
+      {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
+    </button>
+  );
+}
 
 export default function Login() {
   const navigate = useNavigate();
@@ -40,6 +65,30 @@ export default function Login() {
         >
           ← Retour à l'accueil
         </button>
+      </div>
+
+      {/* Panneau identifiants démo */}
+      <div className="w-full max-w-md mb-4 p-4 bg-amber-950/40 border border-amber-500/30 rounded-lg">
+        <p className="text-xs font-semibold text-amber-400 uppercase tracking-widest mb-3">
+          Identifiants de démonstration
+        </p>
+        <div className="space-y-3 text-sm font-mono">
+          {DEMO_CREDENTIALS.map(({ role, email, password }) => (
+            <div key={role} className="flex flex-col gap-1">
+              <span className="text-xs text-amber-500 uppercase tracking-wider">{role}</span>
+              <div className="flex items-center gap-1">
+                <span className="text-gray-400 w-6 shrink-0">@</span>
+                <span className="text-gray-200 flex-1">{email}</span>
+                <CopyButton value={email} />
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-gray-400 w-6 shrink-0">pw</span>
+                <span className="text-amber-300 font-bold flex-1">{password}</span>
+                <CopyButton value={password} />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Card de connexion */}

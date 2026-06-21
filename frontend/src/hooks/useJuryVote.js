@@ -1,4 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
+
+const USE_WEB_ASSETS = import.meta.env.VITE_USE_LOCAL_ASSETS === 'true';
+const SAMPLE_VIDEOS = [
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4',
+];
 import getAPI from "../services/getAPI";
 
 export function useJuryVote() {
@@ -33,7 +43,11 @@ export function useJuryVote() {
           setAllWatched(true);
         }
       } else {
-        setFilm(data.data);
+        const filmData = data.data;
+        if (USE_WEB_ASSETS) {
+          filmData.videoUrl = SAMPLE_VIDEOS[filmData.id % SAMPLE_VIDEOS.length];
+        }
+        setFilm(filmData);
         setAllWatched(false);
       }
     } catch (err) {

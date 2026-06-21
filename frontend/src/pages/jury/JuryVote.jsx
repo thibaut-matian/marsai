@@ -103,7 +103,7 @@ export default function JuryVote() {
           {/* Vidéo + Verdict */}
           <div className="flex flex-col gap-4 mb-12">
             <div className="flex flex-col lg:flex-row gap-4 lg:items-stretch">
-              <VideoPlayer videoUrl={film.videoUrl} />
+              <VideoPlayer videoUrl={film.videoUrl} youtubeId={film.youtubeId} />
               <VerdictPanel
                 decision={decision}
                 setDecision={setDecision}

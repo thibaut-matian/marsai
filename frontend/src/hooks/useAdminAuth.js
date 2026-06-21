@@ -94,22 +94,26 @@ export const useAdminAuth = () => {
         throw new Error("Données utilisateur manquantes");
       }
 
-      // Vérifier que c'est bien un admin
-      if (!["admin", "super_admin"].includes(user.Role?.name)) {
-        throw new Error("Accès réservé aux administrateurs");
+      const role = user.Role?.name;
+      const allowedRoles = ["admin", "super_admin", "jury"];
+      if (!allowedRoles.includes(role)) {
+        throw new Error("Accès non autorisé");
       }
 
       // ✅ Sauvegarder les tokens JWT
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-      // localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("userRole", user.Role.name);
+      localStorage.setItem("userRole", role);
       localStorage.setItem("isAuthenticated", "true");
 
       console.log("✅ Connexion réussie:", user.firstname, user.lastname);
 
-      // Redirection vers le dashboard admin
-      navigate("/admin/dashboard");
+      // Redirection selon le rôle
+      if (role === "jury") {
+        navigate("/jury/DashboardJury");
+      } else {
+        navigate("/admin/dashboard");
+      }
 
     } catch (err) {
       console.error("❌ Erreur de connexion:", err);

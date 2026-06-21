@@ -5,14 +5,22 @@ import PlateformeLogo from "../../assets/img/logoPlateforme.png";
 import MobileFilmLogo from "../../assets/img/logoMobile.png";
 import { useHomeData } from "../../hooks/useHomeData";
 
+const NAV_LINKS = [
+    { label: 'Accueil',           url: '/' },
+    { label: 'FAQ',               url: '/FAQ' },
+    { label: 'Planning',          url: '/planning' },
+    { label: 'Réservation',       url: '/reservation' },
+    { label: 'Soumettre un film', url: '/submission' },
+    { label: 'Galerie',           url: '/galerie' },
+    { label: 'Espace Admin',      url: '/admin/login' },
+];
+
 export default function Footer() {
     const { t } = useTranslation();
     const { content } = useHomeData();
 
-    // ✅ Récupérer les données dynamiques
     const footerData = content?.footer || {};
-    const title = footerData.title || 'MarsIA';
-    const links = footerData.links || [];
+    const title = footerData.title || 'MarsAI Festival';
     const logoMobileFilm = footerData.logoMobileFilm || MobileFilmLogo;
     const logoMarsIA = footerData.logoMarsIA || PlateformeLogo;
 
@@ -25,15 +33,15 @@ export default function Footer() {
             </div>
             <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
                 <h2 className="text-lg font-semibold">{title}</h2>
-                <div className="flex flex-col md:flex-row flex-wrap justify-center md:justify-end gap-x-4 gap-y-2 text-sm">
-                    {/* ✅ Liens dynamiques */}
-                    {links.map((link, index) => (
-                        <Link key={index} to={link.url} className="hover:underline">
+                <nav className="flex flex-wrap justify-center md:justify-end gap-x-4 gap-y-2 text-sm">
+                    {NAV_LINKS.map((link) => (
+                        <Link key={link.url} to={link.url} className="hover:underline text-gray-300 hover:text-white transition-colors">
                             {link.label}
                         </Link>
                     ))}
-                </div>
+                </nav>
             </div>
+            <p className="mt-4 text-xs text-gray-500">MarsAI Festival © {new Date().getFullYear()}</p>
         </footer>
     );
 }
