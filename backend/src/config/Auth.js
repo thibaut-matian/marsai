@@ -4,15 +4,15 @@ module.exports = {
   
   // Configuration session
   session: {
-    secret: process.env.SESSION_SECRET || 'marsai-secret-key-change-in-production',
+    secret: process.env.SESSION_SECRET,
     name: 'marsai.sid',
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === 'production', // HTTPS uniquement en prod
+      secure: ['production', 'deployment'].includes(process.env.NODE_ENV),
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 24 heures
-      sameSite: 'lax'
+      maxAge: 24 * 60 * 60 * 1000,
+      sameSite: 'strict'
     }
   },
   

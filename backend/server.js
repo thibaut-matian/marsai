@@ -32,13 +32,23 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Rate limiting : 100 req / 15min par IP
+// Rate limiting global : 100 req / 15min par IP
 app.use('/api', rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Trop de requêtes, réessayez plus tard.' },
+}));
+
+// Rate limiting strict sur les routes auth : 10 tentatives / 15min par IP
+app.use('/api/auth', rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Trop de tentatives de connexion, réessayez dans 15 minutes.' },
+  skipSuccessfulRequests: true,
 }));
 
 // Configuration des sessions (AVANT les routes)
@@ -163,10 +173,7 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   console.error('❌ ERREUR SERVEUR GLOBALE:', err.message);
   console.error('Stack:', err.stack);
-  res.status(500).json({ 
-    message: "Erreur serveur", 
-    error: err.message 
-  });
+  res.status(500).json({ message: "Erreur serveur" });
 });
 
 // --- DÉMARRAGE DU SERVEUR ---

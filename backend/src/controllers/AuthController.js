@@ -111,8 +111,7 @@ class AuthController {
       console.error('Erreur lors de l\'inscription:', error);
       res.status(500).json({
         success: false,
-        message: 'Erreur lors de l\'inscription',
-        error: error.message
+        message: 'Erreur lors de l\'inscription'
       });
     }
   }
@@ -128,6 +127,13 @@ class AuthController {
         return res.status(400).json({
           success: false,
           message: 'Email et mot de passe requis'
+        });
+      }
+
+      if (mail.length > 255 || password.length > 128) {
+        return res.status(400).json({
+          success: false,
+          message: 'Paramètres invalides'
         });
       }
 
@@ -193,8 +199,7 @@ class AuthController {
       console.error('Erreur lors de la connexion:', error);
       res.status(500).json({
         success: false,
-        message: 'Erreur lors de la connexion',
-        error: error.message
+        message: 'Erreur lors de la connexion'
       });
     }
   }
@@ -260,8 +265,7 @@ class AuthController {
       console.error('Erreur refresh token:', error);
       res.status(500).json({
         success: false,
-        message: 'Erreur lors du rafraîchissement',
-        error: error.message
+        message: 'Erreur lors du rafraîchissement'
       });
     }
   }
@@ -296,8 +300,7 @@ class AuthController {
       console.error('Erreur récupération utilisateur:', error);
       res.status(500).json({
         success: false,
-        message: 'Erreur lors de la récupération',
-        error: error.message
+        message: 'Erreur lors de la récupération'
       });
     }
   }
