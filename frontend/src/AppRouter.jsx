@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Navigate, Route, BrowserRouter as Router, Routes, useLocation } from "react-router-dom";
 import { useGalleryAccess } from "./hooks/useGalleryAccess";
 import getAPI from "./services/getAPI.jsx";
 
@@ -119,6 +119,34 @@ const ProtectedGalleryRoute = ({ children }) => {
   return children;
 };
 
+const PAGE_TITLES = {
+  '/':                      'MarsAI Festival',
+  '/FAQ':                   'FAQ - MarsAI Festival',
+  '/planning':              'Planning - MarsAI Festival',
+  '/reservation':           'Réservation - MarsAI Festival',
+  '/submission':            'Soumettre un film - MarsAI Festival',
+  '/submit-movie':          'Soumettre un film - MarsAI Festival',
+  '/galerie':               'Galerie - MarsAI Festival',
+  '/admin/login':           'Connexion Admin - MarsAI Festival',
+  '/admin':                 'Dashboard - MarsAI Festival',
+  '/admin/dashboard':       'Dashboard - MarsAI Festival',
+  '/admin/jury-management': 'Gestion des jurys - MarsAI Festival',
+  '/admin/movies':          'Modération - MarsAI Festival',
+  '/admin/movies/list':     'Films - MarsAI Festival',
+  '/admin/settings':        'Paramètres - MarsAI Festival',
+  '/jury/DashboardJury':    'Espace Jury - MarsAI Festival',
+  '/jury/RankingJury':      'Classement - MarsAI Festival',
+  '/jury/JuryVote':         'Vote - MarsAI Festival',
+};
+
+const TitleManager = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    document.title = PAGE_TITLES[pathname] ?? 'MarsAI Festival';
+  }, [pathname]);
+  return null;
+};
+
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-screen bg-black">
     <span className="loading loading-spinner loading-lg text-white"></span>
@@ -128,6 +156,7 @@ const PageLoader = () => (
 function AppRouter() {
   return (
     <Router>
+      <TitleManager />
       <Suspense fallback={<PageLoader />}>
       <Routes>
         {/* 1. Routes Publiques (avec le Header du site) */}
