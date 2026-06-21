@@ -59,7 +59,7 @@ export default function JuryVote() {
         <div className="flex items-center justify-center h-[80vh]">
           <div className="text-center max-w-md">
             <div className="text-6xl mb-6">🎬</div>
-            <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+            <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-linear-to-r from-blue-400 to-purple-400">
               Pas de films assignés pour le moment.
             </h2>
             <p className="text-gray-400 mb-8">
@@ -80,7 +80,7 @@ export default function JuryVote() {
         <div className="flex items-center justify-center h-[80vh]">
           <div className="text-center max-w-md">
             <div className="text-6xl mb-6">🏆</div>
-            <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+            <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-linear-to-r from-blue-400 to-purple-400">
               Bravo, tu as tout vu !
             </h2>
             <p className="text-gray-400 mb-8">
@@ -88,7 +88,7 @@ export default function JuryVote() {
             </p>
             <Link
               to="/jury/RankingJury"
-              className="btn bg-gradient-to-r from-blue-600 to-purple-600 border-0 text-white rounded-2xl px-8"
+              className="btn bg-linear-to-r from-blue-600 to-purple-600 border-0 text-white rounded-2xl px-8"
             >
               Voir mon classement →
             </Link>

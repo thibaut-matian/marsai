@@ -43,7 +43,7 @@ const FilmInfoCard = ({ film, formatDuration }) => {
               <h3 className="font-bold uppercase tracking-wider text-xs mb-4 text-gray-500">Candidat</h3>
               <div className="flex items-center gap-4 mb-4">
                 <div className="avatar placeholder">
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 border border-white/10 flex items-center justify-center">
+                  <div className="w-14 h-14 rounded-full bg-linear-to-br from-gray-700 to-gray-800 border border-white/10 flex items-center justify-center">
                     <span className="text-white text-lg font-bold">
                       {film.director.firstname?.[0]}{film.director.lastname?.[0]}
                     </span>
