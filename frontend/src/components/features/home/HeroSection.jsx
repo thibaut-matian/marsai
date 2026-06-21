@@ -8,9 +8,10 @@ export default function HeroSection({ videoUrl, buttonText, buttonEnabled }) {
   return (
     <div className="relative w-full h-screen text-white overflow-hidden">
       <video
-        autoPlay
-        muted
-        loop
+        autoPlay 
+        muted 
+        loop 
+        playsInline
         className="absolute inset-0 w-full h-full object-cover -z-10"
       >
         <source src={videoUrl} type="video/mp4" />
