@@ -5,6 +5,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000
 const api = axios.create({
     baseURL: API_BASE_URL,
     timeout: 15000,
+    withCredentials: true, // ⚠️ IMPORTANT : Envoie les cookies de session
     headers: {
         'Content-Type': 'application/json',
     }
@@ -64,6 +65,9 @@ api.interceptors.response.use(
 const getAPI = {
     // ===== AUTHENTIFICATION (useAuth) =====
     login: (credentials) => api.post('auth/login', credentials),
+    logout: () => api.post('auth/logout'),  // ← AJOUT
+    register: (registrationData) => api.post('auth/register', registrationData),  // ← AJOUT
+    checkAuth: () => api.get('auth/check'),  // ← AJOUT
     getProfile: () => api.get('auth/me'),
     validateInvitation: (invitationToken) => api.post('users/validate-invitation', { invitationToken }),
     getUserByToken: (token) => api.get(`users/by-token/${token}`),
@@ -74,7 +78,7 @@ const getAPI = {
     getMovieByUrl: (url) => api.get(`movies/url/${url}`),
     submitMovie: (formData) => api.post('movies', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
-        timeout: 5 * 60 * 1000, // 5 minutes
+        timeout: 300000 // 5 minutes pour l'upload de fichiers volumineux
     }),
     
     // ===== JURY & VOTES (useJuryVote, useRankingJury) =====
@@ -99,15 +103,15 @@ const getAPI = {
     getDashboardProgress: () => api.get('admin/dashboard/progress'),
     getDashboardActivity: () => api.get('admin/dashboard/activity'),
     getReports: () => api.get('admin/reports'),
-    getAdminMovies: () => api.get('admin/movie'),
-    deleteMovie: (id) => api.delete(`admin/movie/${id}`),
-    moderateMovie: (id, status) => api.patch(`admin/movie/${id}`, { status }),
-    AllMoviesReports: () => api.get('admin/movie/reports'),
+    getAdminMovies: () => api.get('admin/movies'),
+    deleteMovie: (id) => api.delete(`admin/movies/${id}`),
+    moderateMovie: (id, status) => api.patch(`admin/movies/${id}`, { status }),
+    AllMoviesReports: () => api.get('admin/movies/reports'),
 
 
-    distributeMovies: () => api.post('admin/distribute'),
-    redistributeMovies: () => api.post('admin/redistribute'),
-    selectMovie: (id) => api.patch(`admin/movie/${id}/select`),
+    distributeMovies: () => api.post('admin/movies/distribute'),
+    redistributeMovies: () => api.post('admin/movies/redistribute'),
+    selectMovie: (id) => api.patch(`admin/movies/${id}/select`),
     
     // ===== GESTION DES JURYS (useJuryManagement) =====
     getAllJuries: () => api.get('users?role=jury'),
@@ -123,6 +127,9 @@ const getAPI = {
     // ===== RECHERCHE & FILTRES =====
     searchMovies: (query) => api.get('search', { params: { q: query } }),
     getGenres: () => api.get('genres'),
+
+    // ===== HOME CONTENT =====
+    getHomeContent: () => api.get('home-content'),
 };
 
 export default getAPI;

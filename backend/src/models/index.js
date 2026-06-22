@@ -111,11 +111,11 @@ Award.hasMany(MovieAward, {
 });
 
 // SocialMedia relations
-MovieSocial.belongsTo(SocialMedia, {
+MovieSocial.belongsTo(SocialLink, {
   foreignKey: "social_id",
-  as: "SocialMedia",
+  as: "SocialLink",
 });
-SocialMedia.hasMany(MovieSocial, {
+SocialLink.hasMany(MovieSocial, {
   foreignKey: "social_id",
   as: "MovieSocials",
 });
@@ -145,11 +145,11 @@ SocialLink.belongsTo(Squad, {
 
 // SocialLink <-> SocialMedia
 SocialLink.belongsTo(SocialMedia, {
-  foreignKey: "social_media_id",
+  foreignKey: "social_id",
   as: "SocialMedia",
 });
 SocialMedia.hasMany(SocialLink, {
-  foreignKey: "social_media_id",
+  foreignKey: "social_id",
   as: "SocialLinks",
 });
 
